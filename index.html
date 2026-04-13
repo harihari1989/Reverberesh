@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Exercise + Yoga Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+
+    <!-- Three.js for 3D humanoid avatar -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+    <script src="./script.js" defer></script>
+  </head>
+  <body data-track="exercise">
+    <div class="bg-orbs" aria-hidden="true">
+      <div class="bg-orb bg-orb-1"></div>
+      <div class="bg-orb bg-orb-2"></div>
+      <div class="bg-orb bg-orb-3"></div>
+    </div>
+
+    <main class="app-shell">
+      <section class="hero card">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> Meet Reverberesh — your AI coach</p>
+          <h1 id="hero-title">Interactive Exercise Guide</h1>
+          <p id="hero-text" class="hero-text">
+            A full-body guided session with simple standing movements, a visible
+            whole-body avatar, and voice cues that keep the energy up.
+          </p>
+
+          <div id="goal-row" class="goal-row" aria-label="Goals"></div>
+
+          <div class="picker-group">
+            <p class="picker-label">Track</p>
+            <div class="choice-row" role="group" aria-label="Track selection">
+              <button id="track-exercise-btn" class="choice-btn is-active" type="button">
+                <svg class="choice-icon" viewBox="0 0 20 20" fill="none"><path d="M10 2a1 1 0 011 1v6.586l4.707 4.707a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L9 9.586V3a1 1 0 011-1z" fill="currentColor"/></svg>
+                Exercise
+              </button>
+              <button id="track-yoga-btn" class="choice-btn" type="button">
+                <svg class="choice-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="4" r="2.5" fill="currentColor"/><path d="M6 18l2-6 2 2 2-2 2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Yoga
+              </button>
+            </div>
+          </div>
+
+          <div class="picker-group">
+            <p class="picker-label">Level</p>
+            <div class="choice-row" role="group" aria-label="Level selection">
+              <button id="level-beginner-btn" class="choice-btn is-active" type="button">
+                Beginner
+              </button>
+              <button id="level-advanced-btn" class="choice-btn" type="button">
+                Advanced
+              </button>
+            </div>
+          </div>
+
+          <p id="session-note" class="session-note">
+            Beginner exercise keeps the pace simple with shorter sets and cleaner recovery.
+          </p>
+        </div>
+
+        <div class="hero-timer">
+          <div class="timer-ring" id="timer-ring" style="--ring-progress: 100">
+            <svg class="timer-ring-svg" viewBox="0 0 260 260">
+              <circle class="timer-ring-bg" cx="130" cy="130" r="115" />
+              <circle class="timer-ring-fill" cx="130" cy="130" r="115" />
+            </svg>
+            <div class="timer-inner">
+              <span class="timer-value" id="remaining-time">30</span>
+              <span class="timer-unit">sec</span>
+            </div>
+          </div>
+
+          <div class="timer-meta">
+            <p class="timer-step" id="step-count">Step 1 of 8</p>
+            <p class="timer-type" id="step-type">Exercise</p>
+            <p class="timer-target" id="step-target">30 sec pace</p>
+          </div>
+
+          <div class="control-row">
+            <button id="start-btn" class="action-btn action-btn-primary">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M6.3 2.84A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.27l9.344-5.891a1.5 1.5 0 000-2.538L6.3 2.841z"/></svg>
+              Start
+            </button>
+            <button id="pause-btn" class="action-btn">Pause</button>
+            <button id="next-btn" class="action-btn">Next</button>
+            <button id="restart-btn" class="action-btn">Restart</button>
+          </div>
+
+          <div class="assist-row">
+            <button id="voice-btn" class="assist-btn is-active" type="button">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4z"/><path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z"/></svg>
+              Voice cues on
+            </button>
+            <button id="burst-btn" class="assist-btn" type="button">
+              Cheer Me
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="main-grid">
+        <section class="stage card">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Current movement</p>
+              <h2 id="current-name">March + Reach</h2>
+            </div>
+            <p class="focus-tag" id="current-focus">Warm the whole body and lift the chest</p>
+          </div>
+
+          <!-- WebGL animation stage powered by PixiJS -->
+          <div class="animation-stage" id="animation-stage"></div>
+
+          <div id="motivation-burst" class="motivation-burst" aria-live="polite">
+            Ready to move
+          </div>
+
+          <div class="movement-copy">
+            <p id="current-summary" class="movement-summary">
+              March lightly in place and reach overhead to wake up the legs,
+              shoulders, and posture without rushing the pace.
+            </p>
+
+            <div class="coach-box">
+              <p class="section-label">Coach cue</p>
+              <p id="coach-cue" class="coach-cue" aria-live="polite">
+                Stay tall through the spine and land softly.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="guide card">
+          <div class="guide-block">
+            <p class="section-label">How to move</p>
+            <ol id="instruction-list" class="instruction-list"></ol>
+          </div>
+
+          <div class="guide-block">
+            <p class="section-label">Up next</p>
+            <p id="up-next" class="up-next">
+              Side Step Pull for 30 seconds.
+            </p>
+          </div>
+
+          <div class="guide-block">
+            <p class="section-label">Session progress</p>
+            <div class="session-progress-track">
+              <div id="session-progress-fill" class="session-progress-fill"></div>
+            </div>
+            <p id="session-progress-copy" class="session-progress-copy">
+              0:00 completed
+            </p>
+          </div>
+
+          <div class="guide-block">
+            <p class="section-label">Interactive tip</p>
+            <p id="interactive-tip" class="interactive-tip">
+              Click any step to jump there, or use Cheer Me for an instant voice boost.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="bottom-grid">
+        <section class="routine card">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Session steps</p>
+              <h2>Follow in order</h2>
+            </div>
+            <p id="total-time" class="total-time">4 min 10 sec</p>
+          </div>
+          <div id="step-list" class="step-list"></div>
+        </section>
+
+        <section class="notes card">
+          <p class="section-label">Technique reminders</p>
+          <ul id="note-list" class="note-list"></ul>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
