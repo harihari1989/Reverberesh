@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Interactive Exercise + Yoga Guide</title>
+    <title>Interactive Workout, Yoga + Dance Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
@@ -11,6 +11,7 @@
 
     <!-- Three.js for 3D humanoid avatar -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
 
     <script src="./script.js" defer></script>
   </head>
@@ -24,11 +25,11 @@
     <main class="app-shell">
       <section class="hero card">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="eyebrow-dot"></span> Meet Reverberesh — your AI coach</p>
-          <h1 id="hero-title">Interactive Exercise Guide</h1>
+          <p class="eyebrow"><span class="eyebrow-dot"></span> Meet Reverberesh — your movement guide</p>
+          <h1 id="hero-title">Interactive Movement Guide</h1>
           <p id="hero-text" class="hero-text">
-            A full-body guided session with simple standing movements, a visible
-            whole-body avatar, and voice cues that keep the energy up.
+            A guided movement session with workout, yoga, and dance options, a
+            visible full-body avatar, and clear voice cues that stay easy to follow.
           </p>
 
           <div id="goal-row" class="goal-row" aria-label="Goals"></div>
@@ -38,11 +39,15 @@
             <div class="choice-row" role="group" aria-label="Track selection">
               <button id="track-exercise-btn" class="choice-btn is-active" type="button">
                 <svg class="choice-icon" viewBox="0 0 20 20" fill="none"><path d="M10 2a1 1 0 011 1v6.586l4.707 4.707a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L9 9.586V3a1 1 0 011-1z" fill="currentColor"/></svg>
-                Exercise
+                Workout
               </button>
               <button id="track-yoga-btn" class="choice-btn" type="button">
                 <svg class="choice-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="4" r="2.5" fill="currentColor"/><path d="M6 18l2-6 2 2 2-2 2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Yoga
+              </button>
+              <button id="track-dance-btn" class="choice-btn" type="button">
+                <svg class="choice-icon" viewBox="0 0 20 20" fill="none"><path d="M11.5 2.5a1.5 1.5 0 10-3 0c0 .675.448 1.245 1.064 1.43v4.4L6.8 10.05a1.75 1.75 0 00-.8 1.476V15a1 1 0 102 0v-2.53l1.564-.96 1.536 2.12V17a1 1 0 102 0v-3.25l-1.46-2.015 1.535-.94A1.75 1.75 0 0014.5 9.3V6.5a1 1 0 10-2 0v2.24l-.936.575V3.93A1.5 1.5 0 0011.5 2.5z" fill="currentColor"/></svg>
+                Dance
               </button>
             </div>
           </div>
@@ -60,7 +65,7 @@
           </div>
 
           <p id="session-note" class="session-note">
-            Beginner exercise keeps the pace simple with shorter sets and cleaner recovery.
+            Beginner workout keeps the timing simple and leaves a little more room to reset between moves.
           </p>
         </div>
 
@@ -78,7 +83,7 @@
 
           <div class="timer-meta">
             <p class="timer-step" id="step-count">Step 1 of 8</p>
-            <p class="timer-type" id="step-type">Exercise</p>
+            <p class="timer-type" id="step-type">Workout</p>
             <p class="timer-target" id="step-target">30 sec pace</p>
           </div>
 
@@ -95,10 +100,14 @@
           <div class="assist-row">
             <button id="voice-btn" class="assist-btn is-active" type="button">
               <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4z"/><path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z"/></svg>
-              Voice cues on
+              <span data-label>Voice cues on</span>
+            </button>
+            <button id="neural-pose-btn" class="assist-btn" type="button">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2.25a2.25 2.25 0 110 4.5 2.25 2.25 0 010-4.5zm-3.1 6.7a1 1 0 00-.96 1.27l.9 3.14a1 1 0 00.96.73h1.2v3.9a1 1 0 102 0v-3.9h1.2a1 1 0 00.96-.73l.9-3.14a1 1 0 10-1.92-.55l-.69 2.42H8.65l-.69-2.42a1 1 0 00-1.06-.72z"/></svg>
+              <span data-neural-label>Show neural pose</span>
             </button>
             <button id="burst-btn" class="assist-btn" type="button">
-              Cheer Me
+              Cue Me
             </button>
           </div>
         </div>
@@ -111,7 +120,7 @@
               <p class="section-label">Current movement</p>
               <h2 id="current-name">March + Reach</h2>
             </div>
-            <p class="focus-tag" id="current-focus">Warm the whole body and lift the chest</p>
+            <p class="focus-tag" id="current-focus">Warm the whole body and lift posture</p>
           </div>
 
           <!-- WebGL animation stage powered by PixiJS -->
@@ -123,14 +132,14 @@
 
           <div class="movement-copy">
             <p id="current-summary" class="movement-summary">
-              March lightly in place and reach overhead to wake up the legs,
-              shoulders, and posture without rushing the pace.
+              March with light feet and an easy overhead reach to wake up the
+              legs, shoulders, and posture without rushing the pace.
             </p>
 
             <div class="coach-box">
               <p class="section-label">Coach cue</p>
               <p id="coach-cue" class="coach-cue" aria-live="polite">
-                Stay tall through the spine and land softly.
+                Stay long through the spine and land softly.
               </p>
             </div>
           </div>
@@ -162,7 +171,7 @@
           <div class="guide-block">
             <p class="section-label">Interactive tip</p>
             <p id="interactive-tip" class="interactive-tip">
-              Click any step to jump there, or use Cheer Me for an instant voice boost.
+              Click any step to jump there, or use Cue Me for a quick voice reminder.
             </p>
           </div>
         </aside>
