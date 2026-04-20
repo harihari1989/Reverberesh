@@ -497,7 +497,12 @@ function ensurePoseOverlay(stageEl) {
 
 function setPoseOverlayVisible(visible) {
   neuralPose.visible = visible;
-  if (neuralPose.canvas) neuralPose.canvas.hidden = !visible;
+  if (neuralPose.canvas) {
+    neuralPose.canvas.hidden = !visible;
+    if (!visible && neuralPose.ctx) {
+      neuralPose.ctx.clearRect(0, 0, neuralPose.canvas.width, neuralPose.canvas.height);
+    }
+  }
   if (neuralPose.statusEl) neuralPose.statusEl.hidden = !visible;
 }
 

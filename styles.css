@@ -538,6 +538,12 @@ body[data-track="dance"] .animation-stage {
   border-radius: 24px;
   mix-blend-mode: screen;
 }
+.pose-overlay-canvas[hidden] {
+  display: none !important;
+}
+.pose-overlay-status[hidden] {
+  display: none !important;
+}
 
 .pose-overlay-status {
   position: absolute;
