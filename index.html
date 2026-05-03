@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Interactive Workout, Yoga + Dance Guide</title>
+    <title>Interactive Workout, Yoga, Breathing Exercise + Dance Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
@@ -25,11 +25,11 @@
     <main class="app-shell">
       <section class="hero card">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="eyebrow-dot"></span> Meet Reverberesh — your movement guide</p>
+          <p class="eyebrow"><span class="eyebrow-dot"></span> Reverberesh = Reverberate + Refresh</p>
           <h1 id="hero-title">Interactive Movement Guide</h1>
           <p id="hero-text" class="hero-text">
-            A guided movement session with workout, yoga, and dance options, a
-            visible full-body avatar, and clear voice cues that stay easy to follow.
+            A guided movement session with workout, yoga, dance, and breathing
+            exercises, a visible full-body avatar, and clear voice cues that stay easy to follow.
           </p>
 
           <div id="goal-row" class="goal-row" aria-label="Goals"></div>
@@ -49,6 +49,10 @@
                 <svg class="choice-icon" viewBox="0 0 20 20" fill="none"><path d="M11.5 2.5a1.5 1.5 0 10-3 0c0 .675.448 1.245 1.064 1.43v4.4L6.8 10.05a1.75 1.75 0 00-.8 1.476V15a1 1 0 102 0v-2.53l1.564-.96 1.536 2.12V17a1 1 0 102 0v-3.25l-1.46-2.015 1.535-.94A1.75 1.75 0 0014.5 9.3V6.5a1 1 0 10-2 0v2.24l-.936.575V3.93A1.5 1.5 0 0011.5 2.5z" fill="currentColor"/></svg>
                 Dance
               </button>
+              <button id="track-breath-btn" class="choice-btn" type="button">
+                <svg class="choice-icon" viewBox="0 0 20 20" fill="none"><path d="M10 2.5c2.65 0 4.8 2.15 4.8 4.8 0 1.94-1.15 3.6-2.8 4.36V15a2.5 2.5 0 11-5 0v-.5a1 1 0 112 0v.5a.5.5 0 001 0v-3.14A4.805 4.805 0 015.2 7.3C5.2 4.65 7.35 2.5 10 2.5zm0 2a2.8 2.8 0 100 5.6 2.8 2.8 0 000-5.6z" fill="currentColor"/></svg>
+                Breathing Exercise
+              </button>
             </div>
           </div>
 
@@ -60,6 +64,36 @@
               </button>
               <button id="level-advanced-btn" class="choice-btn" type="button">
                 Advanced
+              </button>
+            </div>
+          </div>
+
+          <div id="yoga-section-picker" class="picker-group yoga-section-picker" hidden>
+            <p class="picker-label">Yoga section</p>
+            <div class="choice-row" role="group" aria-label="Yoga section selection">
+              <button id="yoga-section-flow-btn" class="choice-btn is-active" type="button">
+                Core Flow
+              </button>
+              <button id="yoga-section-relax-btn" class="choice-btn" type="button">
+                Relaxation
+              </button>
+            </div>
+          </div>
+
+          <div id="breath-option-picker" class="picker-group breath-option-picker" hidden>
+            <p class="picker-label">Breathing timing</p>
+            <div class="choice-row" role="group" aria-label="Breathing timing selection">
+              <button class="choice-btn" type="button" data-breath-option="easy">
+                Easy 3 / 3 / 3 / 3
+              </button>
+              <button class="choice-btn is-active" type="button" data-breath-option="classic">
+                Classic 4 / 4 / 4 / 4
+              </button>
+              <button class="choice-btn" type="button" data-breath-option="deep">
+                Deep 5 / 5 / 5 / 5
+              </button>
+              <button class="choice-btn" type="button" data-breath-option="advanced">
+                Advanced 6 / 6 / 6 / 6
               </button>
             </div>
           </div>
@@ -85,6 +119,29 @@
             <p class="timer-step" id="step-count">Step 1 of 8</p>
             <p class="timer-type" id="step-type">Workout</p>
             <p class="timer-target" id="step-target">30 sec pace</p>
+            <p class="breath-phase" id="breath-phase" hidden>Inhale</p>
+          </div>
+
+          <div id="breath-box-guide" class="breath-box-guide" hidden aria-label="Box breathing phase guide">
+            <div id="breath-box" class="breath-box">
+              <div class="breath-box-side breath-box-side-top" data-box-side="inhale">
+                <span>Inhale</span><strong data-box-count>4s</strong>
+              </div>
+              <div class="breath-box-side breath-box-side-right" data-box-side="hold">
+                <span>Hold</span><strong data-box-count>4s</strong>
+              </div>
+              <div class="breath-box-side breath-box-side-bottom" data-box-side="exhale">
+                <span>Exhale</span><strong data-box-count>4s</strong>
+              </div>
+              <div class="breath-box-side breath-box-side-left" data-box-side="rest">
+                <span>Hold</span><strong data-box-count>4s</strong>
+              </div>
+              <div class="breath-box-center">
+                <span id="box-phase-label">Inhale</span>
+                <strong id="box-phase-count">4s</strong>
+                <small id="box-cycle-count">Cycle 1 / 6</small>
+              </div>
+            </div>
           </div>
 
           <div class="control-row">
@@ -102,9 +159,13 @@
               <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4z"/><path d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z"/></svg>
               <span data-label>Voice cues on</span>
             </button>
-            <button id="neural-pose-btn" class="assist-btn" type="button">
+            <button id="neural-pose-btn" class="assist-btn is-active" type="button">
               <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2.25a2.25 2.25 0 110 4.5 2.25 2.25 0 010-4.5zm-3.1 6.7a1 1 0 00-.96 1.27l.9 3.14a1 1 0 00.96.73h1.2v3.9a1 1 0 102 0v-3.9h1.2a1 1 0 00.96-.73l.9-3.14a1 1 0 10-1.92-.55l-.69 2.42H8.65l-.69-2.42a1 1 0 00-1.06-.72z"/></svg>
-              <span data-neural-label>Show neural pose</span>
+              <span data-neural-label>Hide guide lines</span>
+            </button>
+            <button id="mirror-guide-btn" class="assist-btn is-active" type="button">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M6.5 4.5a1 1 0 011.707-.707L13 8.586V6.5a1 1 0 112 0V11a1 1 0 01-1 1H9.5a1 1 0 110-2h2.086L7.793 6.207A1 1 0 016.5 4.5z"/><path d="M13.5 15.5a1 1 0 01-1.707.707L7 11.414V13.5a1 1 0 11-2 0V9a1 1 0 011-1h4.5a1 1 0 110 2H8.414l3.793 3.793A1 1 0 0113.5 15.5z"/></svg>
+              <span data-mirror-label>Mirror on</span>
             </button>
             <button id="burst-btn" class="assist-btn" type="button">
               Cue Me
@@ -123,8 +184,19 @@
             <p class="focus-tag" id="current-focus">Warm the whole body and lift posture</p>
           </div>
 
-          <!-- WebGL animation stage powered by PixiJS -->
-          <div class="animation-stage" id="animation-stage"></div>
+          <!-- WebGL animation stage powered by Three.js -->
+          <div class="animation-stage" id="animation-stage">
+            <div id="advanced-cue" class="advanced-cue" hidden>
+              <span>Morpheus</span>
+              <strong>I'll show you how deep the rabbit hole goes.</strong>
+            </div>
+            <div id="stage-breath-cue" class="stage-breath-cue" hidden aria-live="polite">
+              <b id="stage-breath-arrow" class="stage-breath-arrow" aria-hidden="true">↑</b>
+              <span id="stage-breath-label">Inhale</span>
+              <strong id="stage-breath-count">4s</strong>
+              <small id="stage-breath-direction">Air moves upward</small>
+            </div>
+          </div>
 
           <div id="motivation-burst" class="motivation-burst" aria-live="polite">
             Ready to move
@@ -193,6 +265,18 @@
           <p class="section-label">Technique reminders</p>
           <ul id="note-list" class="note-list"></ul>
         </section>
+      </section>
+
+      <section id="tutorial-panel" class="tutorial-panel card" hidden>
+        <div class="section-head">
+          <div>
+            <p class="section-label" id="tutorial-label">Tutorial</p>
+            <h2 id="tutorial-title">Practice tutorial</h2>
+          </div>
+          <p id="tutorial-kicker" class="total-time">Reference guide</p>
+        </div>
+        <p id="tutorial-summary" class="tutorial-summary"></p>
+        <div id="tutorial-body" class="tutorial-body"></div>
       </section>
     </main>
   </body>

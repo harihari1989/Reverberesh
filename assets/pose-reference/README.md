@@ -8,6 +8,8 @@ Create:
 
 - `assets/pose-reference/exercise/`
 - `assets/pose-reference/yoga/`
+- `assets/pose-reference/yoga/relaxation/`
+- `assets/pose-reference/breath/`
 
 Supported file extensions:
 
@@ -32,11 +34,36 @@ Supported file extensions:
 - `mountain-pose`
 - `sun-reach-flow`
 - `chair-pose`
+- `low-lunge`
 - `warrior-ii`
+- `triangle-pose`
 - `standing-side-stretch`
 - `tree-pose`
+- `warrior-iii-balance`
 - `standing-forward-bend`
+- `wide-leg-forward-fold`
 - `seated-breath-reset`
+
+### Yoga / Relaxation
+
+- `sukhasana-slow-breathing`
+- `balasana-child-pose`
+- `vajrasana`
+- `baddha-konasana-butterfly`
+- `supported-paschimottanasana`
+- `viparita-karani-legs-on-wall`
+- `supported-bridge`
+- `shavasana`
+
+### Breath
+
+- `belly-breath`
+- `box-breath`
+- `box-breath-primer`
+- `classic-box-breathing`
+- `longer-box-breathing`
+- `box-breathing-focus-set`
+- `quiet-integration`
 
 ## Generation rules
 
@@ -51,4 +78,4 @@ Use one consistent character across the whole set:
 - no dramatic perspective distortion
 - consistent clothing across all poses
 
-The per-pose prompts live in `script.js` under `POSE_REFERENCE_IMAGES`.
+For external tutorial media, update `BREATH_TUTORIAL` or `BP_YOGA_TUTORIAL` in `script.js`.
