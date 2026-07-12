@@ -11,8 +11,7 @@
 
     <!-- Three.js for 3D humanoid avatar -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
-
+    <script src="./storage.js" defer></script>
     <script src="./script.js" defer></script>
   </head>
   <body data-track="exercise">
@@ -98,6 +97,21 @@
             </div>
           </div>
 
+          <div id="breath-duration-picker" class="picker-group breath-duration-picker" hidden>
+            <p class="picker-label">Session length</p>
+            <div class="choice-row breath-duration-row" role="group" aria-label="Breathing session length">
+              <button class="choice-btn" type="button" data-breath-minutes="3">3 min</button>
+              <button class="choice-btn is-active" type="button" data-breath-minutes="5">5 min</button>
+              <button class="choice-btn" type="button" data-breath-minutes="10">10 min</button>
+              <button class="choice-btn" type="button" data-breath-minutes="15">15 min</button>
+              <label class="breath-duration-custom">
+                <span>Custom</span>
+                <input id="breath-custom-minutes" type="number" min="2" max="60" step="1" value="5" inputmode="numeric" aria-label="Custom breathing session length in minutes" />
+                <span>min</span>
+              </label>
+            </div>
+          </div>
+
           <p id="session-note" class="session-note">
             Beginner workout keeps the timing simple and leaves a little more room to reset between moves.
           </p>
@@ -166,6 +180,14 @@
             <button id="mirror-guide-btn" class="assist-btn is-active" type="button">
               <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M6.5 4.5a1 1 0 011.707-.707L13 8.586V6.5a1 1 0 112 0V11a1 1 0 01-1 1H9.5a1 1 0 110-2h2.086L7.793 6.207A1 1 0 016.5 4.5z"/><path d="M13.5 15.5a1 1 0 01-1.707.707L7 11.414V13.5a1 1 0 11-2 0V9a1 1 0 011-1h4.5a1 1 0 110 2H8.414l3.793 3.793A1 1 0 0113.5 15.5z"/></svg>
               <span data-mirror-label>Mirror on</span>
+            </button>
+            <button id="camera-coach-btn" class="assist-btn camera-coach-btn" type="button">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6.5 5.5l1-1.5h5l1 1.5H16A2 2 0 0118 7.5v7A2 2 0 0116 16.5H4a2 2 0 01-2-2v-7a2 2 0 012-2h2.5zM10 8a3 3 0 100 6 3 3 0 000-6z"/></svg>
+              <span data-camera-label>Camera coach</span>
+            </button>
+            <button id="exercise-studio-btn" class="assist-btn" type="button">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 3a1 1 0 112 0v6h6a1 1 0 110 2h-6v6a1 1 0 11-2 0v-6H3a1 1 0 110-2h6V3z"/></svg>
+              Add exercise
             </button>
             <button id="burst-btn" class="assist-btn" type="button">
               Cue Me
@@ -247,6 +269,134 @@
             </p>
           </div>
         </aside>
+      </section>
+
+      <section id="camera-coach-panel" class="camera-coach-panel card" hidden aria-labelledby="camera-coach-title">
+        <div class="section-head camera-coach-head">
+          <div>
+            <p class="section-label">Live movement tracking</p>
+            <h2 id="camera-coach-title">Camera Coach</h2>
+          </div>
+          <button id="camera-stop-btn" class="action-btn" type="button">Stop camera</button>
+        </div>
+
+        <div class="camera-coach-grid">
+          <div class="camera-view" id="camera-view">
+            <video id="camera-video" autoplay muted playsinline></video>
+            <canvas id="user-pose-canvas" aria-hidden="true"></canvas>
+            <div class="camera-frame-guide" aria-hidden="true"></div>
+            <div id="camera-loading" class="camera-loading">
+              <span class="camera-pulse"></span>
+              <strong>Starting camera coach</strong>
+              <small>Your video stays on this device.</small>
+            </div>
+            <div id="framing-guidance" class="framing-guidance" data-state="setup" aria-live="polite">
+              <strong id="framing-title">Stand where your full body is visible</strong>
+              <span id="framing-detail">Leave space above your head and below your feet.</span>
+            </div>
+          </div>
+
+          <aside class="camera-stats" aria-label="Live coaching statistics">
+            <div class="camera-score-card">
+              <span>Pose match</span>
+              <strong id="match-score">--</strong>
+              <div class="match-meter"><span id="match-meter-fill"></span></div>
+              <small id="match-label">Waiting for a full-body pose</small>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-tile"><span>Body visible</span><strong id="visibility-score">0%</strong></div>
+              <div class="stat-tile"><span>Matched reps</span><strong id="rep-count">0</strong></div>
+              <div class="stat-tile"><span>Hold time</span><strong id="hold-time">0s</strong></div>
+              <div class="stat-tile"><span>Best match</span><strong id="best-score">0%</strong></div>
+            </div>
+
+            <div class="coach-direction">
+              <p class="section-label">Live adjustment</p>
+              <strong id="coach-direction-title">Get into frame</strong>
+              <p id="coach-direction-copy">The coach will highlight the body area that needs the largest adjustment.</p>
+            </div>
+
+            <div class="camera-privacy">
+              <strong>Private by design</strong>
+              <span>No camera frames or pose landmarks are uploaded. Only session totals are saved.</span>
+            </div>
+          </aside>
+        </div>
+
+        <div class="session-history-block">
+          <div class="section-head compact-head">
+            <div>
+              <p class="section-label">Recent camera sessions</p>
+              <h3>Your progress</h3>
+            </div>
+          </div>
+          <div id="session-history" class="session-history"></div>
+        </div>
+      </section>
+
+      <section id="exercise-studio-panel" class="exercise-studio-panel card" hidden aria-labelledby="exercise-studio-title">
+        <div class="section-head">
+          <div>
+            <p class="section-label">Movement onboarding</p>
+            <h2 id="exercise-studio-title">Exercise Studio</h2>
+          </div>
+          <button id="exercise-studio-close-btn" class="action-btn" type="button">Close</button>
+        </div>
+        <p class="studio-intro">Define the movement, choose the closest avatar motion, and add clear coaching cues. Saved exercises appear at the end of their matching track.</p>
+
+        <div class="exercise-studio-grid">
+          <form id="exercise-form" class="exercise-form">
+            <div class="form-section">
+              <span class="form-step">1</span>
+              <div>
+                <h3>Name the exercise</h3>
+                <p>Use a short name people can recognize while moving.</p>
+              </div>
+            </div>
+            <div class="form-grid two-column">
+              <label>Exercise name<input id="exercise-name" name="name" required maxlength="60" placeholder="Example: Supported Side Lunge" /></label>
+              <label>Track<select id="exercise-track" name="track"><option value="exercise">Workout</option><option value="yoga">Yoga</option><option value="dance">Dance</option><option value="breath">Breathing</option></select></label>
+              <label>Level<select id="exercise-level" name="level"><option value="both">Beginner + Advanced</option><option value="beginner">Beginner</option><option value="advanced">Advanced</option></select></label>
+              <label>Duration (seconds)<input id="exercise-duration" name="duration" type="number" min="10" max="600" value="30" required /></label>
+            </div>
+
+            <div class="form-section">
+              <span class="form-step">2</span>
+              <div>
+                <h3>Define the movement</h3>
+                <p>Choose a visual base and describe what the user should do.</p>
+              </div>
+            </div>
+            <div class="form-grid">
+              <label>Closest avatar movement<select id="exercise-animation" name="animation"></select></label>
+              <label>Training focus<input id="exercise-focus" name="focus" required maxlength="100" placeholder="Balance, hip mobility, shoulder control..." /></label>
+              <label>Movement summary<textarea id="exercise-summary" name="summary" required rows="2" maxlength="240" placeholder="Describe the movement in one clear sentence."></textarea></label>
+              <label>How to move<textarea id="exercise-instructions" name="instructions" required rows="4" placeholder="One instruction per line"></textarea></label>
+              <label>Coach cues<textarea id="exercise-cues" name="cues" required rows="3" placeholder="One short cue per line"></textarea></label>
+            </div>
+
+            <div class="form-actions">
+              <button class="action-btn action-btn-primary" type="submit">Save exercise</button>
+              <button id="exercise-form-reset-btn" class="action-btn" type="reset">Clear</button>
+              <span id="exercise-save-status" class="form-status" aria-live="polite"></span>
+            </div>
+          </form>
+
+          <aside class="exercise-library">
+            <div class="section-head compact-head">
+              <div>
+                <p class="section-label">Saved movements</p>
+                <h3>Custom library</h3>
+              </div>
+            </div>
+            <div id="custom-exercise-list" class="custom-exercise-list"></div>
+            <div class="storage-note">
+              <strong>Stored in this browser</strong>
+              <span>Reverberesh uses IndexedDB, a free browser database. Camera images are never stored.</span>
+            </div>
+          </aside>
+        </div>
       </section>
 
       <section class="bottom-grid">

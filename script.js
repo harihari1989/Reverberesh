@@ -239,7 +239,36 @@ function buildExerciseRoutine(level) {
   ];
 }
 
-function buildBreathingRoutine(level, optionKey = "classic") {
+function fitBreathingRoutineDuration(steps, minutes = 5) {
+  const safeMinutes = Math.max(2, Math.min(60, Math.round(Number(minutes) || 5)));
+  const targetSeconds = safeMinutes * 60;
+  const originalTotal = steps.reduce((sum, item) => sum + item.duration, 0) || targetSeconds;
+  const cycles = steps.map(item => Math.max(1, item.breathPattern?.reduce((sum, phaseItem) => sum + phaseItem.duration, 0) || 1));
+  const ideals = steps.map(item => targetSeconds * (item.duration / originalTotal));
+
+  let states = new Map([[0, { cost: 0, counts: [] }]]);
+  steps.forEach((item, index) => {
+    const cycle = cycles[index];
+    const nextStates = new Map();
+    states.forEach((entry, usedSeconds) => {
+      for (let count = 1; usedSeconds + count * cycle <= targetSeconds; count++) {
+        const duration = count * cycle;
+        const total = usedSeconds + duration;
+        const cost = entry.cost + Math.pow(duration - ideals[index], 2);
+        const existing = nextStates.get(total);
+        if (!existing || cost < existing.cost) nextStates.set(total, { cost, counts: [...entry.counts, count] });
+      }
+    });
+    states = nextStates;
+  });
+
+  const exact = states.get(targetSeconds);
+  const fallbackSeconds = Math.max(...states.keys());
+  const allocation = exact || states.get(fallbackSeconds);
+  return steps.map((item, index) => ({ ...item, duration: allocation.counts[index] * cycles[index] }));
+}
+
+function buildBreathingRoutine(level, optionKey = "classic", sessionMinutes = 5) {
   const adv = level === "advanced";
   const option = selectedBreathOption(optionKey);
   const easy = selectedBreathOption("easy");
@@ -249,22 +278,22 @@ function buildBreathingRoutine(level, optionKey = "classic") {
   const natural = breathPattern([4, 4, 4, 4]);
 
   if (adv) {
-    return [
+    return fitBreathingRoutineDuration([
       move({ name: "Arrow Breathing Setup", duration: 64, target: "4 / 4 / 4 / 4", animation: "belly-breath", focus: "Watch the arrow cue on the pose", summary: "The cue box sits on Reverberesh's breathing pose and shows airflow direction with arrows.", instructions: ["Inhale with the upward arrow.", "Hold softly with no arrow movement.", "Exhale with the downward arrow, then hold softly again."], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 3.0, breathPattern: natural, boxGuide: true }),
       boxStep({ name: `${option.label} Box Breathing`, counts: selectedCounts, cycles: 5, focus: "Inhale, hold, exhale, hold", summary: `Use the ${option.target} timing option while the cue box on the pose moves through the four-part pattern.`, instructions: [`Inhale for ${selectedCounts[0]} seconds with the upward arrow.`, `Hold softly for ${selectedCounts[1]} seconds.`, `Exhale for ${selectedCounts[2]} seconds with the downward arrow, then hold for ${selectedCounts[3]} seconds.`], cues: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow.", "Hold softly."] }),
       boxStep({ name: "Advanced Hold Box", counts: holdCounts, cycles: 5, focus: "Longer holds with clear inhale and exhale", summary: "Lengthen both holds while keeping the inhale and exhale smooth and unforced.", instructions: [`Inhale for ${holdCounts[0]} seconds.`, `Hold softly for ${holdCounts[1]} seconds.`, `Exhale for ${holdCounts[2]} seconds, then hold for ${holdCounts[3]} seconds.`], cues: ["Inhale.", "Hold without bracing.", "Exhale.", "Hold softly."], period: 2.7 }),
       boxStep({ name: "Endurance Box Breathing", counts: enduranceCounts, cycles: 4, focus: "Longer equal sides", summary: "Practice a longer equal-sided box only while the breath stays calm and controlled.", instructions: [`Inhale for ${enduranceCounts[0]} seconds without filling to maximum.`, `Hold for ${enduranceCounts[1]} seconds with a relaxed face.`, `Exhale for ${enduranceCounts[2]} seconds, then hold for ${enduranceCounts[3]} seconds.`], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."] }),
       move({ name: "Quiet Box Breathing", duration: 64, target: "4 / 4 / 4 / 4", animation: "box-breath", focus: "Return to a calm four-part pattern", summary: "Stay with the pose, arrows, and soft holds as the practice finishes.", instructions: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow, then hold softly again."], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 3.0, breathPattern: natural, boxGuide: true }),
-    ];
+    ], sessionMinutes);
   }
 
-  return [
+  return fitBreathingRoutineDuration([
     move({ name: "Arrow Breathing Setup", duration: 48, target: "4 / 4 / 4 / 4", animation: "belly-breath", focus: "Watch the arrow cue on the pose", summary: "The cue box sits on Reverberesh's breathing pose and shows airflow direction with arrows.", instructions: ["Inhale with the upward arrow.", "Hold softly with no arrow movement.", "Exhale with the downward arrow, then hold softly again."], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 3.0, breathPattern: natural, boxGuide: true }),
     boxStep({ name: "Easy Box Breathing", counts: easy.counts, cycles: 6, focus: "Learn inhale, hold, exhale, hold", summary: "Use a short three-count box so the four-part pattern is obvious.", instructions: ["Inhale for 3 seconds with the upward arrow.", "Hold softly for 3 seconds.", "Exhale for 3 seconds with the downward arrow, then hold for 3 seconds."], cues: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow.", "Hold softly."] }),
     boxStep({ name: `${option.label} Box Breathing`, counts: selectedCounts, cycles: 6, focus: "Use your selected timing option", summary: `Practice the ${option.target} timing option: ${option.note}`, instructions: [`Inhale for ${selectedCounts[0]} seconds.`, `Hold for ${selectedCounts[1]} seconds.`, `Exhale for ${selectedCounts[2]} seconds, then hold for ${selectedCounts[3]} seconds.`], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."] }),
     boxStep({ name: "Repeat Box Breathing", counts: selectedCounts, cycles: 6, focus: "Repeat the same four-part cue", summary: "Stay with the same timing while the box near Reverberesh tells you inhale, hold, exhale, hold.", instructions: [`Inhale smoothly for ${selectedCounts[0]} seconds.`, `Hold softly for ${selectedCounts[1]} seconds.`, `Exhale evenly for ${selectedCounts[2]} seconds, then hold for ${selectedCounts[3]} seconds.`], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 2.7 }),
     move({ name: "Quiet Box Breathing", duration: 48, target: "4 / 4 / 4 / 4", animation: "box-breath", focus: "Return to a calm four-part pattern", summary: "Let the counts fade but keep watching the cue box and airflow arrows.", instructions: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow, then hold softly again."], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 3.0, breathPattern: natural, boxGuide: true }),
-  ];
+  ], sessionMinutes);
 }
 
 function buildYogaRoutine(level) {
@@ -323,10 +352,20 @@ function buildDanceRoutine(level) {
 }
 
 function buildRoutine(t, l) {
-  if (t === "yoga") return buildYogaRoutine(l);
-  if (t === "dance") return buildDanceRoutine(l);
-  if (t === "breath") return buildBreathingRoutine(l, state?.breathOption);
-  return buildExerciseRoutine(l);
+  let built;
+  if (t === "yoga") built = buildYogaRoutine(l);
+  else if (t === "dance") built = buildDanceRoutine(l);
+  else if (t === "breath") built = buildBreathingRoutine(l, state?.breathOption, state?.breathMinutes);
+  else built = buildExerciseRoutine(l);
+  const custom = (state?.customExercises || [])
+    .filter(item => item.track === t && (item.level === "both" || item.level === l))
+    .map(item => move({
+      ...item,
+      target: `${item.duration} sec ${DYNAMIC_ANIMS?.has?.(item.animation) ? "pace" : "practice"}`,
+      period: item.period || 2,
+      isCustom: true,
+    }));
+  return [...built, ...custom];
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -903,8 +942,11 @@ const BODY = {
   footL: 1.1, footH: 0.22, footW: 0.38,
 };
 
-const MEDIAPIPE_WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm";
+const MEDIAPIPE_VERSION = "0.10.22-rc.20250304";
+const MEDIAPIPE_MODULE_URL = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_VERSION}/+esm`;
+const MEDIAPIPE_WASM_URL = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_VERSION}/wasm`;
 const MEDIAPIPE_POSE_MODEL_URL = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
+let mediaPipeModule = null;
 const POSE_IDX = {
   nose: 0, leftEar: 7, rightEar: 8,
   leftShoulder: 11, rightShoulder: 12,
@@ -992,15 +1034,11 @@ function resizePoseOverlay(width, height) {
 
 async function initNeuralPose() {
   if (neuralPose.ready || neuralPose.loading || neuralPose.failed) return;
-  if (typeof FilesetResolver === "undefined" || typeof PoseLandmarker === "undefined") {
-    neuralPose.failed = true;
-    setPoseOverlayStatus("AI pose guide unavailable", "offline");
-    return;
-  }
-
   neuralPose.loading = true;
   setPoseOverlayStatus("AI pose guide loading", "loading");
   try {
+    mediaPipeModule ||= await import(MEDIAPIPE_MODULE_URL);
+    const { FilesetResolver, PoseLandmarker } = mediaPipeModule;
     const vision = await FilesetResolver.forVisionTasks(MEDIAPIPE_WASM_URL);
     neuralPose.landmarker = await PoseLandmarker.createFromOptions(vision, {
       baseOptions: { modelAssetPath: MEDIAPIPE_POSE_MODEL_URL },
@@ -1023,6 +1061,7 @@ async function initNeuralPose() {
 
 function updateNeuralPose(nowMs) {
   if (state?.track === "breath") return;
+  if (cameraCoach.active) return;
   if (!state?.neuralPoseEnabled || !neuralPose.ready || !neuralPose.landmarker || !renderer3d) return;
   if (nowMs - neuralPose.lastDetectAt < neuralPose.detectEveryMs) return;
   neuralPose.lastDetectAt = nowMs;
@@ -1269,6 +1308,240 @@ function drawNeuralPose() {
   [leftToe, rightToe].forEach(p => drawJoint(ctx, p, 3.5, palette.accent));
   drawFootDirection(ctx, leftHeel || leftAnkle, leftToe, palette.accent);
   drawFootDirection(ctx, rightHeel || rightAnkle, rightToe, palette.accent);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CAMERA COACH — local video pose matching
+// ═══════════════════════════════════════════════════════════
+
+const CAMERA_SEGMENTS = [
+  ["leftShoulder", "rightShoulder"], ["leftShoulder", "leftElbow"], ["leftElbow", "leftWrist"],
+  ["rightShoulder", "rightElbow"], ["rightElbow", "rightWrist"], ["leftShoulder", "leftHip"],
+  ["rightShoulder", "rightHip"], ["leftHip", "rightHip"], ["leftHip", "leftKnee"],
+  ["leftKnee", "leftAnkle"], ["rightHip", "rightKnee"], ["rightKnee", "rightAnkle"],
+];
+const CAMERA_KEY_JOINTS = ["nose", "leftShoulder", "rightShoulder", "leftHip", "rightHip", "leftKnee", "rightKnee", "leftAnkle", "rightAnkle"];
+const CAMERA_ANGLE_METRICS = [
+  { label: "left elbow", points: ["leftShoulder", "leftElbow", "leftWrist"] },
+  { label: "right elbow", points: ["rightShoulder", "rightElbow", "rightWrist"] },
+  { label: "left shoulder", points: ["leftElbow", "leftShoulder", "leftHip"] },
+  { label: "right shoulder", points: ["rightElbow", "rightShoulder", "rightHip"] },
+  { label: "left hip", points: ["leftShoulder", "leftHip", "leftKnee"] },
+  { label: "right hip", points: ["rightShoulder", "rightHip", "rightKnee"] },
+  { label: "left knee", points: ["leftHip", "leftKnee", "leftAnkle"] },
+  { label: "right knee", points: ["rightHip", "rightKnee", "rightAnkle"] },
+];
+
+const cameraCoach = {
+  active: false,
+  stream: null,
+  lastDetectAt: 0,
+  detectEveryMs: 90,
+  lastFrameAt: 0,
+  smoothedScore: 0,
+  bestScore: 0,
+  scoreTotal: 0,
+  sampleCount: 0,
+  reps: 0,
+  holdMs: 0,
+  repArmed: true,
+  lastCue: "",
+  lastCueAt: 0,
+  startedAt: 0,
+};
+
+function cameraPoint(landmarks, name) {
+  const point = landmarks?.[POSE_IDX[name]];
+  if (!point) return null;
+  return { x: point.x, y: point.y, score: scorePoint(point) };
+}
+
+function avatarReferencePoints() {
+  if (!neuralPose.cssWidth || !neuralPose.cssHeight) return null;
+  const projected = {
+    leftShoulder: projectFromObject(bones.lArm),
+    rightShoulder: projectFromObject(bones.rArm),
+    leftElbow: projectFromObject(bones.lElbow),
+    rightElbow: projectFromObject(bones.rElbow),
+    leftWrist: projectFromObject(bones.lElbow, 0, -BODY.lArmL - 0.15, 0),
+    rightWrist: projectFromObject(bones.rElbow, 0, -BODY.lArmL - 0.15, 0),
+    leftHip: projectFromObject(bones.root, BODY.hipW / 2, 0, 0),
+    rightHip: projectFromObject(bones.root, -BODY.hipW / 2, 0, 0),
+    leftKnee: projectFromObject(bones.lKnee),
+    rightKnee: projectFromObject(bones.rKnee),
+    leftAnkle: projectFromObject(bones.lFoot),
+    rightAnkle: projectFromObject(bones.rFoot),
+  };
+  return Object.fromEntries(Object.entries(projected).map(([name, point]) => [name, point ? {
+    x: point.x / neuralPose.cssWidth,
+    y: point.y / neuralPose.cssHeight,
+    score: 1,
+  } : null]));
+}
+
+function jointAngle(a, b, c) {
+  if (!a || !b || !c) return null;
+  const abx = a.x - b.x, aby = a.y - b.y;
+  const cbx = c.x - b.x, cby = c.y - b.y;
+  const denom = Math.hypot(abx, aby) * Math.hypot(cbx, cby);
+  if (!denom) return null;
+  return Math.acos(Math.max(-1, Math.min(1, (abx * cbx + aby * cby) / denom))) / DEG;
+}
+
+function scorePoseMatch(landmarks) {
+  const user = {};
+  Object.keys(POSE_IDX).forEach(name => { user[name] = cameraPoint(landmarks, name); });
+  const reference = avatarReferencePoints();
+  if (!reference) return null;
+
+  const comparisons = CAMERA_ANGLE_METRICS.map(metric => {
+    const [a, b, c] = metric.points;
+    if ((user[a]?.score || 0) < 0.35 || (user[b]?.score || 0) < 0.35 || (user[c]?.score || 0) < 0.35) return null;
+    const userAngle = jointAngle(user[a], user[b], user[c]);
+    const targetAngle = jointAngle(reference[a], reference[b], reference[c]);
+    if (!Number.isFinite(userAngle) || !Number.isFinite(targetAngle)) return null;
+    const difference = Math.abs(userAngle - targetAngle);
+    return { ...metric, difference, score: Math.max(0, 100 - difference * 1.35) };
+  }).filter(Boolean);
+
+  if (comparisons.length < 4) return null;
+  const score = comparisons.reduce((sum, item) => sum + item.score, 0) / comparisons.length;
+  const weakest = comparisons.reduce((worst, item) => item.score < worst.score ? item : worst, comparisons[0]);
+  return { score, weakest, comparisons };
+}
+
+function framingResult(landmarks) {
+  const points = CAMERA_KEY_JOINTS.map(name => cameraPoint(landmarks, name)).filter(Boolean);
+  const visible = points.filter(point => point.score >= 0.5);
+  const visibility = Math.round((visible.length / CAMERA_KEY_JOINTS.length) * 100);
+  const noseVisible = (cameraPoint(landmarks, "nose")?.score || 0) >= 0.5;
+  const anklesVisible = ["leftAnkle", "rightAnkle"].every(name => (cameraPoint(landmarks, name)?.score || 0) >= 0.45);
+  if (visible.length < 5) return { ready: false, visibility, title: "Step into the camera view", detail: "Face the camera and make sure the room is well lit." };
+
+  const minX = Math.min(...visible.map(p => p.x));
+  const maxX = Math.max(...visible.map(p => p.x));
+  const minY = Math.min(...visible.map(p => p.y));
+  const maxY = Math.max(...visible.map(p => p.y));
+  const height = maxY - minY;
+  const centerX = (minX + maxX) / 2;
+  if (!noseVisible || !anklesVisible || height > 0.94) return { ready: false, visibility, title: "Move farther from the camera", detail: "Keep your head, hands, knees, and feet inside the frame." };
+  if (height < 0.48) return { ready: false, visibility, title: "Move a little closer", detail: "Come closer while keeping your whole body visible." };
+  if (centerX < 0.34 || centerX > 0.66) return { ready: false, visibility, title: "Reposition toward the center", detail: "Center your hips inside the body outline." };
+  return { ready: true, visibility, title: "Full body visible", detail: "Copy the AI pose and follow the live adjustment cue." };
+}
+
+function drawCameraSkeleton(landmarks, matchScore = 0) {
+  const canvas = el.userPoseCanvas;
+  const video = el.cameraVideo;
+  if (!canvas || !video.videoWidth) return;
+  if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+  }
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const color = matchScore >= 80 ? "#3dd9c4" : matchScore >= 60 ? "#fbbf24" : "#fb7185";
+  ctx.lineWidth = Math.max(4, canvas.width / 180);
+  ctx.lineCap = "round";
+  ctx.strokeStyle = color;
+  ctx.shadowBlur = 14;
+  ctx.shadowColor = color;
+  CAMERA_SEGMENTS.forEach(([from, to]) => {
+    const a = cameraPoint(landmarks, from), b = cameraPoint(landmarks, to);
+    if (!a || !b || a.score < 0.35 || b.score < 0.35) return;
+    ctx.beginPath();
+    ctx.moveTo(a.x * canvas.width, a.y * canvas.height);
+    ctx.lineTo(b.x * canvas.width, b.y * canvas.height);
+    ctx.stroke();
+  });
+  ctx.shadowBlur = 0;
+  Object.keys(POSE_IDX).filter(name => name !== "nose" && cameraPoint(landmarks, name)?.score >= 0.45).forEach(name => {
+    const point = cameraPoint(landmarks, name);
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(point.x * canvas.width, point.y * canvas.height, Math.max(4, canvas.width / 220), 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function setCameraGuidance(framing, match) {
+  const ready = framing.ready && match;
+  el.framingGuidance.dataset.state = ready ? "ready" : "adjust";
+  el.framingTitle.textContent = framing.title;
+  el.framingDetail.textContent = framing.detail;
+  if (!ready) {
+    el.coachDirectionTitle.textContent = framing.title;
+    el.coachDirectionCopy.textContent = framing.detail;
+    announceCameraCue(framing.title);
+    return;
+  }
+
+  if (match.score >= 85) {
+    el.coachDirectionTitle.textContent = "Strong match";
+    el.coachDirectionCopy.textContent = "Hold this alignment and keep breathing naturally.";
+  } else {
+    el.coachDirectionTitle.textContent = `Adjust your ${match.weakest.label}`;
+    el.coachDirectionCopy.textContent = `Bring the ${match.weakest.label} closer to the AI guide. Make a small change, then settle.`;
+  }
+}
+
+function announceCameraCue(cue) {
+  const now = performance.now();
+  if (cue === cameraCoach.lastCue && now - cameraCoach.lastCueAt < 7000) return;
+  cameraCoach.lastCue = cue;
+  cameraCoach.lastCueAt = now;
+  speak(cue);
+}
+
+function renderCameraStats(visibility, match) {
+  const score = match ? Math.round(cameraCoach.smoothedScore) : 0;
+  el.matchScore.textContent = match ? `${score}%` : "--";
+  el.matchMeterFill.style.width = `${score}%`;
+  el.visibilityScore.textContent = `${visibility}%`;
+  el.repCount.textContent = String(cameraCoach.reps);
+  el.holdTime.textContent = `${Math.floor(cameraCoach.holdMs / 1000)}s`;
+  el.bestScore.textContent = `${Math.round(cameraCoach.bestScore)}%`;
+  el.matchLabel.textContent = !match ? "Waiting for a full-body pose" : score >= 85 ? "Excellent alignment" : score >= 70 ? "Close match" : "Keep adjusting";
+}
+
+function updateMovementStats(score, nowMs) {
+  const delta = cameraCoach.lastFrameAt ? Math.min(250, nowMs - cameraCoach.lastFrameAt) : 0;
+  cameraCoach.lastFrameAt = nowMs;
+  cameraCoach.smoothedScore = cameraCoach.sampleCount ? cameraCoach.smoothedScore * 0.78 + score * 0.22 : score;
+  cameraCoach.bestScore = Math.max(cameraCoach.bestScore, score);
+  cameraCoach.scoreTotal += score;
+  cameraCoach.sampleCount++;
+  if (score >= 78) cameraCoach.holdMs += delta;
+
+  const isDynamic = DYNAMIC_ANIMS.has(step()?.animation);
+  if (isDynamic && score < 62) cameraCoach.repArmed = true;
+  if (isDynamic && score >= 80 && cameraCoach.repArmed) {
+    cameraCoach.reps++;
+    cameraCoach.repArmed = false;
+  }
+}
+
+function updateCameraCoach(nowMs) {
+  if (!cameraCoach.active || !neuralPose.ready || !el.cameraVideo || el.cameraVideo.readyState < 2) return;
+  if (nowMs - cameraCoach.lastDetectAt < cameraCoach.detectEveryMs) return;
+  cameraCoach.lastDetectAt = nowMs;
+  try {
+    const result = neuralPose.landmarker.detectForVideo(el.cameraVideo, nowMs);
+    const landmarks = result?.landmarks?.[0];
+    if (!landmarks) {
+      renderCameraStats(0, null);
+      setCameraGuidance({ ready: false, title: "Step into the camera view", detail: "Face the camera so the coach can find your full body." }, null);
+      return;
+    }
+    const framing = framingResult(landmarks);
+    const match = framing.ready ? scorePoseMatch(landmarks) : null;
+    if (match) updateMovementStats(match.score, nowMs);
+    drawCameraSkeleton(landmarks, match?.score || 0);
+    setCameraGuidance(framing, match);
+    renderCameraStats(framing.visibility, match);
+  } catch (error) {
+    console.warn("Camera coach detection failed.", error);
+  }
 }
 
 function mat(color, rough = 0.65) {
@@ -1811,6 +2084,7 @@ function setupScene() {
 
     renderer3d.render(scene, camera);
     updateNeuralPose(now);
+    updateCameraCoach(now);
     drawNeuralPose();
   }
 
@@ -1993,7 +2267,7 @@ function speak(text) {
 //  APP STATE + UI
 // ═══════════════════════════════════════════════════════════
 
-const state = { track: "exercise", level: "beginner", yogaSection: "flow", breathOption: "classic", routine: [], stepIndex: 0, remaining: 0, running: false, tickId: null, cueId: null, cueIndex: 0, voiceEnabled: true, neuralPoseEnabled: true, mirrorGuideEnabled: true, hasUserInteracted: false };
+const state = { track: "exercise", level: "beginner", yogaSection: "flow", breathOption: "classic", breathMinutes: 5, routine: [], customExercises: [], stepIndex: 0, remaining: 0, running: false, tickId: null, cueId: null, cueIndex: 0, voiceEnabled: true, neuralPoseEnabled: true, mirrorGuideEnabled: true, cameraCoachEnabled: false, hasUserInteracted: false };
 state.routine = buildRoutine(state.track, state.level);
 
 const $ = id => document.getElementById(id);
@@ -2008,6 +2282,8 @@ const el = {
   yogaSectionFlowBtn: $("yoga-section-flow-btn"),
   yogaSectionRelaxBtn: $("yoga-section-relax-btn"),
   breathOptionPicker: $("breath-option-picker"),
+  breathDurationPicker: $("breath-duration-picker"),
+  breathCustomMinutes: $("breath-custom-minutes"),
   timerRing: $("timer-ring"),
   remainingTime: $("remaining-time"), stepCount: $("step-count"),
   stepType: $("step-type"), stepTarget: $("step-target"), breathPhase: $("breath-phase"),
@@ -2017,7 +2293,8 @@ const el = {
   startBtn: $("start-btn"), pauseBtn: $("pause-btn"),
   nextBtn: $("next-btn"), restartBtn: $("restart-btn"),
   voiceBtn: $("voice-btn"), neuralPoseBtn: $("neural-pose-btn"),
-  mirrorGuideBtn: $("mirror-guide-btn"), burstBtn: $("burst-btn"),
+  mirrorGuideBtn: $("mirror-guide-btn"), cameraCoachBtn: $("camera-coach-btn"),
+  exerciseStudioBtn: $("exercise-studio-btn"), burstBtn: $("burst-btn"),
   currentName: $("current-name"), currentFocus: $("current-focus"),
   currentSummary: $("current-summary"), coachCue: $("coach-cue"),
   instructionList: $("instruction-list"), upNext: $("up-next"),
@@ -2035,11 +2312,24 @@ const el = {
   tutorialPanel: $("tutorial-panel"), tutorialLabel: $("tutorial-label"),
   tutorialTitle: $("tutorial-title"), tutorialKicker: $("tutorial-kicker"),
   tutorialSummary: $("tutorial-summary"), tutorialBody: $("tutorial-body"),
+  cameraCoachPanel: $("camera-coach-panel"), cameraStopBtn: $("camera-stop-btn"),
+  cameraVideo: $("camera-video"), userPoseCanvas: $("user-pose-canvas"),
+  cameraLoading: $("camera-loading"), framingGuidance: $("framing-guidance"),
+  framingTitle: $("framing-title"), framingDetail: $("framing-detail"),
+  matchScore: $("match-score"), matchMeterFill: $("match-meter-fill"), matchLabel: $("match-label"),
+  visibilityScore: $("visibility-score"), repCount: $("rep-count"), holdTime: $("hold-time"), bestScore: $("best-score"),
+  coachDirectionTitle: $("coach-direction-title"), coachDirectionCopy: $("coach-direction-copy"),
+  sessionHistory: $("session-history"),
+  exerciseStudioPanel: $("exercise-studio-panel"), exerciseStudioCloseBtn: $("exercise-studio-close-btn"),
+  exerciseForm: $("exercise-form"), exerciseAnimation: $("exercise-animation"),
+  exerciseSaveStatus: $("exercise-save-status"), customExerciseList: $("custom-exercise-list"),
 };
 el.voiceBtnLabel = el.voiceBtn ? el.voiceBtn.querySelector("[data-label]") : null;
 el.neuralPoseBtnLabel = el.neuralPoseBtn ? el.neuralPoseBtn.querySelector("[data-neural-label]") : null;
 el.mirrorGuideBtnLabel = el.mirrorGuideBtn ? el.mirrorGuideBtn.querySelector("[data-mirror-label]") : null;
+el.cameraCoachBtnLabel = el.cameraCoachBtn ? el.cameraCoachBtn.querySelector("[data-camera-label]") : null;
 el.breathOptionBtns = Array.from(document.querySelectorAll("[data-breath-option]"));
+el.breathDurationBtns = Array.from(document.querySelectorAll("[data-breath-minutes]"));
 el.breathBoxSides = Array.from(document.querySelectorAll("[data-box-side]"));
 
 function cfg() {
@@ -2064,6 +2354,209 @@ function rndPrompt() { const p = cfg().prompts; return p[Math.floor(Math.random(
 function showBurst(text) {
   el.motivationBurst.textContent = text;
   el.motivationBurst.animate([{ opacity: 0.2, transform: "translateY(12px) scale(0.94)" }, { opacity: 1, transform: "translateY(0) scale(1)" }], { duration: 360, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" });
+}
+
+function resetCameraStats() {
+  Object.assign(cameraCoach, {
+    lastDetectAt: 0,
+    lastFrameAt: 0,
+    smoothedScore: 0,
+    bestScore: 0,
+    scoreTotal: 0,
+    sampleCount: 0,
+    reps: 0,
+    holdMs: 0,
+    repArmed: true,
+    lastCue: "",
+    lastCueAt: 0,
+    startedAt: performance.now(),
+  });
+  renderCameraStats(0, null);
+}
+
+async function renderSessionHistory() {
+  if (!el.sessionHistory) return;
+  const sessions = await window.ReverbereshStore?.listSessions?.(8) || [];
+  el.sessionHistory.innerHTML = "";
+  if (!sessions.length) {
+    const empty = appendText(document.createElement("p"), "Completed camera sessions will appear here.");
+    empty.className = "history-empty";
+    el.sessionHistory.appendChild(empty);
+    return;
+  }
+  sessions.forEach(session => {
+    const item = document.createElement("article");
+    item.className = "history-item";
+    item.appendChild(appendText(document.createElement("strong"), session.movement));
+    const score = appendText(document.createElement("span"), `${session.averageScore}% average · ${session.bestScore}% best`);
+    score.className = "history-score";
+    item.appendChild(score);
+    item.appendChild(appendText(document.createElement("span"), `${session.reps} reps · ${session.holdSeconds}s matched hold`));
+    item.appendChild(appendText(document.createElement("span"), new Date(session.completedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })));
+    el.sessionHistory.appendChild(item);
+  });
+}
+
+async function saveCameraSession() {
+  if (cameraCoach.sampleCount < 5 || !window.ReverbereshStore) return;
+  await window.ReverbereshStore.saveSession({
+    movement: step()?.name || "Movement session",
+    track: state.track,
+    level: state.level,
+    averageScore: Math.round(cameraCoach.scoreTotal / cameraCoach.sampleCount),
+    bestScore: Math.round(cameraCoach.bestScore),
+    reps: cameraCoach.reps,
+    holdSeconds: Math.floor(cameraCoach.holdMs / 1000),
+    durationSeconds: Math.max(1, Math.round((performance.now() - cameraCoach.startedAt) / 1000)),
+  });
+}
+
+async function startCameraCoach() {
+  noteInteraction();
+  if (cameraCoach.active) return stopCameraCoach();
+  if (state.track === "breath") {
+    showBurst("Camera coach is for movement tracks");
+    speak("Choose workout, yoga, or dance before starting camera coach.");
+    return;
+  }
+  el.cameraCoachPanel.hidden = false;
+  el.cameraLoading.hidden = false;
+  el.framingGuidance.dataset.state = "setup";
+  el.framingTitle.textContent = "Allow camera access";
+  el.framingDetail.textContent = "Your video stays on this device.";
+  el.cameraCoachPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  try {
+    if (!navigator.mediaDevices?.getUserMedia) throw new Error("Camera access requires HTTPS or localhost.");
+    cameraCoach.stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+    el.cameraVideo.srcObject = cameraCoach.stream;
+    await el.cameraVideo.play();
+    neuralPose.failed = false;
+    await initNeuralPose();
+    if (!neuralPose.ready) throw new Error("The pose model could not start. Check the network connection and reload.");
+
+    neuralPose.result = null;
+    cameraCoach.active = true;
+    state.cameraCoachEnabled = true;
+    resetCameraStats();
+    el.cameraLoading.hidden = true;
+    el.cameraCoachBtn.classList.add("is-active");
+    if (el.cameraCoachBtnLabel) el.cameraCoachBtnLabel.textContent = "Camera coach on";
+    el.framingTitle.textContent = "Stand where your full body is visible";
+    el.framingDetail.textContent = "Leave space above your head and below your feet.";
+    showBurst("Camera coach ready");
+    await renderSessionHistory();
+  } catch (error) {
+    cameraCoach.stream?.getTracks().forEach(track => track.stop());
+    cameraCoach.stream = null;
+    el.cameraLoading.hidden = true;
+    el.framingGuidance.dataset.state = "error";
+    el.framingTitle.textContent = "Camera coach could not start";
+    el.framingDetail.textContent = error?.name === "NotAllowedError" ? "Allow camera access in the browser, then try again." : (error?.message || "Check camera access and try again.");
+    console.warn("Camera coach could not start.", error);
+  }
+}
+
+async function stopCameraCoach({ save = true, hide = true } = {}) {
+  if (save) await saveCameraSession();
+  cameraCoach.active = false;
+  state.cameraCoachEnabled = false;
+  cameraCoach.stream?.getTracks().forEach(track => track.stop());
+  cameraCoach.stream = null;
+  if (el.cameraVideo) el.cameraVideo.srcObject = null;
+  const ctx = el.userPoseCanvas?.getContext("2d");
+  if (ctx) ctx.clearRect(0, 0, el.userPoseCanvas.width, el.userPoseCanvas.height);
+  el.cameraCoachBtn?.classList.remove("is-active");
+  if (el.cameraCoachBtnLabel) el.cameraCoachBtnLabel.textContent = "Camera coach";
+  if (hide && el.cameraCoachPanel) el.cameraCoachPanel.hidden = true;
+  await renderSessionHistory();
+}
+
+function humanizeAnimation(key) {
+  return key.split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+}
+
+function populateAnimationOptions() {
+  if (!el.exerciseAnimation) return;
+  el.exerciseAnimation.innerHTML = "";
+  Object.keys(P).filter(key => key !== "_base").sort().forEach(key => {
+    const option = document.createElement("option");
+    option.value = key;
+    option.textContent = humanizeAnimation(key);
+    el.exerciseAnimation.appendChild(option);
+  });
+}
+
+function renderCustomExerciseList() {
+  if (!el.customExerciseList) return;
+  el.customExerciseList.innerHTML = "";
+  if (!state.customExercises.length) {
+    const empty = appendText(document.createElement("p"), "No custom exercises yet. Define one using the form.");
+    empty.className = "history-empty";
+    el.customExerciseList.appendChild(empty);
+    return;
+  }
+  state.customExercises.forEach(exercise => {
+    const item = document.createElement("article");
+    item.className = "custom-exercise-item";
+    const copy = document.createElement("div");
+    copy.appendChild(appendText(document.createElement("strong"), exercise.name));
+    copy.appendChild(appendText(document.createElement("span"), `${tracks[exercise.track]?.label || exercise.track} · ${exercise.duration}s · ${humanizeAnimation(exercise.animation)}`));
+    const remove = appendText(document.createElement("button"), "×");
+    remove.type = "button";
+    remove.className = "icon-action";
+    remove.title = `Delete ${exercise.name}`;
+    remove.setAttribute("aria-label", `Delete ${exercise.name}`);
+    remove.addEventListener("click", async () => {
+      if (!window.confirm(`Delete ${exercise.name}?`)) return;
+      await window.ReverbereshStore?.deleteExercise?.(exercise.id);
+      state.customExercises = state.customExercises.filter(item => item.id !== exercise.id);
+      renderCustomExerciseList();
+      resetSession(false);
+    });
+    item.append(copy, remove);
+    el.customExerciseList.appendChild(item);
+  });
+}
+
+function openExerciseStudio() {
+  el.exerciseStudioPanel.hidden = false;
+  const trackInput = el.exerciseForm?.elements?.track;
+  if (trackInput) trackInput.value = state.track;
+  if (el.exerciseAnimation && P[step()?.animation]) el.exerciseAnimation.value = step().animation;
+  el.exerciseStudioPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  renderCustomExerciseList();
+}
+
+function closeExerciseStudio() {
+  el.exerciseStudioPanel.hidden = true;
+}
+
+async function saveCustomExercise(event) {
+  event.preventDefault();
+  const formData = new FormData(el.exerciseForm);
+  const lines = value => String(value || "").split("\n").map(line => line.trim()).filter(Boolean);
+  const exercise = {
+    name: String(formData.get("name") || "").trim(),
+    track: String(formData.get("track") || "exercise"),
+    level: String(formData.get("level") || "both"),
+    duration: Math.max(10, Math.min(600, Number(formData.get("duration")) || 30)),
+    animation: String(formData.get("animation") || "rest"),
+    focus: String(formData.get("focus") || "").trim(),
+    summary: String(formData.get("summary") || "").trim(),
+    instructions: lines(formData.get("instructions")),
+    cues: lines(formData.get("cues")),
+  };
+  if (!exercise.name || !exercise.focus || !exercise.summary || !exercise.instructions.length || !exercise.cues.length) return;
+  const saved = await window.ReverbereshStore.saveExercise(exercise);
+  state.customExercises = [saved, ...state.customExercises.filter(item => item.id !== saved.id)];
+  el.exerciseSaveStatus.textContent = `${saved.name} added to ${tracks[saved.track]?.label || saved.track}.`;
+  el.exerciseForm.reset();
+  renderCustomExerciseList();
+  if (saved.track === state.track) resetSession(false);
 }
 
 function activeTutorial() {
@@ -2166,10 +2659,11 @@ function updateHero() {
   document.body.dataset.yogaSection = state.track === "yoga" ? state.yogaSection : "";
   document.body.dataset.mirrorGuide = state.mirrorGuideEnabled ? "on" : "off";
   el.heroTitle.textContent = t.heroTitle; el.heroText.textContent = t.heroText;
-  el.sessionNote.textContent = t.descriptions[state.level]; el.interactiveTip.textContent = t.tip;
+  el.sessionNote.textContent = state.track === "breath" ? `${t.descriptions[state.level]} Session length: ${state.breathMinutes} minutes.` : t.descriptions[state.level]; el.interactiveTip.textContent = t.tip;
   el.burstBtn.textContent = t.burstLabel;
   if (el.yogaSectionPicker) el.yogaSectionPicker.hidden = state.track !== "yoga";
   if (el.breathOptionPicker) el.breathOptionPicker.hidden = state.track !== "breath";
+  if (el.breathDurationPicker) el.breathDurationPicker.hidden = state.track !== "breath";
   el.goalRow.innerHTML = ""; t.goals.forEach(g => { const s = document.createElement("span"); s.className = "goal-pill"; s.textContent = g; el.goalRow.appendChild(s); });
   el.noteList.innerHTML = ""; t.notes.forEach(n => { const li = document.createElement("li"); li.textContent = n; el.noteList.appendChild(li); });
   renderTutorial();
@@ -2197,15 +2691,20 @@ function updateSel() {
   if (el.yogaSectionRelaxBtn) el.yogaSectionRelaxBtn.classList.toggle("is-active", state.yogaSection === "relax");
   if (el.yogaSectionPicker) el.yogaSectionPicker.hidden = state.track !== "yoga";
   if (el.breathOptionPicker) el.breathOptionPicker.hidden = state.track !== "breath";
+  if (el.breathDurationPicker) el.breathDurationPicker.hidden = state.track !== "breath";
   el.breathOptionBtns.forEach(btn => btn.classList.toggle("is-active", btn.dataset.breathOption === state.breathOption));
+  el.breathDurationBtns.forEach(btn => btn.classList.toggle("is-active", Number(btn.dataset.breathMinutes) === state.breathMinutes));
+  if (el.breathCustomMinutes) el.breathCustomMinutes.value = String(state.breathMinutes);
   el.levelBeginnerBtn.classList.toggle("is-active", state.level === "beginner");
   el.levelAdvancedBtn.classList.toggle("is-active", state.level === "advanced");
   el.voiceBtn.classList.toggle("is-active", state.voiceEnabled);
   el.neuralPoseBtn.classList.toggle("is-active", state.neuralPoseEnabled);
   if (el.mirrorGuideBtn) el.mirrorGuideBtn.classList.toggle("is-active", state.mirrorGuideEnabled);
+  if (el.cameraCoachBtn) el.cameraCoachBtn.classList.toggle("is-active", state.cameraCoachEnabled);
   if (el.voiceBtnLabel) el.voiceBtnLabel.textContent = state.voiceEnabled ? "Voice cues on" : "Voice cues off";
   if (el.neuralPoseBtnLabel) el.neuralPoseBtnLabel.textContent = state.neuralPoseEnabled ? "Hide guide lines" : "Show guide lines";
   if (el.mirrorGuideBtnLabel) el.mirrorGuideBtnLabel.textContent = state.mirrorGuideEnabled ? "Mirror on" : "Mirror off";
+  if (el.cameraCoachBtnLabel) el.cameraCoachBtnLabel.textContent = state.cameraCoachEnabled ? "Camera coach on" : "Camera coach";
 }
 
 function buildStepList() {
@@ -2334,7 +2833,13 @@ function renderStep(announce = true) {
 
 function stopTimer() { state.running = false; clearInterval(state.tickId); state.tickId = null; el.startBtn.textContent = "Start"; }
 function resetSession(announce = true) { stopTimer(); state.routine = buildRoutine(state.track, state.level); state.stepIndex = 0; state.remaining = routine()[0].duration; updateHero(); buildStepList(); el.totalTime.textContent = fmtDur(totalTime()); renderStep(announce); }
-function switchTrack(t) { if (t === state.track) return; state.track = t; noteInteraction(); resetSession(true); }
+function switchTrack(t) {
+  if (t === state.track) return;
+  if (t === "breath" && cameraCoach.active) stopCameraCoach();
+  state.track = t;
+  noteInteraction();
+  resetSession(true);
+}
 function triggerAdvancedCue() {
   advancedCue.active = true;
   advancedCue.startedAt = performance.now();
@@ -2371,6 +2876,14 @@ function switchYogaSection(section) {
 function switchBreathOption(key) {
   if (!BREATH_OPTIONS[key] || key === state.breathOption) return;
   state.breathOption = key;
+  if (state.track !== "breath") state.track = "breath";
+  noteInteraction();
+  resetSession(true);
+}
+function switchBreathMinutes(value) {
+  const minutes = Math.max(2, Math.min(60, Math.round(Number(value) || 5)));
+  if (minutes === state.breathMinutes && state.track === "breath") return;
+  state.breathMinutes = minutes;
   if (state.track !== "breath") state.track = "breath";
   noteInteraction();
   resetSession(true);
@@ -2469,31 +2982,44 @@ function bindEvents() {
   el.yogaSectionFlowBtn.addEventListener("click", () => switchYogaSection("flow"));
   el.yogaSectionRelaxBtn.addEventListener("click", () => switchYogaSection("relax"));
   el.breathOptionBtns.forEach(btn => btn.addEventListener("click", () => switchBreathOption(btn.dataset.breathOption)));
+  el.breathDurationBtns.forEach(btn => btn.addEventListener("click", () => switchBreathMinutes(btn.dataset.breathMinutes)));
+  el.breathCustomMinutes.addEventListener("change", () => switchBreathMinutes(el.breathCustomMinutes.value));
   el.startBtn.addEventListener("click", startTimer); el.pauseBtn.addEventListener("click", pauseTimer);
   el.nextBtn.addEventListener("click", () => { noteInteraction(); goNext(); });
   el.restartBtn.addEventListener("click", restartRoutine);
   el.voiceBtn.addEventListener("click", toggleVoice);
   el.neuralPoseBtn.addEventListener("click", toggleNeuralPose);
   el.mirrorGuideBtn.addEventListener("click", toggleMirrorGuide);
+  el.cameraCoachBtn.addEventListener("click", startCameraCoach);
+  el.cameraStopBtn.addEventListener("click", () => stopCameraCoach());
+  el.exerciseStudioBtn.addEventListener("click", openExerciseStudio);
+  el.exerciseStudioCloseBtn.addEventListener("click", closeExerciseStudio);
+  el.exerciseForm.addEventListener("submit", saveCustomExercise);
   el.burstBtn.addEventListener("click", () => { noteInteraction(); const p = rndPrompt(); showBurst(p); speak(p); });
+  window.addEventListener("pagehide", () => {
+    cameraCoach.stream?.getTracks().forEach(track => track.stop());
+  });
 }
 
 // ─── Init ───
 
-function init() {
+async function init() {
   const p = new URLSearchParams(window.location.search);
-  const pt = p.get("track"), pl = p.get("level"), section = p.get("section"), breathOption = p.get("timing") || p.get("breath") || p.get("pattern"), mirror = p.get("mirror"), guide = p.get("guide"), ps = parseInt(p.get("step") || "0", 10);
+  const pt = p.get("track"), pl = p.get("level"), section = p.get("section"), breathOption = p.get("timing") || p.get("breath") || p.get("pattern"), breathMinutes = parseInt(p.get("minutes") || p.get("duration") || "5", 10), mirror = p.get("mirror"), guide = p.get("guide"), ps = parseInt(p.get("step") || "0", 10);
   if (pt === "exercise" || pt === "yoga" || pt === "dance" || pt === "breath") state.track = pt;
   if (pl === "beginner" || pl === "advanced") state.level = pl;
   if (section === "flow" || section === "relax") state.yogaSection = section;
   if (BREATH_OPTIONS[breathOption]) state.breathOption = breathOption;
+  if (Number.isFinite(breathMinutes)) state.breathMinutes = Math.max(2, Math.min(60, breathMinutes));
   if (mirror === "off" || mirror === "false" || mirror === "0") state.mirrorGuideEnabled = false;
   if (mirror === "on" || mirror === "true" || mirror === "1") state.mirrorGuideEnabled = true;
   if (guide === "off" || guide === "false" || guide === "0") state.neuralPoseEnabled = false;
   if (guide === "on" || guide === "true" || guide === "1") state.neuralPoseEnabled = true;
+  state.customExercises = await window.ReverbereshStore?.listExercises?.() || [];
   state.routine = buildRoutine(state.track, state.level);
   state.stepIndex = Math.min(Math.max(0, Number.isFinite(ps) ? ps : 0), Math.max(0, state.routine.length - 1));
   state.remaining = routine()[state.stepIndex].duration;
+  populateAnimationOptions(); renderCustomExerciseList(); renderSessionHistory();
   updateHero(); buildStepList(); el.totalTime.textContent = fmtDur(totalTime());
   bindEvents(); renderStep(false); setupScene();
 }

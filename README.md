@@ -15,6 +15,10 @@ Reverberesh is a browser-based movement coach that combines a guided session UI 
 - Drives the session from structured routine data in `script.js`
 - Uses the Web Speech API for spoken cues
 - Can enable an optional MediaPipe pose overlay on top of the 3D stage
+- Adds an opt-in Camera Coach that tracks a user's full-body pose locally, compares joint angles with the current AI pose, and reports live match, visibility, rep, hold, and best-score stats
+- Gives camera repositioning guidance when the head, feet, or key joints are outside the frame, or when the user is too near, too far, or off-center
+- Adds an Exercise Studio for defining custom movements, selecting an avatar motion, writing instructions and cues, and appending saved exercises to a matching track
+- Stores custom exercises and aggregate camera-session history in IndexedDB with a local-storage fallback
 - Accepts URL parameters for deep-linking into a specific track, level, yoga section, and step
 
 ## Stack
@@ -25,6 +29,8 @@ Reverberesh is a browser-based movement coach that combines a guided session UI 
 - `Three.js`: 3D avatar, camera, lighting, and render loop
 - `MediaPipe Tasks Vision`: optional pose landmark detection and neural overlay
 - `Web Speech API`: voice guidance
+- `MediaDevices API`: opt-in local camera stream
+- `IndexedDB`: custom exercise and aggregate session-stat persistence
 
 ## File Structure
 
@@ -32,6 +38,7 @@ Reverberesh is a browser-based movement coach that combines a guided session UI 
 .
 |-- index.html
 |-- styles.css
+|-- storage.js
 |-- script.js
 `-- assets/
     `-- pose-reference/
@@ -82,6 +89,31 @@ The page loads external runtime dependencies directly from CDNs:
 - `vision_bundle.js` from MediaPipe Tasks Vision
 
 There is no bundler or module loader. `script.js` runs as a single deferred script.
+
+### Camera Coach
+
+Camera Coach is off by default and starts only after a user action. It requests the browser camera, runs MediaPipe Pose Landmarker against the local video stream, and compares the user's visible joint angles with the projected AI avatar joints for the current movement.
+
+The camera workspace reports:
+
+- full-body visibility and framing readiness
+- live pose-match percentage and best score
+- matched hold time for controlled poses
+- matched rep count for dynamic movements
+- the joint area with the largest alignment difference
+- repositioning guidance when the user is too near, too far, off-center, or partially outside the frame
+
+Camera frames and raw landmarks are not uploaded or saved. Only aggregate session totals are written to the local database.
+
+Camera access requires `https://` in production or `localhost` during development.
+
+### Exercise Studio And Storage
+
+Exercise Studio lets users define a movement name, track, level, duration, closest avatar animation, training focus, instructions, and short coaching cues. Saved movements are appended to the appropriate built-in routine.
+
+The default database is IndexedDB because Reverberesh is deployable as a static GitHub Pages site and should work without account setup, secrets, or a paid backend. `storage.js` provides a small persistence API and falls back to local storage when IndexedDB is unavailable.
+
+For future signed-in, multi-device sync, Firebase Cloud Firestore's no-cost Spark plan is a practical hosted option. Cloud sync should store exercise definitions and aggregate session records only, never camera frames or raw pose landmarks.
 
 ### 2. Style And Theme Layer
 
