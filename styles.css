@@ -18,9 +18,9 @@
   --ring-muted: rgba(255, 255, 255, 0.06);
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
   --shadow-glow: 0 0 60px rgba(255, 122, 61, 0.08);
-  --radius-xl: 28px;
-  --radius-lg: 22px;
-  --radius-md: 16px;
+  --radius-xl: 8px;
+  --radius-lg: 8px;
+  --radius-md: 6px;
   --pose-speed: 1.15s;
   --transition: 220ms ease;
   --transition-slow: 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -90,6 +90,7 @@ body[data-yoga-section="relax"] {
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
@@ -101,84 +102,112 @@ body {
   overflow-x: hidden;
 }
 
-.bg-orbs {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.bg-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.4;
-}
-
-.bg-orb-1 {
-  width: 600px;
-  height: 600px;
-  top: -180px;
-  left: -100px;
-  background: radial-gradient(circle, rgba(255, 122, 61, 0.35), transparent 70%);
-  animation: orb-drift-1 18s ease-in-out infinite;
-}
-
-.bg-orb-2 {
-  width: 500px;
-  height: 500px;
-  top: 20%;
-  right: -120px;
-  background: radial-gradient(circle, rgba(61, 217, 196, 0.3), transparent 70%);
-  animation: orb-drift-2 22s ease-in-out infinite;
-}
-
-.bg-orb-3 {
-  width: 400px;
-  height: 400px;
-  bottom: -100px;
-  left: 30%;
-  background: radial-gradient(circle, rgba(123, 143, 255, 0.2), transparent 70%);
-  animation: orb-drift-3 20s ease-in-out infinite;
-}
-
-@keyframes orb-drift-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(60px, 40px) scale(1.1); }
-  66% { transform: translate(-30px, 80px) scale(0.95); }
-}
-
-@keyframes orb-drift-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-80px, 50px) scale(1.15); }
-}
-
-@keyframes orb-drift-3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(60px, -40px) scale(1.08); }
-}
-
 button, input, select, textarea {
   font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .app-shell {
   position: relative;
   z-index: 1;
-  width: min(1280px, calc(100vw - 32px));
+  width: min(1440px, calc(100vw - 32px));
   margin: 24px auto 48px;
   display: grid;
   gap: 20px;
 }
 
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 8px 10px 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: rgba(15, 15, 19, 0.94);
+  backdrop-filter: blur(18px);
+}
+
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.app-brand-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+}
+
+.app-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.app-tab {
+  min-width: 96px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink-secondary);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.app-tab.is-active {
+  background: var(--ink);
+  color: #15151b;
+}
+
+.app-tab:focus-visible,
+.icon-control:focus-visible,
+.step-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+body[data-app-view="exercises"] [data-coach-view],
+body[data-app-view="coach"] #exercise-studio-panel {
+  display: none !important;
+}
+
 .card {
-  background: var(--panel);
+  background: color-mix(in srgb, var(--panel) 92%, #15151b);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow), var(--shadow-glow);
   backdrop-filter: blur(24px) saturate(1.4);
   transition: border-color var(--transition);
+}
+
+.coach-workspace {
+  display: grid;
+  gap: 20px;
 }
 
 .card:hover {
@@ -189,16 +218,16 @@ button, input, select, textarea {
 
 .hero {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 28px;
-  padding: 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(440px, 520px);
+  gap: 24px;
+  padding: 24px;
 }
 
 .eyebrow, .section-label, .picker-label {
   margin: 0 0 10px;
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--secondary);
 }
@@ -225,18 +254,21 @@ button, input, select, textarea {
 
 .hero h1, .section-head h2 {
   margin: 0;
-  font-family: "Playfair Display", Georgia, serif;
-  line-height: 1.05;
+  font-family: inherit;
+  line-height: 1.15;
 }
 
 .hero h1 {
-  max-width: 14ch;
-  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  max-width: none;
+  font-size: 2rem;
+  font-weight: 850;
+  color: var(--ink);
+}
+
+.hero .eyebrow,
+.hero .hero-text,
+.hero .goal-row {
+  display: none;
 }
 
 .hero-text, .session-note, .movement-summary, .coach-cue,
@@ -288,7 +320,7 @@ button, input, select, textarea {
 
 .choice-btn, .action-btn, .assist-btn {
   border: 0;
-  border-radius: 999px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all var(--transition);
 }
@@ -305,7 +337,8 @@ button, input, select, textarea {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 18px;
+  min-height: 40px;
+  padding: 9px 14px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--ink-secondary);
@@ -357,7 +390,7 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
   gap: 7px;
   padding: 7px 10px 7px 14px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.04);
   color: var(--ink-secondary);
   font-size: 0.82rem;
@@ -393,22 +426,25 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
 
 .hero-timer {
   display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
   align-content: start;
-  gap: 18px;
-  padding: 24px;
-  border-radius: 24px;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 18px;
+  border-radius: 8px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
   border: 1px solid var(--border);
 }
 
 .timer-ring {
   --ring-progress: 100;
-  width: min(240px, 100%);
+  width: min(160px, 100%);
   aspect-ratio: 1;
   margin: 0 auto;
   display: grid;
   place-items: center;
   position: relative;
+  grid-row: 1 / span 2;
 }
 
 .timer-ring-svg {
@@ -444,7 +480,7 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
 }
 
 .timer-value {
-  font-size: clamp(3rem, 7vw, 4.2rem);
+  font-size: 3.4rem;
   line-height: 1;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
@@ -454,12 +490,13 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
   margin-top: 4px;
   font-weight: 700;
   font-size: 0.8rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--muted);
 }
 
 .timer-meta {
+  grid-column: 2;
   text-align: center;
 }
 
@@ -496,7 +533,7 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
   color: var(--ink);
   font-weight: 900;
   font-size: 0.82rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -519,6 +556,7 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
 
 .breath-box-guide {
   display: grid;
+  grid-column: 1 / -1;
   place-items: center;
   margin-top: 2px;
 }
@@ -661,13 +699,23 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
 }
 
 .control-row, .assist-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 8px;
 }
 
+.control-row {
+  grid-column: 2;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.assist-row {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .action-btn, .assist-btn {
-  padding: 11px 18px;
+  min-width: 0;
+  padding: 10px 12px;
   font-weight: 700;
   font-size: 0.88rem;
 }
@@ -694,7 +742,10 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
 }
 
 .assist-btn {
-  flex: 1 1 160px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background: var(--secondary-soft);
   border: 1px solid rgba(61, 217, 196, 0.12);
   color: var(--secondary);
@@ -715,7 +766,7 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
 }
 
 .main-grid {
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: minmax(0, 1fr) 300px;
 }
 
 .bottom-grid {
@@ -750,13 +801,59 @@ body[data-yoga-section="relax"] .choice-btn.is-active {
   white-space: nowrap;
 }
 
+.coach-visual-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+
+body[data-camera-coach="on"] .coach-visual-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.visual-workspace {
+  min-width: 0;
+}
+
+.visual-workspace-head {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.visual-workspace-head .section-label {
+  margin-bottom: 3px;
+}
+
+.visual-workspace-head h3,
+.form-heading h3,
+.exercise-order-section h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.live-status,
+.exercise-source-label {
+  width: fit-content;
+  padding: 4px 7px;
+  border-radius: 5px;
+  background: var(--secondary-soft);
+  color: var(--secondary);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
 /* ─── Animation Stage (Three.js 3D) ─── */
 
 .animation-stage {
   position: relative;
-  min-height: 580px;
-  margin-top: 20px;
-  border-radius: 24px;
+  min-height: 540px;
+  margin-top: 0;
+  border-radius: 8px;
   overflow: hidden;
   background: linear-gradient(180deg, #181820 0%, #10101a 100%);
   border: 1px solid var(--border);
@@ -778,7 +875,7 @@ body[data-track="breath"] .animation-stage {
   display: block;
   width: 100% !important;
   height: 100% !important;
-  border-radius: 24px;
+  border-radius: 8px;
 }
 
 .advanced-cue {
@@ -790,7 +887,7 @@ body[data-track="breath"] .animation-stage {
   display: grid;
   gap: 6px;
   padding: 14px 16px;
-  border-radius: 18px;
+  border-radius: 8px;
   background: rgba(8, 10, 14, 0.82);
   border: 1px solid rgba(239, 68, 68, 0.36);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32), 0 0 28px rgba(239, 68, 68, 0.16);
@@ -816,7 +913,7 @@ body[data-track="breath"] .animation-stage {
 
 .advanced-cue strong {
   color: var(--ink);
-  font-size: clamp(0.95rem, 2vw, 1.12rem);
+  font-size: 1rem;
   line-height: 1.32;
 }
 
@@ -845,7 +942,7 @@ body[data-track="breath"] .animation-stage {
   justify-items: center;
   gap: 5px;
   padding: 16px 18px;
-  border-radius: 18px;
+  border-radius: 8px;
   background: rgba(8, 13, 18, 0.84);
   border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34), 0 0 30px var(--accent-glow);
@@ -931,7 +1028,7 @@ body[data-track="breath"] .animation-stage {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  border-radius: 24px;
+  border-radius: 8px;
   mix-blend-mode: screen;
 }
 .pose-overlay-canvas[hidden] {
@@ -965,7 +1062,7 @@ body[data-track="breath"] #camera-coach-btn {
   color: var(--ink);
   font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
   text-transform: uppercase;
   pointer-events: none;
   transition: opacity var(--transition), border-color var(--transition), color var(--transition);
@@ -1026,16 +1123,11 @@ body[data-track="breath"] #camera-coach-btn {
   font-size: 0.95rem;
 }
 
-.coach-box, .guide-block {
-  padding: 18px;
-  border-radius: 18px;
-  background: var(--panel-strong);
-  border: 1px solid var(--border);
-  transition: border-color var(--transition);
-}
-
-.coach-box:hover, .guide-block:hover {
-  border-color: var(--border-glow);
+.coach-box {
+  padding: 14px 16px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .coach-cue {
@@ -1046,8 +1138,17 @@ body[data-track="breath"] #camera-coach-btn {
 /* ─── Guide sidebar ─── */
 
 .guide {
-  display: grid;
-  gap: 14px;
+  display: block;
+}
+
+.guide-block {
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+}
+
+.guide-block:first-child {
+  padding-top: 0;
+  border-top: 0;
 }
 
 .instruction-list, .note-list {
@@ -1111,7 +1212,7 @@ body[data-track="breath"] #camera-coach-btn {
   gap: 14px;
   align-items: center;
   padding: 14px 18px;
-  border-radius: 16px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border);
   cursor: pointer;
@@ -1245,7 +1346,7 @@ body[data-track="breath"] #camera-coach-btn {
   color: var(--secondary);
   font-weight: 800;
   font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -1317,7 +1418,7 @@ body[data-track="breath"] #camera-coach-btn {
   color: var(--secondary);
   font-size: 0.72rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -1331,7 +1432,7 @@ body[data-track="breath"] #camera-coach-btn {
   color: var(--ink);
   font-size: 0.72rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -1372,14 +1473,18 @@ body[data-track="breath"] #camera-coach-btn {
 
 /* ─── Camera Coach ─── */
 
-.camera-coach-panel,
 .exercise-studio-panel {
   padding: 24px;
 }
 
 .camera-coach-panel[hidden],
+.camera-feedback[hidden],
 .exercise-studio-panel[hidden] {
   display: none !important;
+}
+
+.camera-coach-panel.visual-workspace {
+  padding: 0;
 }
 
 .camera-coach-head {
@@ -1395,9 +1500,9 @@ body[data-track="breath"] #camera-coach-btn {
 
 .camera-view {
   position: relative;
-  min-height: 520px;
+  min-height: 540px;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 8px;
   background: #090d12;
   border: 1px solid var(--border);
 }
@@ -1473,7 +1578,7 @@ body[data-track="breath"] #camera-coach-btn {
   display: grid;
   gap: 4px;
   padding: 14px 16px;
-  border-radius: 14px;
+  border-radius: 6px;
   background: rgba(8, 12, 18, 0.86);
   border-left: 4px solid var(--accent);
   backdrop-filter: blur(14px);
@@ -1497,10 +1602,19 @@ body[data-track="breath"] #camera-coach-btn {
   line-height: 1.45;
 }
 
-.camera-stats {
+.camera-stats,
+.camera-feedback {
   display: grid;
   align-content: start;
   gap: 16px;
+}
+
+.camera-feedback {
+  grid-template-columns: 190px minmax(260px, 0.8fr) minmax(250px, 1fr) 220px;
+  margin-top: 14px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .camera-score-card,
@@ -1508,7 +1622,7 @@ body[data-track="breath"] #camera-coach-btn {
 .camera-privacy,
 .storage-note {
   padding: 18px;
-  border-radius: 14px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -1564,7 +1678,7 @@ body[data-track="breath"] #camera-coach-btn {
   align-content: center;
   gap: 7px;
   padding: 14px;
-  border-radius: 12px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -1596,7 +1710,9 @@ body[data-track="breath"] #camera-coach-btn {
 }
 
 .session-history-block {
-  margin-top: 24px;
+  grid-column: 1 / -1;
+  margin-top: 0;
+  padding-top: 4px;
 }
 
 .compact-head h3,
@@ -1618,7 +1734,7 @@ body[data-track="breath"] #camera-coach-btn {
   gap: 6px;
   min-height: 108px;
   padding: 14px;
-  border-radius: 12px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -1648,14 +1764,112 @@ body[data-track="breath"] #camera-coach-btn {
 
 .exercise-studio-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+  grid-template-columns: minmax(340px, 0.8fr) minmax(0, 1.2fr);
   gap: 24px;
   margin-top: 22px;
+}
+
+.exercise-order-section {
+  min-width: 0;
+}
+
+.exercise-order-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.exercise-order-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 68px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.exercise-order-index {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.exercise-order-copy {
+  min-width: 0;
+}
+
+.exercise-order-copy strong,
+.exercise-order-copy span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.exercise-order-copy strong {
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.exercise-order-copy span {
+  margin-top: 3px;
+  color: var(--ink-secondary);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.exercise-source-label {
+  margin-top: 6px;
+}
+
+.exercise-order-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.icon-control {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.icon-control:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.icon-control:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+}
+
+.exercise-order-section .storage-note {
+  margin-top: 14px;
 }
 
 .exercise-form {
   display: grid;
   gap: 18px;
+  align-content: start;
+  padding-left: 24px;
+  border-left: 1px solid var(--border);
 }
 
 .form-section {
@@ -1677,7 +1891,7 @@ body[data-track="breath"] #camera-coach-btn {
   height: 34px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
+  border-radius: 6px;
   background: var(--accent);
   color: white;
   font-weight: 900;
@@ -1706,7 +1920,7 @@ body[data-track="breath"] #camera-coach-btn {
   width: 100%;
   padding: 12px 13px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 6px;
   outline: none;
   background: rgba(8, 12, 18, 0.55);
   color: var(--ink);
@@ -1784,6 +1998,20 @@ body[data-track="breath"] #camera-coach-btn {
 
 /* ─── Responsive ─── */
 
+@media (max-width: 1180px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .camera-feedback {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .session-history-block {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 980px) {
   .hero, .main-grid, .bottom-grid {
     grid-template-columns: 1fr;
@@ -1792,6 +2020,17 @@ body[data-track="breath"] #camera-coach-btn {
   .camera-coach-grid,
   .exercise-studio-grid {
     grid-template-columns: 1fr;
+  }
+
+  body[data-camera-coach="on"] .coach-visual-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-form {
+    padding-top: 24px;
+    padding-left: 0;
+    border-top: 1px solid var(--border);
+    border-left: 0;
   }
 
   .session-history {
@@ -1819,7 +2058,7 @@ body[data-track="breath"] #camera-coach-btn {
   }
 
   .hero, .stage, .guide, .routine, .notes,
-  .camera-coach-panel, .exercise-studio-panel {
+  .exercise-studio-panel {
     padding: 18px;
   }
 
@@ -1840,12 +2079,66 @@ body[data-track="breath"] #camera-coach-btn {
     font-size: 2rem;
   }
 
+  .session-note {
+    display: none;
+  }
+
+  body[data-yoga-section="relax"] .session-note {
+    display: block;
+  }
+
+  .hero-timer {
+    grid-template-columns: 120px minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  .timer-ring {
+    width: 120px;
+    grid-row: 1;
+  }
+
+  .control-row,
+  .assist-row,
+  .breath-box-guide {
+    grid-column: 1 / -1;
+  }
+
+  .timer-meta {
+    grid-column: 2;
+  }
+
+  .control-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .assist-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .timer-value {
+    font-size: 2.5rem;
+  }
+
+  .action-btn,
+  .assist-btn {
+    padding: 8px 5px;
+    font-size: 0.76rem;
+  }
+
   .animation-stage {
     min-height: 440px;
   }
 
   .camera-view {
-    min-height: 480px;
+    min-height: 440px;
+  }
+
+  .camera-feedback {
+    grid-template-columns: 1fr;
+  }
+
+  .session-history-block {
+    grid-column: auto;
   }
 
   .form-grid.two-column,
@@ -1864,6 +2157,84 @@ body[data-track="breath"] #camera-coach-btn {
     left: 50%;
     bottom: 12px;
     width: min(220px, calc(100% - 24px));
+  }
+
+  .exercise-order-item {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .exercise-order-actions {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .app-brand > span:last-child {
+    display: none;
+  }
+
+  .app-tabs {
+    flex: 1;
+  }
+
+  .app-tab {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .app-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .assist-btn {
+    min-width: 0;
+  }
+
+  .hero {
+    padding: 14px;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero .choice-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero .choice-btn {
+    min-width: 0;
+    justify-content: center;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .breath-duration-custom {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

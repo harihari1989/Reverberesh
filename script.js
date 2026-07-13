@@ -240,7 +240,7 @@ function buildExerciseRoutine(level) {
 }
 
 function fitBreathingRoutineDuration(steps, minutes = 5) {
-  const safeMinutes = Math.max(2, Math.min(60, Math.round(Number(minutes) || 5)));
+  const safeMinutes = Math.max(3, Math.min(60, Math.round(Number(minutes) || 5)));
   const targetSeconds = safeMinutes * 60;
   const originalTotal = steps.reduce((sum, item) => sum + item.duration, 0) || targetSeconds;
   const cycles = steps.map(item => Math.max(1, item.breathPattern?.reduce((sum, phaseItem) => sum + phaseItem.duration, 0) || 1));
@@ -351,6 +351,30 @@ function buildDanceRoutine(level) {
   ];
 }
 
+function routineContextKey(t = state?.track, l = state?.level) {
+  const variant = t === "yoga" ? state?.yogaSection || "flow" : "default";
+  return `${t}:${l}:${variant}`;
+}
+
+function applyRoutineOrder(items, contextKey) {
+  const identified = items.map((item, index) => ({
+    ...item,
+    routineId: item.isCustom
+      ? `custom:${item.id}`
+      : `builtin:${contextKey}:${item.name}:${item.animation}:${item.focus || index}`,
+  }));
+  const storedOrder = state?.routineOrders?.[contextKey] || [];
+  const storedRank = new Map(storedOrder.map((id, index) => [id, index]));
+  return identified
+    .map((item, originalIndex) => ({ item, originalIndex }))
+    .sort((a, b) => {
+      const aRank = storedRank.has(a.item.routineId) ? storedRank.get(a.item.routineId) : Number.MAX_SAFE_INTEGER;
+      const bRank = storedRank.has(b.item.routineId) ? storedRank.get(b.item.routineId) : Number.MAX_SAFE_INTEGER;
+      return aRank - bRank || a.originalIndex - b.originalIndex;
+    })
+    .map(entry => entry.item);
+}
+
 function buildRoutine(t, l) {
   let built;
   if (t === "yoga") built = buildYogaRoutine(l);
@@ -365,7 +389,7 @@ function buildRoutine(t, l) {
       period: item.period || 2,
       isCustom: true,
     }));
-  return [...built, ...custom];
+  return applyRoutineOrder([...built, ...custom], routineContextKey(t, l));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1952,11 +1976,21 @@ let lastAppliedPose = null;
 let transitionProgress = 1;
 const TRANSITION_SPEED = 2.0;
 
+function resizeSceneToStage() {
+  if (!el?.animationStage || !camera || !renderer3d) return;
+  const width = el.animationStage.clientWidth || 600;
+  const height = el.animationStage.clientHeight || 540;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer3d.setSize(width, height);
+  resizePoseOverlay(width, height);
+}
+
 function setupScene() {
   if (typeof THREE === "undefined") return;
   const stageEl = el.animationStage;
   const w = stageEl.clientWidth || 600;
-  const h = Math.max(stageEl.clientHeight, 580);
+  const h = stageEl.clientHeight || 540;
 
   scene = new THREE.Scene();
 
@@ -2040,14 +2074,7 @@ function setupScene() {
   });
 
   // Resize handler
-  window.addEventListener("resize", () => {
-    const ww = stageEl.clientWidth || 600;
-    const hh = Math.max(stageEl.clientHeight, 580);
-    camera.aspect = ww / hh;
-    camera.updateProjectionMatrix();
-    renderer3d.setSize(ww, hh);
-    resizePoseOverlay(ww, hh);
-  });
+  window.addEventListener("resize", resizeSceneToStage);
 
   // Animation loop
   let lastTime = performance.now();
@@ -2267,11 +2294,12 @@ function speak(text) {
 //  APP STATE + UI
 // ═══════════════════════════════════════════════════════════
 
-const state = { track: "exercise", level: "beginner", yogaSection: "flow", breathOption: "classic", breathMinutes: 5, routine: [], customExercises: [], stepIndex: 0, remaining: 0, running: false, tickId: null, cueId: null, cueIndex: 0, voiceEnabled: true, neuralPoseEnabled: true, mirrorGuideEnabled: true, cameraCoachEnabled: false, hasUserInteracted: false };
+const state = { activeView: "coach", track: "exercise", level: "beginner", yogaSection: "flow", breathOption: "classic", breathMinutes: 5, routine: [], routineOrders: {}, customExercises: [], stepIndex: 0, remaining: 0, running: false, tickId: null, cueId: null, cueIndex: 0, voiceEnabled: true, neuralPoseEnabled: true, mirrorGuideEnabled: true, cameraCoachEnabled: false, hasUserInteracted: false };
 state.routine = buildRoutine(state.track, state.level);
 
 const $ = id => document.getElementById(id);
 const el = {
+  coachTabBtn: $("coach-tab-btn"), exercisesTabBtn: $("exercises-tab-btn"),
   heroTitle: $("hero-title"), heroText: $("hero-text"), goalRow: $("goal-row"),
   sessionNote: $("session-note"), trackExerciseBtn: $("track-exercise-btn"),
   trackYogaBtn: $("track-yoga-btn"), trackDanceBtn: $("track-dance-btn"),
@@ -2293,8 +2321,7 @@ const el = {
   startBtn: $("start-btn"), pauseBtn: $("pause-btn"),
   nextBtn: $("next-btn"), restartBtn: $("restart-btn"),
   voiceBtn: $("voice-btn"), neuralPoseBtn: $("neural-pose-btn"),
-  mirrorGuideBtn: $("mirror-guide-btn"), cameraCoachBtn: $("camera-coach-btn"),
-  exerciseStudioBtn: $("exercise-studio-btn"), burstBtn: $("burst-btn"),
+  mirrorGuideBtn: $("mirror-guide-btn"), cameraCoachBtn: $("camera-coach-btn"), burstBtn: $("burst-btn"),
   currentName: $("current-name"), currentFocus: $("current-focus"),
   currentSummary: $("current-summary"), coachCue: $("coach-cue"),
   instructionList: $("instruction-list"), upNext: $("up-next"),
@@ -2312,7 +2339,7 @@ const el = {
   tutorialPanel: $("tutorial-panel"), tutorialLabel: $("tutorial-label"),
   tutorialTitle: $("tutorial-title"), tutorialKicker: $("tutorial-kicker"),
   tutorialSummary: $("tutorial-summary"), tutorialBody: $("tutorial-body"),
-  cameraCoachPanel: $("camera-coach-panel"), cameraStopBtn: $("camera-stop-btn"),
+  cameraCoachPanel: $("camera-coach-panel"), cameraFeedback: $("camera-feedback"), cameraStopBtn: $("camera-stop-btn"),
   cameraVideo: $("camera-video"), userPoseCanvas: $("user-pose-canvas"),
   cameraLoading: $("camera-loading"), framingGuidance: $("framing-guidance"),
   framingTitle: $("framing-title"), framingDetail: $("framing-detail"),
@@ -2320,9 +2347,10 @@ const el = {
   visibilityScore: $("visibility-score"), repCount: $("rep-count"), holdTime: $("hold-time"), bestScore: $("best-score"),
   coachDirectionTitle: $("coach-direction-title"), coachDirectionCopy: $("coach-direction-copy"),
   sessionHistory: $("session-history"),
-  exerciseStudioPanel: $("exercise-studio-panel"), exerciseStudioCloseBtn: $("exercise-studio-close-btn"),
+  exerciseStudioPanel: $("exercise-studio-panel"), exerciseAddBtn: $("exercise-add-btn"),
   exerciseForm: $("exercise-form"), exerciseAnimation: $("exercise-animation"),
-  exerciseSaveStatus: $("exercise-save-status"), customExerciseList: $("custom-exercise-list"),
+  exerciseSaveStatus: $("exercise-save-status"), exerciseOrderList: $("exercise-order-list"),
+  exerciseRoutineContext: $("exercise-routine-context"), exerciseRoutineTotal: $("exercise-routine-total"),
 };
 el.voiceBtnLabel = el.voiceBtn ? el.voiceBtn.querySelector("[data-label]") : null;
 el.neuralPoseBtnLabel = el.neuralPoseBtn ? el.neuralPoseBtn.querySelector("[data-neural-label]") : null;
@@ -2420,11 +2448,14 @@ async function startCameraCoach() {
     return;
   }
   el.cameraCoachPanel.hidden = false;
+  if (el.cameraFeedback) el.cameraFeedback.hidden = false;
+  document.body.dataset.cameraCoach = "on";
+  requestAnimationFrame(() => requestAnimationFrame(resizeSceneToStage));
   el.cameraLoading.hidden = false;
   el.framingGuidance.dataset.state = "setup";
   el.framingTitle.textContent = "Allow camera access";
   el.framingDetail.textContent = "Your video stays on this device.";
-  el.cameraCoachPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  el.cameraCoachPanel.closest(".stage")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   try {
     if (!navigator.mediaDevices?.getUserMedia) throw new Error("Camera access requires HTTPS or localhost.");
@@ -2471,7 +2502,12 @@ async function stopCameraCoach({ save = true, hide = true } = {}) {
   if (ctx) ctx.clearRect(0, 0, el.userPoseCanvas.width, el.userPoseCanvas.height);
   el.cameraCoachBtn?.classList.remove("is-active");
   if (el.cameraCoachBtnLabel) el.cameraCoachBtnLabel.textContent = "Camera coach";
-  if (hide && el.cameraCoachPanel) el.cameraCoachPanel.hidden = true;
+  if (hide && el.cameraCoachPanel) {
+    el.cameraCoachPanel.hidden = true;
+    if (el.cameraFeedback) el.cameraFeedback.hidden = true;
+    document.body.dataset.cameraCoach = "off";
+    requestAnimationFrame(() => requestAnimationFrame(resizeSceneToStage));
+  }
   await renderSessionHistory();
 }
 
@@ -2490,49 +2526,112 @@ function populateAnimationOptions() {
   });
 }
 
-function renderCustomExerciseList() {
-  if (!el.customExerciseList) return;
-  el.customExerciseList.innerHTML = "";
-  if (!state.customExercises.length) {
-    const empty = appendText(document.createElement("p"), "No custom exercises yet. Define one using the form.");
-    empty.className = "history-empty";
-    el.customExerciseList.appendChild(empty);
-    return;
-  }
-  state.customExercises.forEach(exercise => {
+function routineContextLabel() {
+  const parts = [cfg().label, state.level === "advanced" ? "Advanced" : "Beginner"];
+  if (state.track === "yoga") parts.push(state.yogaSection === "relax" ? "Relaxation" : "Core Flow");
+  return parts.join(" · ");
+}
+
+function makeOrderButton(symbol, label, disabled, action) {
+  const button = appendText(document.createElement("button"), symbol);
+  button.type = "button";
+  button.className = "icon-control";
+  button.disabled = disabled;
+  button.title = label;
+  button.setAttribute("aria-label", label);
+  button.addEventListener("click", action);
+  return button;
+}
+
+async function moveRoutineExercise(index, offset) {
+  const targetIndex = index + offset;
+  if (targetIndex < 0 || targetIndex >= routine().length) return;
+  const activeId = step()?.routineId;
+  [state.routine[index], state.routine[targetIndex]] = [state.routine[targetIndex], state.routine[index]];
+  const contextKey = routineContextKey();
+  state.routineOrders[contextKey] = state.routine.map(item => item.routineId);
+  await window.ReverbereshStore?.saveRoutineOrder?.(contextKey, state.routineOrders[contextKey]);
+  state.stepIndex = Math.max(0, state.routine.findIndex(item => item.routineId === activeId));
+  buildStepList();
+  renderExerciseOrderList();
+  renderStep(false);
+}
+
+function renderExerciseOrderList() {
+  if (!el.exerciseOrderList) return;
+  el.exerciseOrderList.innerHTML = "";
+  if (el.exerciseRoutineContext) el.exerciseRoutineContext.textContent = routineContextLabel();
+  if (el.exerciseRoutineTotal) el.exerciseRoutineTotal.textContent = `${routine().length} movements · ${fmtDur(totalTime())}`;
+
+  routine().forEach((exercise, index) => {
     const item = document.createElement("article");
-    item.className = "custom-exercise-item";
+    item.className = "exercise-order-item";
+    item.dataset.routineId = exercise.routineId;
+
+    const indexLabel = appendText(document.createElement("span"), String(index + 1));
+    indexLabel.className = "exercise-order-index";
+
     const copy = document.createElement("div");
-    copy.appendChild(appendText(document.createElement("strong"), exercise.name));
-    copy.appendChild(appendText(document.createElement("span"), `${tracks[exercise.track]?.label || exercise.track} · ${exercise.duration}s · ${humanizeAnimation(exercise.animation)}`));
-    const remove = appendText(document.createElement("button"), "×");
-    remove.type = "button";
-    remove.className = "icon-action";
-    remove.title = `Delete ${exercise.name}`;
-    remove.setAttribute("aria-label", `Delete ${exercise.name}`);
-    remove.addEventListener("click", async () => {
-      if (!window.confirm(`Delete ${exercise.name}?`)) return;
-      await window.ReverbereshStore?.deleteExercise?.(exercise.id);
-      state.customExercises = state.customExercises.filter(item => item.id !== exercise.id);
-      renderCustomExerciseList();
-      resetSession(false);
-    });
-    item.append(copy, remove);
-    el.customExerciseList.appendChild(item);
+    copy.className = "exercise-order-copy";
+    copy.appendChild(appendText(document.createElement("strong"), exercise.type === "rest" ? "Reset / Rest" : exercise.name));
+    copy.appendChild(appendText(document.createElement("span"), `${fmtDur(exercise.duration)} · ${exercise.focus}`));
+    if (exercise.isCustom) {
+      const customLabel = appendText(document.createElement("small"), "Custom");
+      customLabel.className = "exercise-source-label";
+      copy.appendChild(customLabel);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "exercise-order-actions";
+    actions.appendChild(makeOrderButton("↑", `Move ${exercise.name} earlier`, index === 0, () => moveRoutineExercise(index, -1)));
+    actions.appendChild(makeOrderButton("↓", `Move ${exercise.name} later`, index === routine().length - 1, () => moveRoutineExercise(index, 1)));
+
+    if (exercise.isCustom) {
+      actions.appendChild(makeOrderButton("×", `Delete ${exercise.name}`, false, async () => {
+        if (!window.confirm(`Delete ${exercise.name}?`)) return;
+        await window.ReverbereshStore?.deleteExercise?.(exercise.id);
+        state.customExercises = state.customExercises.filter(entry => entry.id !== exercise.id);
+        const contextKey = routineContextKey();
+        state.routineOrders[contextKey] = (state.routineOrders[contextKey] || []).filter(id => id !== exercise.routineId);
+        await window.ReverbereshStore?.saveRoutineOrder?.(contextKey, state.routineOrders[contextKey]);
+        resetSession(false);
+      }));
+    }
+
+    item.append(indexLabel, copy, actions);
+    el.exerciseOrderList.appendChild(item);
   });
 }
 
-function openExerciseStudio() {
-  el.exerciseStudioPanel.hidden = false;
+async function switchAppView(view) {
+  if (view !== "coach" && view !== "exercises") return;
+  if (view === "exercises" && cameraCoach.active) await stopCameraCoach();
+  state.activeView = view;
+  document.body.dataset.appView = view;
+  el.exerciseStudioPanel.hidden = view !== "exercises";
+  el.coachTabBtn.classList.toggle("is-active", view === "coach");
+  el.exercisesTabBtn.classList.toggle("is-active", view === "exercises");
+  el.coachTabBtn.setAttribute("aria-selected", String(view === "coach"));
+  el.exercisesTabBtn.setAttribute("aria-selected", String(view === "exercises"));
+  if (view === "exercises") renderExerciseOrderList();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function openExerciseStudio() {
+  await switchAppView("exercises");
   const trackInput = el.exerciseForm?.elements?.track;
   if (trackInput) trackInput.value = state.track;
   if (el.exerciseAnimation && P[step()?.animation]) el.exerciseAnimation.value = step().animation;
-  el.exerciseStudioPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-  renderCustomExerciseList();
+  renderExerciseOrderList();
 }
 
 function closeExerciseStudio() {
-  el.exerciseStudioPanel.hidden = true;
+  switchAppView("coach");
+}
+
+function focusExerciseForm() {
+  el.exerciseForm?.scrollIntoView({ behavior: "smooth", block: "start" });
+  el.exerciseForm?.elements?.name?.focus({ preventScroll: true });
 }
 
 async function saveCustomExercise(event) {
@@ -2555,8 +2654,8 @@ async function saveCustomExercise(event) {
   state.customExercises = [saved, ...state.customExercises.filter(item => item.id !== saved.id)];
   el.exerciseSaveStatus.textContent = `${saved.name} added to ${tracks[saved.track]?.label || saved.track}.`;
   el.exerciseForm.reset();
-  renderCustomExerciseList();
   if (saved.track === state.track) resetSession(false);
+  else renderExerciseOrderList();
 }
 
 function activeTutorial() {
@@ -2710,11 +2809,31 @@ function updateSel() {
 function buildStepList() {
   el.stepList.innerHTML = "";
   routine().forEach((s, i) => {
-    const c = document.createElement("article"); c.className = "step-card"; c.dataset.index = String(i);
+    const c = document.createElement("article");
+    c.className = "step-card";
+    c.dataset.index = String(i);
+    c.tabIndex = 0;
+    c.setAttribute("role", "button");
     const title = s.type === "rest" ? "Reset / Rest" : s.name;
     const meta = s.type === "rest" ? s.focus : `${s.target} · ${s.focus}`;
-    c.innerHTML = `<div class="step-index">${i + 1}</div><div class="step-copy"><p class="step-title">${title}</p><p class="step-meta">${meta}</p></div><div class="step-duration">${s.duration}s</div>`;
+    const index = appendText(document.createElement("div"), String(i + 1));
+    index.className = "step-index";
+    const copy = document.createElement("div");
+    copy.className = "step-copy";
+    const heading = appendText(document.createElement("p"), title);
+    heading.className = "step-title";
+    const description = appendText(document.createElement("p"), meta);
+    description.className = "step-meta";
+    copy.append(heading, description);
+    const duration = appendText(document.createElement("div"), fmtDur(s.duration));
+    duration.className = "step-duration";
+    c.append(index, copy, duration);
     c.addEventListener("click", () => { jumpToStep(i); });
+    c.addEventListener("keydown", event => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      jumpToStep(i);
+    });
     el.stepList.appendChild(c);
   });
 }
@@ -2800,11 +2919,14 @@ function updateBreathPhase(s) {
 }
 
 function updateTimer(s) {
-  el.remainingTime.textContent = String(state.remaining);
+  const sessionRemaining = Math.max(0, totalTime() - doneTime());
+  const displayedRemaining = state.track === "breath" ? sessionRemaining : state.remaining;
+  const ringProgress = state.track === "breath" ? (sessionRemaining / totalTime()) * 100 : (state.remaining / s.duration) * 100;
+  el.remainingTime.textContent = String(displayedRemaining);
   el.stepCount.textContent = `Step ${state.stepIndex + 1} of ${routine().length}`;
   el.stepType.textContent = s.type === "rest" ? "Reset" : cfg().label;
   el.stepTarget.textContent = s.target;
-  el.timerRing.style.setProperty("--ring-progress", String((state.remaining / s.duration) * 100));
+  el.timerRing.style.setProperty("--ring-progress", String(ringProgress));
   return updateBreathPhase(s);
 }
 function fmtPreview(s) { return s.type === "rest" ? `Reset for ${s.duration} seconds.` : `${s.name} for ${s.target}.`; }
@@ -2832,7 +2954,7 @@ function renderStep(announce = true) {
 }
 
 function stopTimer() { state.running = false; clearInterval(state.tickId); state.tickId = null; el.startBtn.textContent = "Start"; }
-function resetSession(announce = true) { stopTimer(); state.routine = buildRoutine(state.track, state.level); state.stepIndex = 0; state.remaining = routine()[0].duration; updateHero(); buildStepList(); el.totalTime.textContent = fmtDur(totalTime()); renderStep(announce); }
+function resetSession(announce = true) { stopTimer(); state.routine = buildRoutine(state.track, state.level); state.stepIndex = 0; state.remaining = routine()[0].duration; updateHero(); buildStepList(); renderExerciseOrderList(); el.totalTime.textContent = fmtDur(totalTime()); renderStep(announce); }
 function switchTrack(t) {
   if (t === state.track) return;
   if (t === "breath" && cameraCoach.active) stopCameraCoach();
@@ -2881,7 +3003,7 @@ function switchBreathOption(key) {
   resetSession(true);
 }
 function switchBreathMinutes(value) {
-  const minutes = Math.max(2, Math.min(60, Math.round(Number(value) || 5)));
+  const minutes = Math.max(3, Math.min(60, Math.round(Number(value) || 5)));
   if (minutes === state.breathMinutes && state.track === "breath") return;
   state.breathMinutes = minutes;
   if (state.track !== "breath") state.track = "breath";
@@ -2972,7 +3094,23 @@ function toggleVoice() {
   speak("Voice cues are on.");
 }
 
+function handleAppTabKeydown(event) {
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+  event.preventDefault();
+  if (state.activeView === "coach") {
+    el.exercisesTabBtn.focus();
+    openExerciseStudio();
+  } else {
+    el.coachTabBtn.focus();
+    closeExerciseStudio();
+  }
+}
+
 function bindEvents() {
+  el.coachTabBtn.addEventListener("click", closeExerciseStudio);
+  el.exercisesTabBtn.addEventListener("click", openExerciseStudio);
+  el.coachTabBtn.addEventListener("keydown", handleAppTabKeydown);
+  el.exercisesTabBtn.addEventListener("keydown", handleAppTabKeydown);
   el.trackExerciseBtn.addEventListener("click", () => switchTrack("exercise"));
   el.trackYogaBtn.addEventListener("click", () => switchTrack("yoga"));
   el.trackDanceBtn.addEventListener("click", () => switchTrack("dance"));
@@ -2992,8 +3130,7 @@ function bindEvents() {
   el.mirrorGuideBtn.addEventListener("click", toggleMirrorGuide);
   el.cameraCoachBtn.addEventListener("click", startCameraCoach);
   el.cameraStopBtn.addEventListener("click", () => stopCameraCoach());
-  el.exerciseStudioBtn.addEventListener("click", openExerciseStudio);
-  el.exerciseStudioCloseBtn.addEventListener("click", closeExerciseStudio);
+  el.exerciseAddBtn.addEventListener("click", focusExerciseForm);
   el.exerciseForm.addEventListener("submit", saveCustomExercise);
   el.burstBtn.addEventListener("click", () => { noteInteraction(); const p = rndPrompt(); showBurst(p); speak(p); });
   window.addEventListener("pagehide", () => {
@@ -3005,23 +3142,30 @@ function bindEvents() {
 
 async function init() {
   const p = new URLSearchParams(window.location.search);
-  const pt = p.get("track"), pl = p.get("level"), section = p.get("section"), breathOption = p.get("timing") || p.get("breath") || p.get("pattern"), breathMinutes = parseInt(p.get("minutes") || p.get("duration") || "5", 10), mirror = p.get("mirror"), guide = p.get("guide"), ps = parseInt(p.get("step") || "0", 10);
+  const pt = p.get("track"), pl = p.get("level"), section = p.get("section"), breathOption = p.get("timing") || p.get("breath") || p.get("pattern"), breathMinutes = parseInt(p.get("minutes") || p.get("duration") || "5", 10), mirror = p.get("mirror"), guide = p.get("guide"), view = p.get("view"), ps = parseInt(p.get("step") || "0", 10);
   if (pt === "exercise" || pt === "yoga" || pt === "dance" || pt === "breath") state.track = pt;
   if (pl === "beginner" || pl === "advanced") state.level = pl;
   if (section === "flow" || section === "relax") state.yogaSection = section;
   if (BREATH_OPTIONS[breathOption]) state.breathOption = breathOption;
-  if (Number.isFinite(breathMinutes)) state.breathMinutes = Math.max(2, Math.min(60, breathMinutes));
+  if (Number.isFinite(breathMinutes)) state.breathMinutes = Math.max(3, Math.min(60, breathMinutes));
   if (mirror === "off" || mirror === "false" || mirror === "0") state.mirrorGuideEnabled = false;
   if (mirror === "on" || mirror === "true" || mirror === "1") state.mirrorGuideEnabled = true;
   if (guide === "off" || guide === "false" || guide === "0") state.neuralPoseEnabled = false;
   if (guide === "on" || guide === "true" || guide === "1") state.neuralPoseEnabled = true;
-  state.customExercises = await window.ReverbereshStore?.listExercises?.() || [];
+  state.activeView = view === "exercises" ? "exercises" : "coach";
+  const [customExercises, routineOrders] = await Promise.all([
+    window.ReverbereshStore?.listExercises?.() || [],
+    window.ReverbereshStore?.listRoutineOrders?.() || [],
+  ]);
+  state.customExercises = customExercises;
+  state.routineOrders = Object.fromEntries(routineOrders.map(entry => [entry.id, Array.isArray(entry.order) ? entry.order : []]));
   state.routine = buildRoutine(state.track, state.level);
   state.stepIndex = Math.min(Math.max(0, Number.isFinite(ps) ? ps : 0), Math.max(0, state.routine.length - 1));
   state.remaining = routine()[state.stepIndex].duration;
-  populateAnimationOptions(); renderCustomExerciseList(); renderSessionHistory();
+  populateAnimationOptions(); renderExerciseOrderList(); renderSessionHistory();
   updateHero(); buildStepList(); el.totalTime.textContent = fmtDur(totalTime());
   bindEvents(); renderStep(false); setupScene();
+  await switchAppView(state.activeView);
 }
 
 init();
