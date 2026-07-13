@@ -6,22 +6,28 @@
     <title>Interactive Workout, Yoga, Breathing Exercise + Dance Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css?v=5" />
 
     <!-- Three.js for 3D humanoid avatar -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-    <script src="./storage.js" defer></script>
-    <script src="./script.js" defer></script>
+    <script src="./storage.js?v=5" defer></script>
+    <script src="./script.js?v=5" defer></script>
   </head>
-  <body data-track="exercise">
-    <div class="bg-orbs" aria-hidden="true">
-      <div class="bg-orb bg-orb-1"></div>
-      <div class="bg-orb bg-orb-2"></div>
-      <div class="bg-orb bg-orb-3"></div>
-    </div>
-
+  <body data-track="exercise" data-app-view="coach" data-camera-coach="off">
     <main class="app-shell">
+      <header class="app-header">
+        <a class="app-brand" href="./index.html" aria-label="Reverberesh home">
+          <span class="app-brand-mark" aria-hidden="true">R</span>
+          <span>Reverberesh</span>
+        </a>
+        <nav class="app-tabs" role="tablist" aria-label="Application sections">
+          <button id="coach-tab-btn" class="app-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="coach-workspace">Coach</button>
+          <button id="exercises-tab-btn" class="app-tab" type="button" role="tab" aria-selected="false" aria-controls="exercise-studio-panel">Exercises</button>
+        </nav>
+      </header>
+
+      <div id="coach-workspace" class="coach-workspace" data-coach-view role="tabpanel" aria-labelledby="coach-tab-btn">
       <section class="hero card">
         <div class="hero-copy">
           <p class="eyebrow"><span class="eyebrow-dot"></span> Reverberesh = Reverberate + Refresh</p>
@@ -106,7 +112,7 @@
               <button class="choice-btn" type="button" data-breath-minutes="15">15 min</button>
               <label class="breath-duration-custom">
                 <span>Custom</span>
-                <input id="breath-custom-minutes" type="number" min="2" max="60" step="1" value="5" inputmode="numeric" aria-label="Custom breathing session length in minutes" />
+                <input id="breath-custom-minutes" type="number" min="3" max="60" step="1" value="5" inputmode="numeric" aria-label="Custom breathing session length in minutes" />
                 <span>min</span>
               </label>
             </div>
@@ -185,10 +191,6 @@
               <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6.5 5.5l1-1.5h5l1 1.5H16A2 2 0 0118 7.5v7A2 2 0 0116 16.5H4a2 2 0 01-2-2v-7a2 2 0 012-2h2.5zM10 8a3 3 0 100 6 3 3 0 000-6z"/></svg>
               <span data-camera-label>Camera coach</span>
             </button>
-            <button id="exercise-studio-btn" class="assist-btn" type="button">
-              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 3a1 1 0 112 0v6h6a1 1 0 110 2h-6v6a1 1 0 11-2 0v-6H3a1 1 0 110-2h6V3z"/></svg>
-              Add exercise
-            </button>
             <button id="burst-btn" class="assist-btn" type="button">
               Cue Me
             </button>
@@ -206,19 +208,88 @@
             <p class="focus-tag" id="current-focus">Warm the whole body and lift posture</p>
           </div>
 
-          <!-- WebGL animation stage powered by Three.js -->
-          <div class="animation-stage" id="animation-stage">
-            <div id="advanced-cue" class="advanced-cue" hidden>
-              <span>Morpheus</span>
-              <strong>I'll show you how deep the rabbit hole goes.</strong>
-            </div>
-            <div id="stage-breath-cue" class="stage-breath-cue" hidden aria-live="polite">
-              <b id="stage-breath-arrow" class="stage-breath-arrow" aria-hidden="true">↑</b>
-              <span id="stage-breath-label">Inhale</span>
-              <strong id="stage-breath-count">4s</strong>
-              <small id="stage-breath-direction">Air moves upward</small>
-            </div>
+          <div id="coach-visual-grid" class="coach-visual-grid">
+            <section class="visual-workspace" aria-labelledby="pose-guide-title">
+              <div class="visual-workspace-head">
+                <div>
+                  <p class="section-label">Pose guide</p>
+                  <h3 id="pose-guide-title">Follow Reverberesh</h3>
+                </div>
+                <span class="live-status">AI reference</span>
+              </div>
+
+              <!-- WebGL animation stage powered by Three.js -->
+              <div class="animation-stage" id="animation-stage">
+                <div id="advanced-cue" class="advanced-cue" hidden>
+                  <span>Morpheus</span>
+                  <strong>I'll show you how deep the rabbit hole goes.</strong>
+                </div>
+                <div id="stage-breath-cue" class="stage-breath-cue" hidden aria-live="polite">
+                  <b id="stage-breath-arrow" class="stage-breath-arrow" aria-hidden="true">↑</b>
+                  <span id="stage-breath-label">Inhale</span>
+                  <strong id="stage-breath-count">4s</strong>
+                  <small id="stage-breath-direction">Air moves upward</small>
+                </div>
+              </div>
+            </section>
+
+            <section id="camera-coach-panel" class="camera-coach-panel visual-workspace" hidden aria-labelledby="camera-coach-title">
+              <div class="visual-workspace-head">
+                <div>
+                  <p class="section-label">Your movement</p>
+                  <h3 id="camera-coach-title">Camera Coach</h3>
+                </div>
+                <button id="camera-stop-btn" class="icon-control" type="button" aria-label="Stop camera" title="Stop camera">×</button>
+              </div>
+
+              <div class="camera-view" id="camera-view">
+                <video id="camera-video" autoplay muted playsinline></video>
+                <canvas id="user-pose-canvas" aria-hidden="true"></canvas>
+                <div class="camera-frame-guide" aria-hidden="true"></div>
+                <div id="camera-loading" class="camera-loading">
+                  <span class="camera-pulse"></span>
+                  <strong>Starting camera coach</strong>
+                  <small>Your video stays on this device.</small>
+                </div>
+                <div id="framing-guidance" class="framing-guidance" data-state="setup" aria-live="polite">
+                  <strong id="framing-title">Stand where your full body is visible</strong>
+                  <span id="framing-detail">Leave space above your head and below your feet.</span>
+                </div>
+              </div>
+            </section>
           </div>
+
+          <section id="camera-feedback" class="camera-feedback" hidden aria-label="Live coaching statistics">
+            <div class="camera-score-card">
+              <span>Pose match</span>
+              <strong id="match-score">--</strong>
+              <div class="match-meter"><span id="match-meter-fill"></span></div>
+              <small id="match-label">Waiting for a full-body pose</small>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-tile"><span>Body visible</span><strong id="visibility-score">0%</strong></div>
+              <div class="stat-tile"><span>Matched reps</span><strong id="rep-count">0</strong></div>
+              <div class="stat-tile"><span>Hold time</span><strong id="hold-time">0s</strong></div>
+              <div class="stat-tile"><span>Best match</span><strong id="best-score">0%</strong></div>
+            </div>
+
+            <div class="coach-direction">
+              <p class="section-label">Live adjustment</p>
+              <strong id="coach-direction-title">Get into frame</strong>
+              <p id="coach-direction-copy">The coach will highlight the body area that needs the largest adjustment.</p>
+            </div>
+
+            <div class="camera-privacy">
+              <strong>Private by design</strong>
+              <span>No camera frames or pose landmarks are uploaded. Only session totals are saved.</span>
+            </div>
+
+            <div class="session-history-block">
+              <p class="section-label">Recent camera sessions</p>
+              <div id="session-history" class="session-history"></div>
+            </div>
+          </section>
 
           <div id="motivation-burst" class="motivation-burst" aria-live="polite">
             Ready to move
@@ -270,83 +341,39 @@
           </div>
         </aside>
       </section>
+      </div>
 
-      <section id="camera-coach-panel" class="camera-coach-panel card" hidden aria-labelledby="camera-coach-title">
-        <div class="section-head camera-coach-head">
-          <div>
-            <p class="section-label">Live movement tracking</p>
-            <h2 id="camera-coach-title">Camera Coach</h2>
-          </div>
-          <button id="camera-stop-btn" class="action-btn" type="button">Stop camera</button>
-        </div>
-
-        <div class="camera-coach-grid">
-          <div class="camera-view" id="camera-view">
-            <video id="camera-video" autoplay muted playsinline></video>
-            <canvas id="user-pose-canvas" aria-hidden="true"></canvas>
-            <div class="camera-frame-guide" aria-hidden="true"></div>
-            <div id="camera-loading" class="camera-loading">
-              <span class="camera-pulse"></span>
-              <strong>Starting camera coach</strong>
-              <small>Your video stays on this device.</small>
-            </div>
-            <div id="framing-guidance" class="framing-guidance" data-state="setup" aria-live="polite">
-              <strong id="framing-title">Stand where your full body is visible</strong>
-              <span id="framing-detail">Leave space above your head and below your feet.</span>
-            </div>
-          </div>
-
-          <aside class="camera-stats" aria-label="Live coaching statistics">
-            <div class="camera-score-card">
-              <span>Pose match</span>
-              <strong id="match-score">--</strong>
-              <div class="match-meter"><span id="match-meter-fill"></span></div>
-              <small id="match-label">Waiting for a full-body pose</small>
-            </div>
-
-            <div class="stats-grid">
-              <div class="stat-tile"><span>Body visible</span><strong id="visibility-score">0%</strong></div>
-              <div class="stat-tile"><span>Matched reps</span><strong id="rep-count">0</strong></div>
-              <div class="stat-tile"><span>Hold time</span><strong id="hold-time">0s</strong></div>
-              <div class="stat-tile"><span>Best match</span><strong id="best-score">0%</strong></div>
-            </div>
-
-            <div class="coach-direction">
-              <p class="section-label">Live adjustment</p>
-              <strong id="coach-direction-title">Get into frame</strong>
-              <p id="coach-direction-copy">The coach will highlight the body area that needs the largest adjustment.</p>
-            </div>
-
-            <div class="camera-privacy">
-              <strong>Private by design</strong>
-              <span>No camera frames or pose landmarks are uploaded. Only session totals are saved.</span>
-            </div>
-          </aside>
-        </div>
-
-        <div class="session-history-block">
-          <div class="section-head compact-head">
-            <div>
-              <p class="section-label">Recent camera sessions</p>
-              <h3>Your progress</h3>
-            </div>
-          </div>
-          <div id="session-history" class="session-history"></div>
-        </div>
-      </section>
-
-      <section id="exercise-studio-panel" class="exercise-studio-panel card" hidden aria-labelledby="exercise-studio-title">
+      <section id="exercise-studio-panel" class="exercise-studio-panel card" hidden role="tabpanel" aria-labelledby="exercises-tab-btn">
         <div class="section-head">
           <div>
-            <p class="section-label">Movement onboarding</p>
-            <h2 id="exercise-studio-title">Exercise Studio</h2>
+            <p class="section-label">Routine library</p>
+            <h2 id="exercise-studio-title">Exercises</h2>
           </div>
-          <button id="exercise-studio-close-btn" class="action-btn" type="button">Close</button>
+          <button id="exercise-add-btn" class="action-btn action-btn-primary" type="button">Add exercise</button>
         </div>
-        <p class="studio-intro">Define the movement, choose the closest avatar motion, and add clear coaching cues. Saved exercises appear at the end of their matching track.</p>
+        <p id="exercise-routine-context" class="studio-intro">Workout · Beginner</p>
 
         <div class="exercise-studio-grid">
+          <section class="exercise-order-section" aria-labelledby="exercise-order-title">
+            <div class="section-head compact-head">
+              <div>
+                <p class="section-label">Current routine</p>
+                <h3 id="exercise-order-title">Movement order</h3>
+              </div>
+              <span id="exercise-routine-total" class="total-time"></span>
+            </div>
+            <div id="exercise-order-list" class="exercise-order-list"></div>
+            <div class="storage-note">
+              <strong>Saved in this browser</strong>
+              <span>Routine order and custom exercises use IndexedDB. Camera images are never stored.</span>
+            </div>
+          </section>
+
           <form id="exercise-form" class="exercise-form">
+            <div class="form-heading">
+              <p class="section-label">Add exercise</p>
+              <h3>New movement</h3>
+            </div>
             <div class="form-section">
               <span class="form-step">1</span>
               <div>
@@ -382,24 +409,10 @@
               <span id="exercise-save-status" class="form-status" aria-live="polite"></span>
             </div>
           </form>
-
-          <aside class="exercise-library">
-            <div class="section-head compact-head">
-              <div>
-                <p class="section-label">Saved movements</p>
-                <h3>Custom library</h3>
-              </div>
-            </div>
-            <div id="custom-exercise-list" class="custom-exercise-list"></div>
-            <div class="storage-note">
-              <strong>Stored in this browser</strong>
-              <span>Reverberesh uses IndexedDB, a free browser database. Camera images are never stored.</span>
-            </div>
-          </aside>
         </div>
       </section>
 
-      <section class="bottom-grid">
+      <section class="bottom-grid" data-coach-view>
         <section class="routine card">
           <div class="section-head">
             <div>
@@ -417,7 +430,7 @@
         </section>
       </section>
 
-      <section id="tutorial-panel" class="tutorial-panel card" hidden>
+      <section id="tutorial-panel" class="tutorial-panel card" data-coach-view hidden>
         <div class="section-head">
           <div>
             <p class="section-label" id="tutorial-label">Tutorial</p>

@@ -8,17 +8,18 @@ Reverberesh is a browser-based movement coach that combines a guided session UI 
 - Supports two difficulty levels: `Beginner` and `Advanced`
 - Adds a Yoga-only section switch for `Core Flow` and `Relaxation`
 - Tunes the Relaxation yoga section for blood-pressure support with slow exhales, supported poses, and no breath holds
-- Adds breathing exercises with phase-aware inhale, hold, exhale, hold timers plus upward/downward airflow arrows on the pose
+- Adds breathing exercises with a five-minute default session, configurable 3/5/10/15-minute and custom durations, phase-aware inhale/hold/exhale/hold timers, and upward/downward airflow arrows
 - Renders a full-body animated avatar in Three.js
 - Defaults to a mirrored follow-along avatar with guide lines for easier visual copying
 - Uses eased pose timing, reduced seated/supine float, and subtle secondary motion for more realistic movement
+- Separates the focused coaching workflow from exercise management with `Coach` and `Exercises` tabs
 - Drives the session from structured routine data in `script.js`
 - Uses the Web Speech API for spoken cues
 - Can enable an optional MediaPipe pose overlay on top of the 3D stage
-- Adds an opt-in Camera Coach that tracks a user's full-body pose locally, compares joint angles with the current AI pose, and reports live match, visibility, rep, hold, and best-score stats
+- Adds an opt-in Camera Coach that places the practice avatar and live user video side by side, tracks the user's full-body pose locally, compares joint angles with the current AI pose, and reports live match, visibility, rep, hold, and best-score stats
 - Gives camera repositioning guidance when the head, feet, or key joints are outside the frame, or when the user is too near, too far, or off-center
-- Adds an Exercise Studio for defining custom movements, selecting an avatar motion, writing instructions and cues, and appending saved exercises to a matching track
-- Stores custom exercises and aggregate camera-session history in IndexedDB with a local-storage fallback
+- Adds an Exercises workspace for reviewing the full current routine, changing movement order, and defining custom movements with avatar motions, instructions, and cues
+- Stores routine order, custom exercises, and aggregate camera-session history in IndexedDB with a local-storage fallback
 - Accepts URL parameters for deep-linking into a specific track, level, yoga section, and step
 
 ## Stack
@@ -75,7 +76,7 @@ flowchart TD
 
 `index.html` defines the entire visible application shell:
 
-- hero content and track selectors
+- compact session setup and track selectors
 - timer and transport controls
 - assist actions for voice, neural pose, and cue bursts
 - current movement panel
@@ -92,7 +93,7 @@ There is no bundler or module loader. `script.js` runs as a single deferred scri
 
 ### Camera Coach
 
-Camera Coach is off by default and starts only after a user action. It requests the browser camera, runs MediaPipe Pose Landmarker against the local video stream, and compares the user's visible joint angles with the projected AI avatar joints for the current movement.
+Camera Coach is off by default and starts only after a user action. When enabled, the live video opens directly beside the practice avatar. It requests the browser camera, runs MediaPipe Pose Landmarker against the local video stream, and compares the user's visible joint angles with the projected AI avatar joints for the current movement.
 
 The camera workspace reports:
 
@@ -107,9 +108,9 @@ Camera frames and raw landmarks are not uploaded or saved. Only aggregate sessio
 
 Camera access requires `https://` in production or `localhost` during development.
 
-### Exercise Studio And Storage
+### Exercises And Storage
 
-Exercise Studio lets users define a movement name, track, level, duration, closest avatar animation, training focus, instructions, and short coaching cues. Saved movements are appended to the appropriate built-in routine.
+The Exercises tab lists the current routine for the active track, level, and yoga section. Users can move any item earlier or later, and the selected order survives reloads. The same workspace lets users define a movement name, track, level, duration, closest avatar animation, training focus, instructions, and short coaching cues.
 
 The default database is IndexedDB because Reverberesh is deployable as a static GitHub Pages site and should work without account setup, secrets, or a paid backend. `storage.js` provides a small persistence API and falls back to local storage when IndexedDB is unavailable.
 
@@ -332,16 +333,20 @@ The app supports lightweight deep linking through query params:
 - `track=exercise|yoga|dance|breath`
 - `level=beginner|advanced`
 - `section=flow|relax`
+- `timing=easy|classic|deep|advanced`
+- `minutes=3..60`
 - `step=<zero-based-index>`
 - `mirror=on|off`
 - `guide=on|off`
+- `view=coach|exercises`
 
 Example:
 
 ```text
 index.html?track=yoga&section=flow&level=advanced
 index.html?track=yoga&section=relax&level=advanced
-index.html?track=breath&level=advanced
+index.html?track=breath&level=advanced&timing=classic&minutes=5
+index.html?track=yoga&level=beginner&view=exercises
 ```
 
 ## External Tutorial Media

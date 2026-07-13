@@ -2,9 +2,10 @@
   "use strict";
 
   const DB_NAME = "reverberesh-coach";
-  const DB_VERSION = 1;
+  const DB_VERSION = 2;
   const EXERCISE_STORE = "exercises";
   const SESSION_STORE = "sessions";
+  const ROUTINE_STORE = "routines";
   const FALLBACK_PREFIX = "reverberesh:";
 
   let dbPromise = null;
@@ -30,6 +31,9 @@
         if (!db.objectStoreNames.contains(SESSION_STORE)) {
           const sessions = db.createObjectStore(SESSION_STORE, { keyPath: "id" });
           sessions.createIndex("completedAt", "completedAt", { unique: false });
+        }
+        if (!db.objectStoreNames.contains(ROUTINE_STORE)) {
+          db.createObjectStore(ROUTINE_STORE, { keyPath: "id" });
         }
       };
       request.onsuccess = () => resolve(request.result);
@@ -105,6 +109,16 @@
     },
     deleteExercise(id) {
       return remove(EXERCISE_STORE, id);
+    },
+    async listRoutineOrders() {
+      return list(ROUTINE_STORE);
+    },
+    saveRoutineOrder(id, order) {
+      return put(ROUTINE_STORE, {
+        id,
+        order: Array.from(order),
+        updatedAt: new Date().toISOString(),
+      });
     },
     async listSessions(limit = 8) {
       const rows = await list(SESSION_STORE);
