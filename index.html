@@ -7,12 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css?v=6" />
+    <link rel="stylesheet" href="./styles.css?v=10" />
 
     <!-- Three.js for 3D humanoid avatar -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-    <script src="./storage.js?v=6" defer></script>
-    <script src="./script.js?v=6" defer></script>
+    <script src="./storage.js?v=10" defer></script>
+    <script src="./script.js?v=10" defer></script>
   </head>
   <body data-track="exercise" data-app-view="coach" data-camera-coach="off" data-display-mode="standard">
     <main class="app-shell">
@@ -75,6 +75,21 @@
               </button>
               <button id="level-advanced-btn" class="choice-btn" type="button">
                 Advanced
+              </button>
+            </div>
+          </div>
+
+          <div id="workout-section-picker" class="picker-group workout-section-picker">
+            <p class="picker-label">Workout focus</p>
+            <div class="choice-row" role="group" aria-label="Workout focus selection">
+              <button id="workout-section-everyday-btn" class="choice-btn is-active" type="button">
+                Everyday
+              </button>
+              <button id="workout-section-posture-btn" class="choice-btn" type="button">
+                Posture + Back Care
+              </button>
+              <button id="workout-section-hiit-btn" class="choice-btn" type="button">
+                High Intensity
               </button>
             </div>
           </div>
@@ -263,7 +278,7 @@
             <section id="camera-coach-panel" class="camera-coach-panel visual-workspace" hidden aria-labelledby="camera-coach-title">
               <div class="visual-workspace-head">
                 <div>
-                  <p class="section-label">Your movement</p>
+                  <p id="camera-mode-label" class="section-label">Your movement</p>
                   <h3 id="camera-coach-title">Camera Coach</h3>
                 </div>
                 <button id="camera-stop-btn" class="icon-control" type="button" aria-label="Stop camera" title="Stop camera">×</button>
@@ -285,7 +300,7 @@
                 </div>
                 <div id="framing-guidance" class="framing-guidance" data-state="setup" aria-live="polite">
                   <strong id="framing-title">Stand where your full body is visible</strong>
-                  <span id="framing-detail">Leave space above your head and below your feet.</span>
+                  <span id="framing-detail">The setup changes to a seated, waist-up view for breathing practices.</span>
                 </div>
               </div>
             </section>
@@ -293,19 +308,19 @@
 
           <section id="camera-feedback" class="camera-feedback" hidden aria-label="Live coaching statistics">
             <div class="camera-score-card">
-              <span>Pose match</span>
+              <span id="camera-primary-label">Pose match</span>
               <strong id="match-score">--</strong>
               <div class="match-meter"><span id="match-meter-fill"></span></div>
               <small id="match-label">Waiting for a full-body pose</small>
             </div>
 
             <div class="stats-grid">
-              <div class="stat-tile"><span>Body visible</span><strong id="visibility-score">0%</strong></div>
-              <div class="stat-tile"><span>In target</span><strong id="target-rate">0%</strong></div>
-              <div class="stat-tile"><span>Consistency</span><strong id="consistency-score">0%</strong></div>
-              <div class="stat-tile"><span>Matched reps</span><strong id="rep-count">0</strong></div>
-              <div class="stat-tile"><span>Hold time</span><strong id="hold-time">0s</strong></div>
-              <div class="stat-tile"><span>Best match</span><strong id="best-score">0%</strong></div>
+              <div class="stat-tile"><span id="camera-visibility-label">Body visible</span><strong id="visibility-score">0%</strong></div>
+              <div class="stat-tile"><span id="camera-target-label">In target</span><strong id="target-rate">0%</strong></div>
+              <div class="stat-tile"><span id="camera-consistency-label">Consistency</span><strong id="consistency-score">0%</strong></div>
+              <div class="stat-tile"><span id="camera-rep-label">Matched reps</span><strong id="rep-count">0</strong></div>
+              <div class="stat-tile"><span id="camera-hold-label">Hold time</span><strong id="hold-time">0s</strong></div>
+              <div class="stat-tile"><span id="camera-best-label">Best match</span><strong id="best-score">0%</strong></div>
             </div>
 
             <div class="coach-direction">
@@ -317,7 +332,7 @@
             <div class="camera-privacy">
               <strong>Private by design</strong>
               <span>No camera frames or pose landmarks are uploaded. Only session totals are saved.</span>
-              <span>Scores compare visible joint angles with the guide; they are coaching estimates, not a medical assessment.</span>
+              <span id="camera-limitation-copy">Scores compare visible joint angles with the guide; they are coaching estimates, not a medical assessment.</span>
             </div>
 
             <div class="session-history-block">
@@ -384,7 +399,7 @@
             <p class="section-label">Routine library</p>
             <h2 id="exercise-studio-title">Exercises</h2>
           </div>
-          <button id="exercise-add-btn" class="action-btn action-btn-primary" type="button">Add exercise</button>
+          <button id="exercise-add-btn" class="action-btn action-btn-primary" type="button">Use recommended order</button>
         </div>
         <p id="exercise-routine-context" class="studio-intro">Workout · Beginner</p>
 
@@ -396,14 +411,6 @@
             </div>
             <span class="source-standard">Authoritative references</span>
           </div>
-          <form id="practice-goal-form" class="practice-goal-form">
-            <label for="practice-goal-input">What would you like to work on?</label>
-            <div class="practice-goal-control">
-              <input id="practice-goal-input" name="goal" type="text" maxlength="180" required placeholder="Morning energy, evening calm, stiff back, focus..." />
-              <button class="action-btn action-btn-primary" type="submit">Recommend</button>
-            </div>
-            <p id="practice-goal-result" class="practice-goal-result" aria-live="polite"></p>
-          </form>
           <div id="practice-library" class="practice-library"></div>
         </section>
 
@@ -416,10 +423,15 @@
               </div>
               <span id="exercise-routine-total" class="total-time"></span>
             </div>
+            <p class="routine-order-guide"><strong>Recommended flow:</strong> warm up → mobility → strength or work intervals → recovery → cooldown.</p>
             <div id="exercise-order-list" class="exercise-order-list"></div>
+            <div class="routine-builder-actions">
+              <button id="exercise-select-all-btn" class="action-btn" type="button">Select all</button>
+              <button id="exercise-clear-btn" class="action-btn" type="button">Clear picks</button>
+            </div>
             <div class="storage-note">
               <strong>Saved in this browser</strong>
-              <span>Routine order and custom exercises use IndexedDB. Camera images are never stored.</span>
+              <span>Selected movements and their order use IndexedDB. Camera images are never stored.</span>
             </div>
             <div class="practice-history-block">
               <p class="section-label">Recent practice</p>
@@ -427,46 +439,22 @@
             </div>
           </section>
 
-          <form id="exercise-form" class="exercise-form">
+          <section class="exercise-form exercise-picker-section" aria-labelledby="exercise-picker-title">
             <div class="form-heading">
-              <p class="section-label">Add exercise</p>
-              <h3>New movement</h3>
+              <p class="section-label">Exercise picker</p>
+              <h3 id="exercise-picker-title">Pick only what you want</h3>
             </div>
             <div class="form-section">
               <span class="form-step">1</span>
               <div>
-                <h3>Name the exercise</h3>
-                <p>Use a short name people can recognize while moving.</p>
+                <h3>Choose movements</h3>
+                <p>Your selected movements keep the coach animation, timing, instructions, and safety cues.</p>
               </div>
             </div>
-            <div class="form-grid two-column">
-              <label>Exercise name<input id="exercise-name" name="name" required maxlength="60" placeholder="Example: Supported Side Lunge" /></label>
-              <label>Track<select id="exercise-track" name="track"><option value="exercise">Workout</option><option value="yoga">Yoga</option><option value="dance">Dance</option><option value="breath">Breathing</option></select></label>
-              <label>Level<select id="exercise-level" name="level"><option value="both">Beginner + Advanced</option><option value="beginner">Beginner</option><option value="advanced">Advanced</option></select></label>
-              <label>Duration (seconds)<input id="exercise-duration" name="duration" type="number" min="10" max="600" value="30" required /></label>
-            </div>
-
-            <div class="form-section">
-              <span class="form-step">2</span>
-              <div>
-                <h3>Define the movement</h3>
-                <p>Choose a visual base and describe what the user should do.</p>
-              </div>
-            </div>
-            <div class="form-grid">
-              <label>Closest avatar movement<select id="exercise-animation" name="animation"></select></label>
-              <label>Training focus<input id="exercise-focus" name="focus" required maxlength="100" placeholder="Balance, hip mobility, shoulder control..." /></label>
-              <label>Movement summary<textarea id="exercise-summary" name="summary" required rows="2" maxlength="240" placeholder="Describe the movement in one clear sentence."></textarea></label>
-              <label>How to move<textarea id="exercise-instructions" name="instructions" required rows="4" placeholder="One instruction per line"></textarea></label>
-              <label>Coach cues<textarea id="exercise-cues" name="cues" required rows="3" placeholder="One short cue per line"></textarea></label>
-            </div>
-
-            <div class="form-actions">
-              <button class="action-btn action-btn-primary" type="submit">Save exercise</button>
-              <button id="exercise-form-reset-btn" class="action-btn" type="reset">Clear</button>
-              <span id="exercise-save-status" class="form-status" aria-live="polite"></span>
-            </div>
-          </form>
+            <p class="picker-help">Warmups and cooldowns are labeled so you can keep a safe beginning and finish. Use “recommended order” after changing your picks.</p>
+            <div id="exercise-picker-list" class="exercise-picker-list"></div>
+            <p id="exercise-save-status" class="form-status" aria-live="polite"></p>
+          </section>
         </div>
       </section>
 

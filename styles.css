@@ -84,6 +84,24 @@ body[data-yoga-section="relax"] {
   --secondary-soft: rgba(254, 240, 138, 0.1);
 }
 
+body[data-track="exercise"][data-workout-section="posture"] {
+  --accent: #6ee7b7;
+  --accent-deep: #10b981;
+  --accent-soft: rgba(110, 231, 183, 0.12);
+  --accent-glow: rgba(110, 231, 183, 0.22);
+  --secondary: #93c5fd;
+  --secondary-soft: rgba(147, 197, 253, 0.1);
+}
+
+body[data-track="exercise"][data-workout-section="hiit"] {
+  --accent: #fb5f6d;
+  --accent-deep: #e11d48;
+  --accent-soft: rgba(251, 95, 109, 0.13);
+  --accent-glow: rgba(251, 95, 109, 0.25);
+  --secondary: #fbbf24;
+  --secondary-soft: rgba(251, 191, 36, 0.1);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1069,8 +1087,7 @@ body[data-track="breath"] .pose-overlay-status {
 }
 
 body[data-track="breath"] #neural-pose-btn,
-body[data-track="breath"] #mirror-guide-btn,
-body[data-track="breath"] #camera-coach-btn {
+body[data-track="breath"] #mirror-guide-btn {
   display: none !important;
 }
 
@@ -1707,6 +1724,16 @@ body[data-track="breath"] #camera-coach-btn {
   font-variant-numeric: tabular-nums;
 }
 
+body[data-track="breath"] .camera-score-card > strong {
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+}
+
+body[data-track="breath"] .camera-frame-guide {
+  inset: 8% 19% 8%;
+  border-radius: 44% 44% 18% 18% / 12% 12% 8% 8%;
+}
+
 .camera-score-card small {
   color: var(--muted);
   line-height: 1.4;
@@ -1834,52 +1861,6 @@ body[data-track="breath"] #camera-coach-btn {
   font-weight: 900;
 }
 
-.practice-goal-form {
-  display: grid;
-  gap: 8px;
-  margin-top: 18px;
-  padding: 16px;
-  border-left: 4px solid var(--accent);
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.practice-goal-form label {
-  color: var(--ink-secondary);
-  font-size: 0.82rem;
-  font-weight: 800;
-}
-
-.practice-goal-control {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 8px;
-}
-
-.practice-goal-control input {
-  width: 100%;
-  min-height: 42px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  outline: none;
-  background: rgba(8, 12, 18, 0.58);
-  color: var(--ink);
-}
-
-.practice-goal-control input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.practice-goal-result {
-  min-height: 20px;
-  margin: 0;
-  color: var(--secondary);
-  font-size: 0.82rem;
-  font-weight: 800;
-  line-height: 1.5;
-}
-
 .practice-library {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1993,6 +1974,21 @@ body[data-track="breath"] #camera-coach-btn {
   min-width: 0;
 }
 
+.routine-order-guide,
+.picker-help {
+  margin: 10px 0 0;
+  color: var(--ink-secondary);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.routine-builder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
 .exercise-order-list {
   display: grid;
   gap: 6px;
@@ -2049,6 +2045,28 @@ body[data-track="breath"] #camera-coach-btn {
   margin-top: 6px;
 }
 
+.routine-phase {
+  width: fit-content;
+  display: inline-flex !important;
+  align-items: center;
+  margin-top: 6px;
+  padding: 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--ink-secondary) !important;
+  font-size: 0.64rem !important;
+  font-weight: 900;
+  line-height: 1 !important;
+  text-transform: uppercase;
+}
+
+.routine-phase.is-warmup { color: #fbbf24 !important; border-color: rgba(251, 191, 36, 0.25); }
+.routine-phase.is-mobility { color: #93c5fd !important; border-color: rgba(147, 197, 253, 0.25); }
+.routine-phase.is-strength { color: #c4b5fd !important; border-color: rgba(196, 181, 253, 0.25); }
+.routine-phase.is-work { color: #fb7185 !important; border-color: rgba(251, 113, 133, 0.28); }
+.routine-phase.is-recovery { color: #67e8f9 !important; border-color: rgba(103, 232, 249, 0.25); }
+.routine-phase.is-cooldown { color: #6ee7b7 !important; border-color: rgba(110, 231, 183, 0.25); }
+
 .exercise-order-actions {
   display: flex;
   gap: 4px;
@@ -2090,6 +2108,87 @@ body[data-track="breath"] #camera-coach-btn {
   align-content: start;
   padding-left: 24px;
   border-left: 1px solid var(--border);
+}
+
+.exercise-picker-section {
+  min-width: 0;
+}
+
+.exercise-picker-list {
+  display: grid;
+  gap: 8px;
+}
+
+.exercise-picker-item {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.exercise-picker-item:has(input:checked) {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: var(--accent-soft);
+}
+
+.exercise-picker-item input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.exercise-picker-copy {
+  min-width: 0;
+}
+
+.exercise-picker-copy strong,
+.exercise-picker-copy span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.exercise-picker-copy strong {
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.exercise-picker-copy span {
+  margin-top: 4px;
+  color: var(--ink-secondary);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.exercise-picker-badge {
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--secondary);
+  font-size: 0.64rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.exercise-order-empty {
+  display: grid;
+  gap: 5px;
+  padding: 18px;
+  border: 1px dashed var(--border);
+  border-radius: 7px;
+  color: var(--ink-secondary);
+}
+
+.exercise-order-empty span {
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 
 .form-section {
@@ -2330,6 +2429,17 @@ body[data-display-mode="large"] .current-name {
   }
 }
 
+@media (max-width: 620px) {
+  .exercise-picker-item {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .exercise-picker-badge {
+    grid-column: 2;
+    width: fit-content;
+  }
+}
+
 @media (max-width: 680px) {
   .app-shell {
     width: min(100vw - 16px, 100%);
@@ -2359,10 +2469,6 @@ body[data-display-mode="large"] .current-name {
     width: 38px;
     justify-content: center;
     padding: 0;
-  }
-
-  .practice-goal-control {
-    grid-template-columns: 1fr;
   }
 
   .tutorial-media-card.is-video {

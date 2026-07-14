@@ -1,27 +1,29 @@
 # Reverberesh
 
-Reverberesh is a browser-based movement coach that combines a guided session UI with a procedural 3D avatar, spoken cues, and an optional neural pose overlay. The name combines "reverberate" and "refresh": clear cues repeat through the session while the user resets into a fresher rhythm. The app is intentionally lightweight: there is no build step, no backend, and no framework runtime. Everything runs client-side from three files plus CDN dependencies.
+Reverberesh is a browser-based movement coach that combines a guided session UI with a procedural 3D avatar, spoken cues, and an optional neural pose overlay. The name combines "reverberate" and "refresh": clear cues repeat through the session while the user resets into a fresher rhythm. The app is intentionally lightweight: there is no build step, no backend, and no framework runtime. Everything runs client-side from four files plus CDN dependencies.
 
 ## What The App Does
 
 - Supports four tracks: `Workout`, `Yoga`, `Dance`, and `Breathing Exercise`
 - Supports two difficulty levels: `Beginner` and `Advanced`
+- Adds focused `Posture + Back Care` and `High-Intensity Intervals` workout sections with warm-up, mobility or work, recovery, cooldown, safety guidance, and authoritative references
 - Adds detailed Yoga sections for `Everyday Flow`, a 40-minute daily session, 20-minute office mobility, five Cat-Cow rounds, 12-position Surya Namaskar, a mirrored Chandra Namaskar variation, and supported relaxation
 - Tunes the Relaxation yoga section for blood-pressure support with slow exhales, supported poses, and no breath holds
 - Adds diaphragmatic, extended-exhale, Nadi Shodhana, Bhramari, box, and pursed-lip breathing with a five-minute default, immediate custom 3-60 minute timing, and phase-aware cues
 - Renders a full-body animated avatar in Three.js
 - Defaults to a mirrored follow-along avatar with guide lines for easier visual copying
-- Uses eased pose timing, reduced seated/supine float, and subtle secondary motion for more realistic movement
+- Uses anatomical joint conventions, joint limits, floor-contact correction, eased transitions, and subtle secondary motion for more realistic movement
 - Separates the focused coaching workflow from exercise management with `Coach` and `Exercises` tabs
 - Drives the session from structured routine data in `script.js`
 - Uses the Web Speech API for spoken cues
 - Can enable an optional MediaPipe pose overlay on top of the 3D stage
-- Adds an opt-in Camera Coach that places the practice avatar and live user video side by side, tracks the user's full-body pose locally, compares joint angles with the current AI pose, and reports live match, visibility, rep, hold, and best-score stats
+- Adds an opt-in Camera Coach that places the practice avatar and live user video side by side, tracks the user's full-body pose locally, compares world-space joint angles with the current AI pose, and reports live match, visibility, rep, hold, and best-score stats
 - Gives camera repositioning guidance when the head, feet, or key joints are outside the frame, or when the user is too near, too far, or off-center
-- Adds an Exercises workspace with a local free-form practice recommender, sourced guided sessions, routine ordering, custom movements, and recent practice summaries
+- Adds a seated breathing-camera mode that estimates visible upper-torso direction and timer-phase agreement while clearly stating that it cannot measure airflow, lung volume, oxygen, or medical fitness
+- Adds an Exercises workspace with sourced guided sessions, curated-only movement selection, persisted routine ordering, and recent practice summaries
 - Adds a big-screen display mode with stable stage sizing for TVs and projectors
-- Stores routine order, custom exercises, and aggregate camera-session history in IndexedDB with a local-storage fallback
-- Accepts URL parameters for deep-linking into a specific track, level, yoga section, and step
+- Stores curated selections, routine order, and aggregate session history in IndexedDB with a local-storage fallback
+- Accepts URL parameters for deep-linking into a specific track, level, workout focus, yoga section, breathing duration, and step
 
 ## Stack
 
@@ -32,7 +34,7 @@ Reverberesh is a browser-based movement coach that combines a guided session UI 
 - `MediaPipe Tasks Vision`: optional pose landmark detection and neural overlay
 - `Web Speech API`: voice guidance
 - `MediaDevices API`: opt-in local camera stream
-- `IndexedDB`: custom exercise and aggregate session-stat persistence
+- `IndexedDB`: selected routine, order, and aggregate session-stat persistence
 
 ## File Structure
 
@@ -94,7 +96,7 @@ There is no bundler or module loader. `script.js` runs as a single deferred scri
 
 ### Camera Coach
 
-Camera Coach is off by default and starts only after a user action. When enabled, the live video opens directly beside the practice avatar. It requests the browser camera, runs MediaPipe Pose Landmarker against the local video stream, and compares the user's visible joint angles with the projected AI avatar joints for the current movement.
+Camera Coach is off by default and starts only after a user action. When enabled, the live video opens directly beside the practice avatar. It requests the browser camera, runs MediaPipe Pose Landmarker against the local video stream, and compares the user's visible joint angles with the AI avatar's world-space joint geometry for the current movement. Orbiting the guide camera therefore does not change the target score.
 
 The camera workspace reports:
 
@@ -107,15 +109,17 @@ The camera workspace reports:
 
 Camera frames and raw landmarks are not uploaded or saved. Only aggregate session totals are written to the local database.
 
+For breathing practices, Camera Coach uses a seated head-shoulders-hips frame and estimates visible upper-torso motion relative to the active timer phase. This is deliberately labeled as an estimate: subtle breathing, loose clothing, humming, and alternate-nostril techniques may not create reliable visible motion, and the camera cannot measure respiratory function.
+
 Camera access requires `https://` in production or `localhost` during development.
 
 ### Exercises And Storage
 
-The Exercises tab lists sourced guided practices and the current routine for the active track, level, and yoga section. A local keyword recommender maps free-form goals to a suitable practice without sending the prompt to a server. Users can move any item earlier or later, and the selected order survives reloads. The same workspace lets users define a movement name, track, level, duration, closest avatar animation, training focus, instructions, and short coaching cues.
+The Exercises tab lists sourced guided practices and the current routine for the active track, level, workout focus, yoga section, or breathing option. Users can select only the curated movements that already have matching animation, timing, instructions, and safety cues. They can move selected items earlier or later, restore the recommended order, select all, or clear the routine. Selections and order survive reloads.
 
-The default database is IndexedDB because Reverberesh is deployable as a static GitHub Pages site and should work without account setup, secrets, or a paid backend. `storage.js` provides a small persistence API and falls back to local storage when IndexedDB is unavailable.
+The default database is IndexedDB because Reverberesh is deployable as a static GitHub Pages site and should work without account setup, secrets, or a paid backend. `storage.js` stores selected IDs, order, and aggregate session history, and falls back to local storage when IndexedDB is unavailable.
 
-For future signed-in, multi-device sync, Firebase Cloud Firestore's no-cost Spark plan is a practical hosted option. Cloud sync should store exercise definitions and aggregate session records only, never camera frames or raw pose landmarks.
+For future signed-in, multi-device sync, a free hosted tier such as Firebase Cloud Firestore can replace the local adapter. Cloud sync should store routine preferences and aggregate session records only, never camera frames or raw pose landmarks.
 
 ### 2. Style And Theme Layer
 
@@ -188,6 +192,8 @@ The 3D motion system is procedural rather than clip-based.
 - left and right leg rotation plus knee flexion
 - foot pitch and yaw
 
+Yoga poses use anatomical signs consistently: positive shoulder and hip X values are flexion, elbow and knee values are non-negative flexion, and positive Z values abduct both left and right limbs away from the body. `ANATOMICAL_LIMITS` clamps unrealistic ranges before the rig is applied.
+
 Each animation key in `P` defines two keyframes, `a` and `b`, plus a `speed`. Examples include:
 
 - workout: `march`, `squat`, `punch`
@@ -200,13 +206,16 @@ Each animation key in `P` defines two keyframes, `a` and `b`, plus a `speed`. Ex
 The render loop computes a pose by:
 
 1. Selecting the current animation key from the active step
-2. Oscillating between keyframes `a` and `b`
+2. Holding the completed keyframe for static asanas, or oscillating between `a` and `b` for active movement
 3. Easing the cycle through `realisticCycle(...)`
 4. Adding natural secondary motion through `applyNaturalMotion(...)`
-5. Interpolating through transitions when the step changes
-6. Applying the final joint rotations in `applyPose(...)`
+5. Interpolating through transitions when the step changes, with longer per-step transitions for linked salutations
+6. Clamping anatomical joint values and correcting grounded poses to the floor plane
+7. Applying the final joint rotations in `applyPose(...)`
 
 This design keeps the motion system easy to extend without exporting external animation assets.
+
+Surya Namaskar is represented as its complete 12-position order. Chandra Namaskar uses a 15-position lateral path through side bend, Goddess, Triangle, Pyramid, low lunge, Skandasana, and Malasana before mirroring back to Mountain. Every salutation step sets `sequenceFlow` and `flowTransitionSeconds`, so transport, voice, and pose interpolation treat the sequence as one continuous practice rather than unrelated pose loops.
 
 ### 5. Three.js Avatar And Scene Graph
 
