@@ -7,24 +7,30 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
 
     <!-- Three.js for 3D humanoid avatar -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-    <script src="./storage.js?v=5" defer></script>
-    <script src="./script.js?v=5" defer></script>
+    <script src="./storage.js?v=6" defer></script>
+    <script src="./script.js?v=6" defer></script>
   </head>
-  <body data-track="exercise" data-app-view="coach" data-camera-coach="off">
+  <body data-track="exercise" data-app-view="coach" data-camera-coach="off" data-display-mode="standard">
     <main class="app-shell">
       <header class="app-header">
         <a class="app-brand" href="./index.html" aria-label="Reverberesh home">
           <span class="app-brand-mark" aria-hidden="true">R</span>
           <span>Reverberesh</span>
         </a>
-        <nav class="app-tabs" role="tablist" aria-label="Application sections">
-          <button id="coach-tab-btn" class="app-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="coach-workspace">Coach</button>
-          <button id="exercises-tab-btn" class="app-tab" type="button" role="tab" aria-selected="false" aria-controls="exercise-studio-panel">Exercises</button>
-        </nav>
+        <div class="header-actions">
+          <button id="display-mode-btn" class="display-mode-btn" type="button" aria-pressed="false" title="Enter big-screen mode">
+            <svg class="btn-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M7 16.5h6M10 13.5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span data-display-label>Big screen</span>
+          </button>
+          <nav class="app-tabs" role="tablist" aria-label="Application sections">
+            <button id="coach-tab-btn" class="app-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="coach-workspace">Coach</button>
+            <button id="exercises-tab-btn" class="app-tab" type="button" role="tab" aria-selected="false" aria-controls="exercise-studio-panel">Exercises</button>
+          </nav>
+        </div>
       </header>
 
       <div id="coach-workspace" class="coach-workspace" data-coach-view role="tabpanel" aria-labelledby="coach-tab-btn">
@@ -77,7 +83,22 @@
             <p class="picker-label">Yoga section</p>
             <div class="choice-row" role="group" aria-label="Yoga section selection">
               <button id="yoga-section-flow-btn" class="choice-btn is-active" type="button">
-                Core Flow
+                Everyday Flow
+              </button>
+              <button id="yoga-section-daily-btn" class="choice-btn" type="button">
+                Daily Yoga · 40 min
+              </button>
+              <button id="yoga-section-office-btn" class="choice-btn" type="button">
+                Office Mobility · 20 min
+              </button>
+              <button id="yoga-section-catcow-btn" class="choice-btn" type="button">
+                Cat-Cow
+              </button>
+              <button id="yoga-section-sun-btn" class="choice-btn" type="button">
+                Surya Namaskar
+              </button>
+              <button id="yoga-section-moon-btn" class="choice-btn" type="button">
+                Chandra Namaskar
               </button>
               <button id="yoga-section-relax-btn" class="choice-btn" type="button">
                 Relaxation
@@ -86,19 +107,25 @@
           </div>
 
           <div id="breath-option-picker" class="picker-group breath-option-picker" hidden>
-            <p class="picker-label">Breathing timing</p>
-            <div class="choice-row" role="group" aria-label="Breathing timing selection">
-              <button class="choice-btn" type="button" data-breath-option="easy">
-                Easy 3 / 3 / 3 / 3
+            <p class="picker-label">Breathing practice</p>
+            <div class="choice-row" role="group" aria-label="Breathing practice selection">
+              <button class="choice-btn is-active" type="button" data-breath-option="diaphragmatic">
+                Diaphragmatic
               </button>
-              <button class="choice-btn is-active" type="button" data-breath-option="classic">
-                Classic 4 / 4 / 4 / 4
+              <button class="choice-btn" type="button" data-breath-option="extended">
+                Extended Exhale
               </button>
-              <button class="choice-btn" type="button" data-breath-option="deep">
-                Deep 5 / 5 / 5 / 5
+              <button class="choice-btn" type="button" data-breath-option="nadi">
+                Nadi Shodhana
               </button>
-              <button class="choice-btn" type="button" data-breath-option="advanced">
-                Advanced 6 / 6 / 6 / 6
+              <button class="choice-btn" type="button" data-breath-option="bhramari">
+                Bhramari
+              </button>
+              <button class="choice-btn" type="button" data-breath-option="box">
+                Box Breathing
+              </button>
+              <button class="choice-btn" type="button" data-breath-option="pursed">
+                Pursed-Lip
               </button>
             </div>
           </div>
@@ -246,6 +273,11 @@
                 <video id="camera-video" autoplay muted playsinline></video>
                 <canvas id="user-pose-canvas" aria-hidden="true"></canvas>
                 <div class="camera-frame-guide" aria-hidden="true"></div>
+                <div class="camera-framing-checks" aria-label="Camera framing checks">
+                  <span id="camera-head-check" data-visible="false">Head</span>
+                  <span id="camera-hands-check" data-visible="false">Hands</span>
+                  <span id="camera-feet-check" data-visible="false">Feet</span>
+                </div>
                 <div id="camera-loading" class="camera-loading">
                   <span class="camera-pulse"></span>
                   <strong>Starting camera coach</strong>
@@ -269,6 +301,8 @@
 
             <div class="stats-grid">
               <div class="stat-tile"><span>Body visible</span><strong id="visibility-score">0%</strong></div>
+              <div class="stat-tile"><span>In target</span><strong id="target-rate">0%</strong></div>
+              <div class="stat-tile"><span>Consistency</span><strong id="consistency-score">0%</strong></div>
               <div class="stat-tile"><span>Matched reps</span><strong id="rep-count">0</strong></div>
               <div class="stat-tile"><span>Hold time</span><strong id="hold-time">0s</strong></div>
               <div class="stat-tile"><span>Best match</span><strong id="best-score">0%</strong></div>
@@ -283,6 +317,7 @@
             <div class="camera-privacy">
               <strong>Private by design</strong>
               <span>No camera frames or pose landmarks are uploaded. Only session totals are saved.</span>
+              <span>Scores compare visible joint angles with the guide; they are coaching estimates, not a medical assessment.</span>
             </div>
 
             <div class="session-history-block">
@@ -343,7 +378,7 @@
       </section>
       </div>
 
-      <section id="exercise-studio-panel" class="exercise-studio-panel card" hidden role="tabpanel" aria-labelledby="exercises-tab-btn">
+      <section id="exercise-studio-panel" class="exercise-studio-panel" hidden role="tabpanel" aria-labelledby="exercises-tab-btn">
         <div class="section-head">
           <div>
             <p class="section-label">Routine library</p>
@@ -352,6 +387,25 @@
           <button id="exercise-add-btn" class="action-btn action-btn-primary" type="button">Add exercise</button>
         </div>
         <p id="exercise-routine-context" class="studio-intro">Workout · Beginner</p>
+
+        <section class="practice-library-section" aria-labelledby="practice-library-title">
+          <div class="section-head compact-head">
+            <div>
+              <p class="section-label">Guided practices</p>
+              <h3 id="practice-library-title">Choose a complete session</h3>
+            </div>
+            <span class="source-standard">Authoritative references</span>
+          </div>
+          <form id="practice-goal-form" class="practice-goal-form">
+            <label for="practice-goal-input">What would you like to work on?</label>
+            <div class="practice-goal-control">
+              <input id="practice-goal-input" name="goal" type="text" maxlength="180" required placeholder="Morning energy, evening calm, stiff back, focus..." />
+              <button class="action-btn action-btn-primary" type="submit">Recommend</button>
+            </div>
+            <p id="practice-goal-result" class="practice-goal-result" aria-live="polite"></p>
+          </form>
+          <div id="practice-library" class="practice-library"></div>
+        </section>
 
         <div class="exercise-studio-grid">
           <section class="exercise-order-section" aria-labelledby="exercise-order-title">
@@ -366,6 +420,10 @@
             <div class="storage-note">
               <strong>Saved in this browser</strong>
               <span>Routine order and custom exercises use IndexedDB. Camera images are never stored.</span>
+            </div>
+            <div class="practice-history-block">
+              <p class="section-label">Recent practice</p>
+              <div id="practice-history" class="session-history"></div>
             </div>
           </section>
 
