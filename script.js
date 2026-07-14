@@ -77,22 +77,22 @@ const tracks = {
     },
   },
   breath: {
-    label: "Breathing Exercise", heroTitle: "Breathing Exercise with Reverberesh",
-    heroText: "I'm Reverberesh, here to guide inhale, hold, exhale, hold breathing with a clear pose view, airflow arrows, and selectable timing.",
-    goals: ["Inhale", "Hold", "Exhale", "Hold"],
+    label: "Breathing Practice", heroTitle: "Pranayama and Breathing with Reverberesh",
+    heroText: "I'm Reverberesh, guiding practical diaphragmatic breathing, extended exhales, alternate-nostril breathing, Bhramari, box breathing, and pursed-lip breathing.",
+    goals: ["Comfortable Cadence", "Everyday Practice", "Clear Timing"],
     descriptions: {
-      beginner: "Beginner breathing uses short four-part cycles so the arrow direction and hold cues stay easy to follow.",
-      advanced: "Advanced breathing uses longer four-part cycles while keeping the pose, arrows, and airflow direction clear."
+      beginner: "Beginner breathing uses conservative counts, no retention for pranayama, and clear visual and voice cues.",
+      advanced: "Advanced breathing keeps the selected method controlled and unforced; only box breathing lengthens to a four-count cycle."
     },
-    tip: "Follow the cue box on the pose: inhale with the upward arrow, hold softly, exhale with the downward arrow, then hold softly again.",
-    burstLabel: "Guide Breathing",
-    notes: ["Breathe comfortably and keep the jaw, eyes, and shoulders relaxed.", "Let the inhale follow the upward arrow without lifting the shoulders.", "Hold softly without bracing.", "Let the exhale follow the downward arrow without forcing.", "Return to normal breathing if you feel light-headed."],
-    prompts: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow.", "Hold softly again."],
+    tip: "Follow the current phase and count. Shorten the count or return to normal breathing whenever the pattern feels strained.",
+    burstLabel: "Breath Cue",
+    notes: ["Breathe comfortably and keep the jaw, eyes, and shoulders relaxed.", "Do not take maximum breaths or force the end of an exhale.", "Beginners should avoid breath retention during pranayama.", "Return to normal breathing if you feel light-headed, dizzy, unusually short of breath, or uncomfortable.", "Breathing cycle counts track timer completion, not lung function or medical fitness."],
+    prompts: ["Keep the breath easy.", "Relax the jaw and shoulders.", "Use a shorter count if needed.", "Return to normal breathing whenever you need."],
     voice: {
       rate: 0.86,
       pitch: 0.95,
       volume: 0.9,
-      intro: "Watch the cue box on the pose. Inhale with the upward arrow, hold, exhale with the downward arrow, then hold again.",
+      intro: "Follow the selected breathing method and keep every phase easy and unforced.",
       pause: "Paused. Let your breath return to normal.",
       fiveSecond: "Five seconds. Finish softly.",
       finish: "Breathing exercise complete. Notice the quieter pace before you move on."
@@ -100,9 +100,125 @@ const tracks = {
   },
 };
 
+const workoutSections = {
+  everyday: {
+    label: "Everyday Workout",
+  },
+  posture: {
+    label: "Posture + Back Care",
+    heroTitle: "Build Posture and Back Support",
+    heroText: "A gentle, progressive session for posture, spinal control, and the muscles that support the back. It is designed for general stiffness or recurring non-specific discomfort, not diagnosis or acute injury care.",
+    goals: ["Posture", "Back Support", "Controlled Mobility"],
+    descriptions: {
+      beginner: "Beginner back care uses a longer warmup, small ranges, and stable floor-based strength work.",
+      advanced: "Advanced back care adds longer controlled holds while keeping every repetition symptom-free and unforced."
+    },
+    tip: "Stop if pain spreads down a leg, numbness or weakness appears, or any movement clearly worsens symptoms. Seek urgent care for new bladder or bowel changes, saddle numbness, major trauma, chest pain, or fever with back pain.",
+    burstLabel: "Posture Cue",
+    notes: ["This routine supports general movement and conditioning; it does not diagnose or treat a specific back condition.", "Warm up gently before the floor exercises and use a folded towel or mat for comfort.", "Keep each range comfortable. More depth is not the goal.", "Stop for increasing pain, tingling, numbness, weakness, dizziness, chest discomfort, or unusual shortness of breath."],
+    prompts: ["Small range, steady control.", "Keep the spine long and the breath easy.", "Move only where symptoms stay calm.", "Use support and slow the transition."],
+    voice: {
+      rate: 0.9,
+      intro: "Move gently and keep every range comfortable. Stop if symptoms increase or travel.",
+      fiveSecond: "Five seconds. Finish the repetition without forcing it.",
+      finish: "Back-care session complete. Notice how you feel before returning to normal activity."
+    },
+  },
+  hiit: {
+    label: "High-Intensity Intervals",
+    heroTitle: "High-Intensity Interval Session",
+    heroText: "A bodyweight interval session with a real warmup, vigorous work blocks, planned recovery, and a cooldown. Intensity stays relative to your current fitness.",
+    goals: ["Intervals", "Cardio", "Power + Recovery"],
+    descriptions: {
+      beginner: "Beginner HIIT uses low-impact options, 25-second work blocks, and generous recovery while still targeting a challenging effort.",
+      advanced: "Advanced HIIT uses 40-second work blocks and shorter recovery for an effort around 7 to 8 out of 10."
+    },
+    tip: "Use the talk test: vigorous effort usually allows only a few words before pausing for breath. Slow down immediately for poor form, dizziness, chest pain, or unusual shortness of breath.",
+    burstLabel: "Intensity Cue",
+    notes: ["Warm up before the first hard interval and keep moving lightly during recovery.", "Vigorous intensity is relative; aim near 7 to 8 out of 10 only if that is appropriate for you.", "Choose step-based, no-jump versions whenever landing quality changes.", "Stop for chest pain, faintness, irregular pounding heartbeat, or unusual shortness of breath."],
+    prompts: ["Strong effort, clean form.", "Use the low-impact option whenever you need it.", "Recover actively and reset your posture.", "Keep enough control to land quietly."],
+    voice: {
+      rate: 1.02,
+      intro: "Warm up first, then build to a challenging but controlled interval pace.",
+      fiveSecond: "Five seconds. Finish with clean form.",
+      finish: "Intervals complete. Keep moving lightly while your breathing settles."
+    },
+  },
+};
+
 const yogaSections = {
   flow: {
-    label: "Yoga",
+    label: "Everyday Yoga",
+  },
+  daily: {
+    label: "Daily Yoga · 40 min",
+    heroTitle: "Practice a Complete Daily Session",
+    heroText: "A detailed 40-minute session combining breath awareness, spinal mobility, a shortened Sun flow, standing strength, balance, twists, forward bends, a gentle backbend, pranayama, and final rest.",
+    goals: ["Full Practice", "Mobility + Strength", "Breath + Rest"],
+    descriptions: {
+      beginner: "Beginner Daily Yoga follows a fixed 40-minute structure with generous setup time, supported shapes, and a seven-minute final rest.",
+      advanced: "Advanced Daily Yoga keeps the 40-minute structure while offering deeper standing shapes only when alignment and breath remain steady."
+    },
+    tip: "Keep a chair, wall, cushion, and two blocks nearby. Use them before balance or range begins to change.",
+    burstLabel: "Daily Practice Cue",
+    notes: ["The session moves from breath and warmup to standing work, floor work, pranayama, and rest.", "Use support in folds, lunges, balance poses, and the final rest.", "Breathing should remain unforced throughout; shorten any count that creates strain.", "Stop for pain, dizziness, unusual shortness of breath, or chest discomfort."],
+    prompts: ["Choose steady alignment over depth.", "Use the support before you need it.", "Let the breath set the pace.", "Keep the transition as controlled as the pose."],
+  },
+  office: {
+    label: "Office Mobility · 20 min",
+    heroTitle: "Reset with Office Mobility",
+    heroText: "A practical 20-minute session for a work break, using breath, posture work, Cat-Cow, side bends, twists, Chair, folds, supported lunges, Warrior II, and a quiet finish.",
+    goals: ["Spinal Mobility", "Posture Reset", "Workday Movement"],
+    descriptions: {
+      beginner: "Beginner Office Mobility keeps every movement close to a chair or wall and avoids deep ranges.",
+      advanced: "Advanced Office Mobility uses the same 20-minute structure with longer lines and stronger standing control, not faster movement."
+    },
+    tip: "Place a stable chair beside you, clear the floor, and keep shoes on if bare feet would be unsafe in the space.",
+    burstLabel: "Workday Cue",
+    notes: ["Use a stable chair or wall for every standing balance or lunge.", "Move away from the desk before folding or reaching sideways.", "Keep twists centered through the torso instead of pulling with the arms.", "This is a general movement break, not treatment for back or neck symptoms."],
+    prompts: ["Stand away from the desk edge.", "Keep the movement small and controlled.", "Use the chair for support.", "Return to an upright posture between shapes."],
+  },
+  catcow: {
+    label: "Cat-Cow Mobility",
+    heroTitle: "Mobilize with Cat-Cow",
+    heroText: "Reverberesh guides five controlled Cat-Cow rounds with a neutral tabletop reset between each spinal movement.",
+    goals: ["Spinal Motion", "Shoulder Control", "Steady Breath"],
+    descriptions: {
+      beginner: "Beginner Cat-Cow uses the VA's five-round structure with clear five-second Cat and Cow positions.",
+      advanced: "Advanced Cat-Cow adds a longer neutral reset and slower, controlled transitions without forcing range."
+    },
+    tip: "Keep hands near the shoulders and knees below the hips; make the movement smaller if the neck or low back feels compressed.",
+    burstLabel: "Mobility Cue",
+    notes: ["Start on hands and knees with weight shared evenly.", "Move only through a comfortable range; the spine should not feel pinched.", "Use a neutral tabletop between Cat and Cow instead of rushing directly between extremes.", "Stop and seek professional guidance if the movement increases pain, tingling, or numbness."],
+    prompts: ["Move one section of the spine at a time.", "Keep the hands and knees grounded.", "Let the breath stay quiet.", "Use less range and more control."],
+  },
+  sun: {
+    label: "Surya Namaskar",
+    heroTitle: "Practice Surya Namaskar",
+    heroText: "Reverberesh links the Yoga Certification Board's 12-position Sun Salutation into one continuous, breath-paced round with beginner modifications.",
+    goals: ["12 Positions", "Whole-Body Flow", "Breath Coordination"],
+    descriptions: {
+      beginner: "Beginner Surya Namaskar links one slow 12-position round with bent-knee folds and a knees-down plank option.",
+      advanced: "Advanced Surya Namaskar links two controlled rounds while preserving alignment and unforced breathing."
+    },
+    tip: "Learn each position before linking the sequence. Use knees down in plank and keep the fold shallow when needed.",
+    burstLabel: "Flow Cue",
+    notes: ["This guide follows a 12-position Government of India Yoga Certification Board sequence.", "Warm up first and avoid forcing forward folds or backbends.", "People with back conditions or other relevant health concerns should seek qualified guidance before starting.", "Stop for pain, dizziness, unusual shortness of breath, or chest discomfort."],
+    prompts: ["Match the position before adding speed.", "Let the breath organize the transition.", "Use the knees-down option when needed.", "Keep the movement smooth and unforced."],
+  },
+  moon: {
+    label: "Chandra Namaskar",
+    heroTitle: "Practice Chandra Namaskar",
+    heroText: "Reverberesh links a mirrored Moon Salutation through side bends, Goddess, Triangle, Pyramid, low lunge, Skandasana, and a centered Garland pose.",
+    goals: ["Continuous Flow", "Hip Control", "Evening Practice"],
+    descriptions: {
+      beginner: "Beginner Chandra Namaskar moves continuously through a slow mirrored variation with shallow lunges and supported transitions.",
+      advanced: "Advanced Chandra Namaskar uses a steadier continuous pace while keeping the left and right ranges symmetrical."
+    },
+    tip: "Moon Salutation sequences vary by tradition. This guide uses one clearly labeled variation and keeps both sides symmetrical.",
+    burstLabel: "Moon Flow Cue",
+    notes: ["Chandra Namaskar is not one universally standardized sequence; this is a Kripalu-inspired practical variation.", "Keep both knees tracking with the toes in wide stances and lateral squats.", "Shorten the stance or keep hands on blocks when balance is limited.", "Stop for pain, dizziness, unusual shortness of breath, or chest discomfort."],
+    prompts: ["Move slowly across the wide stance.", "Keep both feet grounded.", "Use a smaller bend to stay steady.", "Match the second side to the first."],
   },
   relax: {
     label: "Yoga Relaxation",
@@ -126,53 +242,85 @@ const yogaSections = {
 };
 
 const BREATH_OPTIONS = {
-  easy: {
-    label: "Easy",
-    title: "Easy Box Breathing",
+  diaphragmatic: {
+    label: "Diaphragmatic",
+    title: "Diaphragmatic Breathing",
+    target: "4 in / 6 out",
+    animation: "belly-breath",
+    phases: [phase("Inhale", 4, "Breathe in through the nose and let the belly move outward.", "inhale"), phase("Exhale", 6, "Exhale gently through relaxed or lightly pursed lips.", "exhale")],
+    summary: "Use one hand below the ribs and one on the upper chest; let the lower hand move more than the upper hand.",
+    source: { title: "Diaphragmatic breathing", label: "Cleveland Clinic", url: "https://my.clevelandclinic.org/-/scassets/files/org/canada/ehp/stress-diaphragmatic-breathing" },
+  },
+  extended: {
+    label: "Extended Exhale",
+    title: "Extended-Exhale Breathing",
+    target: "4 in / 6 out",
+    animation: "long-exhale",
+    phases: [phase("Inhale", 4, "Inhale gently without filling to your maximum.", "inhale"), phase("Exhale", 6, "Exhale slowly and comfortably; do not force the last part.", "exhale")],
+    summary: "Use a longer exhale while the jaw, shoulders, and belly stay relaxed.",
+    source: { title: "Rectangle breathing", label: "NHS", url: "https://www.cht.nhs.uk/services/clinical-services/oncology/information-support/first-steps/breathlessness-and-relaxation" },
+  },
+  nadi: {
+    label: "Nadi Shodhana",
+    title: "Alternate-Nostril Breathing",
+    target: "4 in / 4 out",
+    animation: "nadi-shodhana",
+    phases: [phase("Left inhale", 4, "Close the right nostril and inhale gently through the left.", "inhale"), phase("Right exhale", 4, "Switch sides and exhale gently through the right.", "exhale"), phase("Right inhale", 4, "Keep the left nostril closed and inhale through the right.", "inhale"), phase("Left exhale", 4, "Switch sides and exhale through the left to complete one round.", "exhale")],
+    summary: "Alternate nostrils without breath retention; one left-to-right-to-left sequence is one round.",
+    source: { title: "Yoga practice guidelines", label: "Ministry of AYUSH", url: "https://yoga.ayush.gov.in/public/assets/yoga-guidelines.pdf" },
+  },
+  bhramari: {
+    label: "Bhramari",
+    title: "Bhramari Humming Breath",
+    target: "4 in / 6 hum",
+    animation: "bhramari",
+    phases: [phase("Inhale", 4, "Inhale gently through the nose with the mouth closed.", "inhale"), phase("Hum", 6, "Exhale slowly with a soft, steady humming sound.", "exhale")],
+    summary: "Sit comfortably, keep the mouth closed, and use a soft hum during the exhale; skip this practice during an ear or nose infection.",
+    source: { title: "Common Yoga Protocol", label: "Ministry of AYUSH", url: "https://yoga.ayush.gov.in/public/assets/front/pdf/CYPEnglishLeaflet.pdf" },
+  },
+  box: {
+    label: "Box",
+    title: "Box Breathing",
     target: "3 / 3 / 3 / 3",
-    counts: [3, 3, 3, 3],
-    note: "Short sides for learning inhale, hold, exhale, hold.",
+    animation: "box-breath",
+    phases: breathPattern([3, 3, 3, 3]),
+    advancedPhases: breathPattern([4, 4, 4, 4]),
+    summary: "Use equal inhale, hold, exhale, and hold phases only while every phase stays comfortable and unforced.",
+    source: { title: "Yoga safety", label: "NCCIH", url: "https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety" },
   },
-  classic: {
-    label: "Classic",
-    title: "Classic Box Breathing",
-    target: "4 / 4 / 4 / 4",
-    counts: [4, 4, 4, 4],
-    note: "The standard equal-count inhale, hold, exhale, hold pattern.",
-  },
-  deep: {
-    label: "Deep",
-    title: "Deep Box Breathing",
-    target: "5 / 5 / 5 / 5",
-    counts: [5, 5, 5, 5],
-    note: "A longer equal-count option for a slower rhythm.",
-  },
-  advanced: {
-    label: "Advanced",
-    title: "Advanced Box Breathing",
-    target: "6 / 6 / 6 / 6",
-    counts: [6, 6, 6, 6],
-    note: "Longer equal sides for experienced, unstrained breathwork.",
+  pursed: {
+    label: "Pursed-Lip",
+    title: "Pursed-Lip Breathing",
+    target: "2 in / 4 out",
+    animation: "long-exhale",
+    phases: [phase("Inhale", 2, "Inhale slowly through the nose.", "inhale"), phase("Exhale", 4, "Exhale gently through lightly pursed lips without blowing hard.", "exhale")],
+    summary: "Keep the exhale at least twice as long as the inhale and stop if you feel dizzy, light-headed, or tired.",
+    source: { title: "Pursed-lip breathing", label: "Cleveland Clinic", url: "https://my.clevelandclinic.org/health/treatments/9443-pursed-lip-breathing" },
   },
 };
-const BREATH_OPTION_ORDER = ["easy", "classic", "deep", "advanced"];
+const BREATH_OPTION_ORDER = ["diaphragmatic", "extended", "nadi", "bhramari", "box", "pursed"];
+const LEGACY_BREATH_OPTIONS = { easy: "box", classic: "box", deep: "box", advanced: "box" };
 
-const BREATH_TUTORIAL = {
-  label: "Breathing timer",
-  title: "Breathing exercises with airflow arrows",
-  kicker: "Inhale - hold - exhale - hold",
-  summary: "The breathing track follows a four-part pattern: inhale, hold, exhale, hold. The cue box sits on the pose and shows an upward arrow for inhale and a downward arrow for exhale.",
-  steps: [
-    { name: "Easy timing", breath: "3 / 3 / 3 / 3", cue: "Short sides for learning inhale, hold, exhale, hold." },
-    { name: "Classic timing", breath: "4 / 4 / 4 / 4", cue: "Equal sides with visible upward and downward airflow arrows." },
-    { name: "Deep timing", breath: "5 / 5 / 5 / 5", cue: "Use longer sides only when the four-count version feels easy." },
-    { name: "Advanced timing", breath: "6 / 6 / 6 / 6", cue: "Use this only when every hold stays soft and unforced." },
-  ],
-  media: [
-    { type: "reference", title: "Diaphragmatic breathing guide", source: "Cleveland Clinic", url: "https://my.clevelandclinic.org/health/articles/diaphragmatic-breathing" },
-    { type: "reference", title: "Breathing exercises for stress", source: "NHS", url: "https://www.nhs.uk/conditions/stress-anxiety-depression/ways-relieve-stress/" },
-  ],
-};
+function buildBreathTutorial() {
+  const option = selectedBreathOption(state?.breathOption);
+  return {
+    label: "Pranayama and breathing tutorial",
+    title: option.title,
+    kicker: option.target,
+    summary: `${option.summary} Breathing cadence is timed locally. The optional camera can estimate visible upper-torso direction, but it cannot measure airflow, lung volume, oxygen, or lung function. Return to normal breathing if you feel uncomfortable or light-headed.`,
+    steps: [
+      { name: "Set your posture", breath: "Comfortable and upright", cue: "Sit or lie in a position where the jaw, shoulders, and belly can remain relaxed." },
+      { name: "Learn one cycle", breath: option.target, cue: option.phases.map(item => `${item.label} ${item.duration}s`).join("; ") + "." },
+      { name: "Keep it unforced", breath: "No maximum breaths", cue: "Make the count shorter whenever the inhale, exhale, hum, or hold stops feeling easy." },
+      { name: "Optional camera estimate", breath: `${state?.breathMinutes || 5} minute session`, cue: "The camera can compare visible torso expansion or contraction with the timer phase. Subtle breaths, clothing, humming, and hand positions can reduce accuracy; no frames are stored." },
+    ],
+    media: [
+      { type: "reference", title: option.source.title, source: option.source.label, url: option.source.url },
+      { type: "reference", title: "Breathing exercises for stress", source: "NHS", url: "https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/" },
+      { type: "reference", title: "Yoga effectiveness and safety", source: "NCCIH", url: "https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety" },
+    ],
+  };
+}
 
 const BP_YOGA_TUTORIAL = {
   label: "Blood pressure support",
@@ -194,6 +342,157 @@ const BP_YOGA_TUTORIAL = {
   ],
 };
 
+const CAT_COW_TUTORIAL = {
+  label: "Spinal mobility tutorial",
+  title: "Cat-Cow in five controlled rounds",
+  kicker: "VA reference",
+  summary: "This sequence follows the Veterans Health Library setup: hands slightly ahead of the shoulders, knees below the hips, a neutral start, five seconds in Cow, five seconds in Cat, and five repetitions.",
+  steps: [
+    { name: "Neutral tabletop", breath: "Breathe normally", cue: "Share weight across both hands and knees, keep the back level, and look slightly down." },
+    { name: "Cow position", breath: "5 seconds", cue: "Relax the belly, lift the head gently, and let the back sag without sitting toward the heels." },
+    { name: "Return to neutral", breath: "One easy breath", cue: "Level the spine before changing direction." },
+    { name: "Cat position", breath: "5 seconds", cue: "Tuck the head and arch the back without forcing the shoulders or neck." },
+    { name: "Repeat", breath: "5 rounds", cue: "Use the same controlled range on every round and stop if symptoms increase." },
+  ],
+  media: [
+    { type: "reference", title: "Back Exercises: Cat and Cow", source: "Veterans Health Library", url: "https://www.veteranshealthlibrary.va.gov/Encyclopedia/3%2C89881" },
+    { type: "reference", title: "Yoga effectiveness and safety", source: "NCCIH", url: "https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety" },
+  ],
+};
+
+const DAILY_YOGA_TUTORIAL = {
+  label: "Complete session tutorial",
+  title: "Daily Yoga · 40-minute structure",
+  kicker: "19 guided steps",
+  summary: "This complete practice uses a familiar class structure: settle the breath, mobilize the spine, warm through a shortened Sun flow, practice standing and seated shapes, add a gentle backbend and alternate-nostril breathing, then rest.",
+  steps: [
+    { name: "1. Arrive", breath: "0:00-4:00", cue: "Use diaphragmatic breathing, posture work, Cat-Cow, and a short Child Pose reset." },
+    { name: "2. Warm the whole body", breath: "4:00-15:00", cue: "Move through Sun Reach, fold, lunge, plank, Cobra, and Downward Dog at a controlled pace." },
+    { name: "3. Stand and balance", breath: "15:00-22:00", cue: "Practice Warrior II, Triangle, side stretch, and Tree with a chair or wall nearby." },
+    { name: "4. Floor sequence", breath: "22:00-30:00", cue: "Use Butterfly, a seated twist, a supported forward fold, and a low supported Bridge." },
+    { name: "5. Breathe and rest", breath: "30:00-40:00", cue: "Finish with alternate-nostril breathing without retention and seven minutes of supported Shavasana." },
+  ],
+  media: [
+    { type: "reference", title: "Yoga effectiveness and safety", source: "NCCIH", url: "https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety" },
+    { type: "reference", title: "Whole Health yoga overview", source: "U.S. Department of Veterans Affairs", url: "https://www.va.gov/WHOLEHEALTHLIBRARY/tools/yoga.asp" },
+    { type: "reference", title: "Common Yoga Protocol", source: "Ministry of AYUSH", url: "https://yoga.ayush.gov.in/YAP/PDF/Common%20Yoga%20Protocol%20Book-English.pdf" },
+  ],
+};
+
+const OFFICE_YOGA_TUTORIAL = {
+  label: "Workday session tutorial",
+  title: "Office Mobility · 20-minute structure",
+  kicker: "13 guided steps",
+  summary: "This work-break sequence moves the spine in several directions, then restores standing control with a chair-supported fold, lunges, Warrior II, posture work, and a quiet breath finish.",
+  steps: [
+    { name: "Set the space", breath: "Stable chair nearby", cue: "Move clear of desk edges, rolling chairs, cables, and hard objects before starting." },
+    { name: "Mobilize", breath: "First 8 minutes", cue: "Use breath, shoulder opening, Cat-Cow, a side bend, and a controlled twist." },
+    { name: "Stand", breath: "Middle 10 minutes", cue: "Practice Chair, a supported fold, lunges on both sides, and Warrior II without rushing." },
+    { name: "Reset posture", breath: "Final 2 minutes", cue: "Finish with upper-back activation, an easy twist, and normal breathing." },
+  ],
+  media: [
+    { type: "reference", title: "Back Exercises: Cat and Cow", source: "Veterans Health Library", url: "https://www.veteranshealthlibrary.va.gov/Encyclopedia/3%2C89881" },
+    { type: "reference", title: "Yoga effectiveness and safety", source: "NCCIH", url: "https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety" },
+  ],
+};
+
+const SURYA_TUTORIAL = {
+  label: "12-position tutorial",
+  title: "Surya Namaskar step by step",
+  kicker: "Yoga Certification Board",
+  summary: "The Yoga Certification Board describes one round as 12 positions, with eight distinct asanas and four repeated positions. Reverberesh links them continuously and offers knees-down and bent-knee options.",
+  steps: [
+    { name: "1. Namaskarasana", breath: "Normal breath", cue: "Stand evenly and bring palms together near the chest." },
+    { name: "2. Hastottanasana", breath: "Inhale", cue: "Raise the arms and lengthen upward; keep any backbend small." },
+    { name: "3. Padahastasana", breath: "Exhale", cue: "Fold from the hips and bend the knees as needed." },
+    { name: "4. Ashwa Sanchalanasana", breath: "Inhale", cue: "Step one leg back and keep the front knee near the ankle." },
+    { name: "5. Santolanasana", breath: "Exhale", cue: "Move to plank; lower the knees when needed and keep shoulders over hands." },
+    { name: "6. Ashtanga Namaskara", breath: "Easy exhale", cue: "Lower knees, chest, and chin with control; skip this position if it is not comfortable." },
+    { name: "7. Bhujangasana", breath: "Inhale", cue: "Lift the chest only as far as the low back and shoulders stay comfortable." },
+    { name: "8. Parvatasana", breath: "Exhale", cue: "Lift the hips into an inverted V and keep the knees bent when needed." },
+    { name: "9. Ashwa Sanchalanasana", breath: "Inhale", cue: "Step the same lead leg forward and use blocks if the floor is far away." },
+    { name: "10. Padahastasana", breath: "Exhale", cue: "Bring the other foot forward and fold with soft knees." },
+    { name: "11. Hastottanasana", breath: "Inhale", cue: "Rise with a long spine and reach the arms up." },
+    { name: "12. Namaskarasana", breath: "Exhale", cue: "Return the palms to the chest and stand evenly." },
+  ],
+  media: [
+    { type: "reference", title: "Surya Namaskar: 12-position sequence", source: "Yoga Certification Board, Government of India", url: "https://yogacertificationboard.nic.in/suryanamaskar/suryanamaskar.php" },
+    { type: "reference", title: "Continuous Surya Namaskar demonstration", source: "Video reference", url: "https://www.youtube.com/watch?v=aJb1AWMc-64" },
+    { type: "reference", title: "Yoga effectiveness and safety", source: "NCCIH", url: "https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety" },
+  ],
+};
+
+const CHANDRA_TUTORIAL = {
+  label: "Moon Salutation tutorial",
+  title: "Chandra Namaskar variation",
+  kicker: "Mirrored lateral sequence",
+  summary: "Moon Salutation is taught in multiple forms. This demonstrated variation moves continuously from a side bend through Goddess, Triangle, Pyramid, low lunge, Skandasana, and Garland, then mirrors the sequence to return to center.",
+  steps: [
+    { name: "Center and left side bend", breath: "Slow inhale and exhale", cue: "Bring the palms together, reach up, and lengthen through the left side without collapsing the waist." },
+    { name: "Goddess", breath: "Steady breath", cue: "Turn the toes out comfortably and keep both knees following the toes." },
+    { name: "Left Triangle and Pyramid", breath: "Exhale into each shape", cue: "Lengthen before tipping or folding; use blocks and soften the knees." },
+    { name: "Left low lunge and Skandasana", breath: "Inhale, then exhale", cue: "Keep the front knee near the ankle, then shift into a shallow lateral squat." },
+    { name: "Garland center", breath: "Steady breath", cue: "Bring the weight to center, keep the heels supported, and let both knees follow the toes." },
+    { name: "Mirror to the right", breath: "Even pace", cue: "Repeat Skandasana, lunge, Pyramid, and Triangle with the same range on the right." },
+    { name: "Goddess and right side bend", breath: "Slow inhale and exhale", cue: "Return through Goddess, lengthen through the right side, and finish centered." },
+  ],
+  media: [
+    { type: "reference", title: "Chandra Namaskar: Honoring the Moon Salute", source: "Kripalu Center for Yoga & Health", url: "https://kripalu.org/living-kripalu/chandra-namaskar-honoring-moon-salute" },
+    { type: "reference", title: "Continuous Chandra Namaskar demonstration", source: "Video reference", url: "https://www.youtube.com/watch?v=x-QxVypp86U" },
+    { type: "reference", title: "Yoga effectiveness and safety", source: "NCCIH", url: "https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety" },
+  ],
+};
+
+const POSTURE_BACK_TUTORIAL = {
+  label: "Posture and back-care guide",
+  title: "A symptom-aware exercise order",
+  kicker: "Warm up · control · strength · reset",
+  summary: "The session follows spine-conditioning guidance: begin with low-impact movement, practice comfortable mobility, strengthen the trunk and hip muscles that support the spine, and finish with an easy reset. It is not individualized medical care.",
+  steps: [
+    { name: "Warm up first", breath: "2-3 minutes here", cue: "Walk or march longer before starting if your body still feels cold or stiff." },
+    { name: "Mobilize comfortably", breath: "No forced range", cue: "Use Cat-Cow and knee-to-chest only through a range that does not increase or spread symptoms." },
+    { name: "Build support", breath: "Exhale with effort", cue: "Bird Dog and Bridge train the trunk, back extensors, and gluteal muscles with slow control." },
+    { name: "Recheck symptoms", breath: "Return to normal", cue: "Finish feeling the same or better. Stop and seek advice when pain, tingling, numbness, or weakness increases." },
+  ],
+  media: [
+    { type: "reference", title: "Spine Conditioning Program", source: "American Academy of Orthopaedic Surgeons", url: "https://orthoinfo.aaos.org/en/recovery/spine-conditioning-program" },
+    { type: "reference", title: "Back pain: symptoms and when to seek help", source: "NHS", url: "https://www.nhs.uk/conditions/back-pain/" },
+  ],
+};
+
+const HIIT_TUTORIAL = {
+  label: "Interval guide",
+  title: "Warm up, work, recover, cool down",
+  kicker: "Relative vigorous intensity",
+  summary: "High-intensity work is relative to the person doing it. The work blocks aim for a challenging effort while the recovery blocks restore posture and breathing before the next movement.",
+  steps: [
+    { name: "Warm up", breath: "Build gradually", cue: "March and step laterally before adding speed or power." },
+    { name: "Work interval", breath: "RPE 7-8 / 10", cue: "At vigorous effort, speaking more than a few words usually requires a pause for breath." },
+    { name: "Active recovery", breath: "Keep moving lightly", cue: "Stand tall, release the hands, and let breathing settle before the next block." },
+    { name: "Cool down", breath: "Do not stop abruptly", cue: "Finish with easy steps and posture work until breathing is clearly calmer." },
+  ],
+  media: [
+    { type: "reference", title: "How to measure physical activity intensity", source: "U.S. Centers for Disease Control and Prevention", url: "https://www.cdc.gov/physical-activity-basics/measuring/index.html" },
+    { type: "reference", title: "Physical Activity Guidelines for Americans", source: "U.S. Department of Health and Human Services", url: "https://health.gov/sites/default/files/2019-09/Physical_Activity_Guidelines_2nd_edition.pdf" },
+  ],
+};
+
+const PRACTICE_LIBRARY = [
+  { id: "posture", type: "workout", eyebrow: "Focused support", title: "Posture + Back Care", meta: "Gentle mobility + trunk strength", description: "A symptom-aware progression through warmup, Cat-Cow, Bird Dog, Bridge, and knee-to-chest.", workoutSection: "posture", keywords: ["back", "pain", "posture", "spine", "stiff", "bird dog", "bridge"], source: POSTURE_BACK_TUTORIAL.media[0] },
+  { id: "hiit", type: "workout", eyebrow: "Vigorous intervals", title: "High-Intensity Intervals", meta: "Warmup + work/recovery blocks", description: "Low-impact or faster bodyweight intervals organized around relative vigorous effort.", workoutSection: "hiit", keywords: ["hiit", "high intensity", "cardio", "interval", "vigorous", "fast"], source: HIIT_TUTORIAL.media[0] },
+  { id: "daily", type: "yoga", eyebrow: "Complete yoga", title: "Daily Yoga · 40 min", meta: "19 detailed steps", description: "Breath, mobility, Sun flow, standing work, balance, floor poses, pranayama, and rest.", section: "daily", keywords: ["daily", "complete", "full", "40", "strength", "flexibility", "fitness", "routine"], source: DAILY_YOGA_TUTORIAL.media[0] },
+  { id: "office", type: "yoga", eyebrow: "Workday yoga", title: "Office Mobility · 20 min", meta: "13 detailed steps", description: "A chair-supported spinal and standing reset for a practical work break.", section: "office", keywords: ["office", "desk", "work", "20", "posture", "stiff", "break", "chair"], source: OFFICE_YOGA_TUTORIAL.media[0] },
+  { id: "catcow", type: "yoga", eyebrow: "Yoga mobility", title: "Cat-Cow Mobility", meta: "5 rounds · about 2 min", description: "A controlled tabletop sequence for everyday spinal movement.", section: "catcow", keywords: ["back", "spine", "stiff", "desk", "mobility", "cat", "cow"], source: CAT_COW_TUTORIAL.media[0] },
+  { id: "sun", type: "yoga", eyebrow: "Continuous yoga flow", title: "Surya Namaskar", meta: "12 positions · 1-2 linked rounds", description: "A continuous full-body Sun Salutation with breath cues and beginner options.", section: "sun", keywords: ["morning", "energy", "warm", "full body", "sun", "surya", "fitness"], source: SURYA_TUTORIAL.media[0] },
+  { id: "moon", type: "yoga", eyebrow: "Continuous yoga flow", title: "Chandra Namaskar", meta: "15 linked positions · both sides", description: "A mirrored Moon Salutation emphasizing lateral mobility, hips, and an even pace.", section: "moon", keywords: ["evening", "moon", "chandra", "hips", "side", "balance", "calm"], source: CHANDRA_TUTORIAL.media[0] },
+  { id: "flow", type: "yoga", eyebrow: "Everyday yoga", title: "Everyday Flow", meta: "Mobility + balance", description: "Standing poses, folds, balance, and a seated breathing reset.", section: "flow", keywords: ["everyday", "general", "balance", "mobility", "yoga", "whole body"], source: { title: "Yoga effectiveness and safety", source: "NCCIH", url: "https://www.nccih.nih.gov/health/yoga-effectiveness-and-safety" } },
+  { id: "diaphragmatic", type: "breath", eyebrow: "Breathing foundation", title: "Diaphragmatic Breathing", meta: "4 in · 6 out", description: "A beginner foundation using lower-rib and belly movement.", breathOption: "diaphragmatic", keywords: ["beginner", "belly", "diaphragm", "foundation", "calm", "stress"], source: BREATH_OPTIONS.diaphragmatic.source },
+  { id: "nadi", type: "breath", eyebrow: "Pranayama", title: "Nadi Shodhana", meta: "No breath holds", description: "A gentle alternate-nostril sequence for everyday practice.", breathOption: "nadi", keywords: ["focus", "alternate", "nostril", "nadi", "pranayama", "calm"], source: BREATH_OPTIONS.nadi.source },
+  { id: "bhramari", type: "breath", eyebrow: "Pranayama", title: "Bhramari", meta: "5+ humming rounds", description: "A soft humming exhale practiced from a comfortable seat.", breathOption: "bhramari", keywords: ["hum", "humming", "bhramari", "focus", "evening", "stress"], source: BREATH_OPTIONS.bhramari.source },
+  { id: "pursed", type: "breath", eyebrow: "Breathing technique", title: "Pursed-Lip Breathing", meta: "2 in · 4 out", description: "A practical long-exhale pattern with lightly pursed lips.", breathOption: "pursed", keywords: ["pursed", "short of breath", "breathless", "slow", "exhale"], source: BREATH_OPTIONS.pursed.source },
+  { id: "box", type: "breath", eyebrow: "Timed breathing", title: "Box Breathing", meta: "Equal four-part cycle", description: "An equal-count pattern with soft, optional breath holds.", breathOption: "box", keywords: ["box", "focus", "count", "timed", "concentration"], source: BREATH_OPTIONS.box.source },
+];
+
 // ─── Routine builders ───
 
 function move(o) { return { type: "movement", ...o }; }
@@ -202,7 +501,7 @@ function rest(duration, focus, summary, instructions, cues) {
 }
 function phase(label, duration, cue, key) { return { label, duration, cue, key: key || label.toLowerCase() }; }
 function selectedBreathOption(key) {
-  const optionKey = BREATH_OPTIONS[key] ? key : "classic";
+  const optionKey = BREATH_OPTIONS[key] ? key : LEGACY_BREATH_OPTIONS[key] || "diaphragmatic";
   return { key: optionKey, ...BREATH_OPTIONS[optionKey] };
 }
 function timingLabel(counts) { return counts.join(" / "); }
@@ -226,6 +525,8 @@ function boxStep({ name, counts, cycles, focus, summary, instructions, cues, per
 }
 
 function buildExerciseRoutine(level) {
+  if (state?.workoutSection === "posture") return buildPostureBackRoutine(level);
+  if (state?.workoutSection === "hiit") return buildHiitRoutine(level);
   const adv = level === "advanced";
   return [
     move({ name: "March + Reach", duration: adv ? 40 : 30, target: `${adv ? 40 : 30} sec pace`, animation: "march", focus: "Warm the whole body and lift posture", summary: "March with light feet and an easy overhead reach.", instructions: ["Stand tall and let the opposite arm rise as each knee lifts.", "Land softly and keep the chest easy and open.", "Stay with a pace that feels smooth instead of rushed."], cues: ["Stay long through the spine.", "Reach up without tightening the neck.", "Light feet, easy breath."], period: adv ? 0.95 : 1.05 }),
@@ -236,6 +537,46 @@ function buildExerciseRoutine(level) {
     move({ name: "Boxer Punches", duration: adv ? 40 : 30, target: `${adv ? 40 : 30} sec pace`, animation: "punch", focus: "Cardio rhythm and upper-body drive", summary: "Bounce lightly and alternate quick, clean punches.", instructions: ["Use a soft athletic stance.", "Punch forward with a quick reach and return.", "Let the shoulders stay loose while the center stays steady."], cues: ["Quick hands, easy shoulders.", "Stay light through the feet.", "Keep the breath steady."], period: adv ? 0.82 : 0.9 }),
     rest(adv ? 12 : 15, "Quick recovery", "Ease the breathing down.", ["Release the hands and let the breath deepen.", "Reset the shoulders and soften the face.", "Stand ready for the final block."], ["Take a breath.", "Stand tall again.", "Easy reset."]),
     move({ name: "Posture Pull-Opens", duration: adv ? 35 : 30, target: `${adv ? 35 : 30} sec pace`, animation: "posture", focus: "Open chest and upper-back activation", summary: "Reach forward, then open the arms wide and pause for a breath.", instructions: ["Reach the hands forward, then sweep the arms out and back.", "Pause briefly as the shoulder blades draw together.", "Keep the neck relaxed and the ribs soft."], cues: ["Open wide through the collarbones.", "Squeeze gently between the shoulder blades.", "Finish each rep tall."], period: adv ? 1.25 : 1.3 }),
+  ];
+}
+
+function buildPostureBackRoutine(level) {
+  const adv = level === "advanced";
+  const comfortable = "Stop or reduce the range if symptoms increase or travel away from the back.";
+  return [
+    move({ name: "Easy March Warmup", duration: adv ? 150 : 120, target: `${adv ? 150 : 120} sec easy pace`, animation: "march", phase: "warmup", focus: "Low-impact circulation before spine work", summary: "March at a conversational pace so the body is warm before floor exercises.", instructions: ["Stand near a wall or chair if balance support is useful.", "Lift each foot only as high as feels smooth.", "Keep the shoulders relaxed and add time if you still feel cold or stiff."], cues: ["Warm up gradually.", "Light feet, easy breath.", "Stand tall without bracing."], period: 1.2 }),
+    move({ name: "Posture Pull-Opens", duration: adv ? 60 : 45, target: `${adv ? 60 : 45} sec control`, animation: "posture", phase: "mobility", focus: "Upper-back activation and head-over-ribs posture", summary: "Open the arms from the upper back while the ribs and pelvis stay stacked.", instructions: ["Reach forward, then open the arms without arching the low back.", "Draw the shoulder blades together gently instead of shrugging.", "Return the head over the ribs after every repetition."], cues: ["Open from the upper back.", "Keep the ribs centered.", "Relax the neck."], period: 1.35 }),
+    move({ name: "Controlled Cat-Cow", duration: adv ? 70 : 55, target: `${adv ? 70 : 55} sec mobility`, animation: "cat-cow", phase: "mobility", focus: "Comfortable spinal movement from tabletop", summary: "Move slowly between a small arch and round, returning through a level tabletop.", instructions: ["Place hands near the shoulders and knees below the hips.", "Use a small Cow and Cat range with one easy breath in each direction.", comfortable], cues: ["Return through neutral.", "Use a symptom-free range.", "Keep the hands steady."], period: 2.5 }),
+    move({ name: "Bird Dog", duration: adv ? 90 : 70, target: `${adv ? 90 : 70} sec alternating`, animation: "bird-dog", phase: "strength", focus: "Back extensors, gluteal muscles, and trunk stability", summary: "Reach one arm and the opposite leg away while the trunk stays quiet and level.", instructions: ["Start on hands and knees with shoulders over hands and hips over knees.", "Brace gently, then reach one arm forward and the opposite leg back.", "Keep the back flat and hips level; use only an arm or leg if the full version is not steady."], cues: ["Long reach, quiet trunk.", "Keep the hips level.", "Return with control."], period: 2.2 }),
+    move({ name: "Glute Bridge", duration: adv ? 75 : 60, target: `${adv ? 75 : 60} sec control`, animation: "glute-bridge", phase: "strength", focus: "Gluteal strength and controlled hip extension", summary: "Lift the hips from a supported back position without over-arching the spine.", instructions: ["Lie on the back with knees bent and feet about hip-width apart.", "Gently tighten the abdomen and gluteal muscles, then lift the pelvis.", "Lower one segment at a time and keep the hips level."], cues: ["Drive through the whole foot.", "Keep the hips level.", "Lift without arching."], period: 2.0 }),
+    move({ name: "Alternating Knee to Chest", duration: adv ? 80 : 60, target: `${adv ? 80 : 60} sec gentle stretch`, animation: "knee-to-chest", phase: "mobility", focus: "Comfortable low-back and hip mobility", summary: "Bring one knee toward the chest while the other leg and the back stay relaxed.", instructions: ["Lie on the back with both knees bent.", "Bring one knee toward the chest and hold behind the thigh or over the shin.", "Change sides slowly and stop if the position increases or spreads symptoms."], cues: ["Use a gentle pull.", "Keep the jaw relaxed.", "Change sides slowly."], period: 2.8 }),
+    move({ name: "Supported Breathing Reset", duration: adv ? 75 : 60, target: `${adv ? 75 : 60} sec easy breath`, animation: "belly-breath", phase: "cooldown", focus: "Finish without bracing", summary: "Return to an easy supported position and let the back, jaw, and breathing settle.", instructions: ["Sit supported or lie with a cushion under the knees.", "Let the lower ribs and belly move without forcing a deep breath.", "Recheck symptoms before standing and rise slowly."], cues: ["Release the brace.", "Easy breath.", "Rise slowly."], period: 3.2 }),
+  ];
+}
+
+function buildHiitRoutine(level) {
+  const adv = level === "advanced";
+  const work = adv ? 40 : 25;
+  const recovery = adv ? 20 : 30;
+  const effort = adv ? "RPE 7-8 / 10" : "challenging low-impact pace";
+  const recover = (focus) => ({ ...rest(recovery, focus, "Keep moving lightly while breathing and posture reset.", ["March or sway in place instead of stopping abruptly.", "Let the hands and jaw relax.", "Begin the next interval only when balance and form feel ready."], ["Active recovery.", "Reset your posture.", "Get ready for the next block."]), phase: "recovery" });
+  const intervals = [
+    move({ name: "Power Boxer", duration: work, target: `${work} sec · ${effort}`, animation: "punch", phase: "work", focus: "Fast upper-body cardio with a stable base", summary: "Alternate quick punches from a soft athletic stance.", instructions: ["Keep the knees soft and the center steady.", "Punch straight ahead and return each hand before the next punch.", "Slow the hands before shoulder position or balance changes."], cues: ["Quick return.", "Easy shoulders.", "Strong, steady base."], period: adv ? 0.72 : 0.88 }),
+    recover("Recover from Power Boxer"),
+    move({ name: "Squat to Reach", duration: work, target: `${work} sec · ${effort}`, animation: "squat", phase: "work", focus: "Leg power with controlled squat mechanics", summary: "Sit back into a squat, stand, and add a tall reach without jumping.", instructions: ["Set the feet at a comfortable squat width.", "Send the hips back and let the knees follow the toes.", "Stand tall and reach only as high as the ribs stay controlled."], cues: ["Sit back first.", "Knees follow toes.", "Stand tall, then reach."], period: adv ? 0.78 : 1.02 }),
+    recover("Recover from Squat to Reach"),
+    move({ name: "Skater Drive", duration: work, target: `${work} sec · ${effort}`, animation: "skater", phase: "work", focus: "Lateral cardio and deceleration", summary: "Push side to side with a step or a light bound and land under control.", instructions: ["Use a wide step for the low-impact version.", "Let the trailing leg tap behind only when balance is steady.", "Land quietly and shorten the distance before the knee turns inward."], cues: ["Push and control.", "Land quietly.", "Use the step option."], period: adv ? 0.78 : 0.98 }),
+    recover("Recover from Skater Drive"),
+    move({ name: "Fast High-Knee Drive", duration: work, target: `${work} sec · ${effort}`, animation: "march", phase: "work", focus: "Upright cardio and coordinated knee drive", summary: "Drive the knees at a fast march or run-in-place pace while posture stays tall.", instructions: ["Start as a fast march and add bounce only if landings stay quiet.", "Drive the opposite arm with each knee.", "Reduce height before leaning back or losing rhythm."], cues: ["Tall torso.", "Quick arms.", "Quiet feet."], period: adv ? 0.68 : 0.86 }),
+    recover("Recover from High-Knee Drive"),
+  ];
+  const rounds = adv ? [...intervals, ...intervals.map(item => ({ ...item, name: item.type === "rest" ? item.name : `${item.name} · Round 2` }))] : intervals;
+  return [
+    move({ name: "March and Reach Warmup", duration: adv ? 120 : 150, target: `${adv ? 120 : 150} sec build`, animation: "march", phase: "warmup", focus: "Raise temperature and rehearse knee drive", summary: "Begin easily, then build the march and arm swing a little at a time.", instructions: ["Start at a conversational pace.", "Increase arm swing and knee height gradually.", "Keep enough control to land quietly."], cues: ["Build gradually.", "Stand tall.", "Light feet."], period: 1.05 }),
+    move({ name: "Side-Step Warmup", duration: 60, target: "60 sec build", animation: "side-step", phase: "warmup", focus: "Prepare lateral movement and shoulders", summary: "Step side to side and draw the elbows back before the first hard interval.", instructions: ["Step wide enough to warm the hips without reaching.", "Pull the elbows back and keep the shoulders low.", "Finish at a brisk but controlled pace."], cues: ["Step, then pull.", "Shoulders low.", "Prepare to work."], period: 1.05 }),
+    ...rounds,
+    move({ name: "Easy Step Cooldown", duration: 90, target: "90 sec easy pace", animation: "side-step", phase: "cooldown", focus: "Lower intensity gradually", summary: "Keep stepping at an easy pace until breathing is clearly calmer.", instructions: ["Shorten the step and relax the arms.", "Keep moving instead of stopping abruptly.", "Let the exhale lengthen naturally without forcing it."], cues: ["Bring the pace down.", "Relax the hands.", "Easy breath."], period: 1.3 }),
+    move({ name: "Posture and Breath Finish", duration: 60, target: "60 sec reset", animation: "posture", phase: "cooldown", focus: "Restore upright posture after intervals", summary: "Open the arms gently, then stand or sit until breathing returns toward normal.", instructions: ["Reach forward and open the arms slowly.", "Set the head over the ribs and pelvis.", "Continue an easy walk if stopping still feels abrupt."], cues: ["Open gently.", "Stand tall.", "Let breathing settle."], period: 1.5 }),
   ];
 }
 
@@ -268,40 +609,182 @@ function fitBreathingRoutineDuration(steps, minutes = 5) {
   return steps.map((item, index) => ({ ...item, duration: allocation.counts[index] * cycles[index] }));
 }
 
-function buildBreathingRoutine(level, optionKey = "classic", sessionMinutes = 5) {
+function buildBreathingRoutine(level, optionKey = "diaphragmatic", sessionMinutes = 5) {
   const adv = level === "advanced";
   const option = selectedBreathOption(optionKey);
-  const easy = selectedBreathOption("easy");
-  const selectedCounts = option.counts;
-  const holdCounts = [selectedCounts[0], Math.min(selectedCounts[1] + 2, 8), selectedCounts[2], Math.min(selectedCounts[3] + 2, 8)];
-  const enduranceCounts = selectedCounts.map(count => Math.min(count + 1, 7));
-  const natural = breathPattern([4, 4, 4, 4]);
-
-  if (adv) {
-    return fitBreathingRoutineDuration([
-      move({ name: "Arrow Breathing Setup", duration: 64, target: "4 / 4 / 4 / 4", animation: "belly-breath", focus: "Watch the arrow cue on the pose", summary: "The cue box sits on Reverberesh's breathing pose and shows airflow direction with arrows.", instructions: ["Inhale with the upward arrow.", "Hold softly with no arrow movement.", "Exhale with the downward arrow, then hold softly again."], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 3.0, breathPattern: natural, boxGuide: true }),
-      boxStep({ name: `${option.label} Box Breathing`, counts: selectedCounts, cycles: 5, focus: "Inhale, hold, exhale, hold", summary: `Use the ${option.target} timing option while the cue box on the pose moves through the four-part pattern.`, instructions: [`Inhale for ${selectedCounts[0]} seconds with the upward arrow.`, `Hold softly for ${selectedCounts[1]} seconds.`, `Exhale for ${selectedCounts[2]} seconds with the downward arrow, then hold for ${selectedCounts[3]} seconds.`], cues: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow.", "Hold softly."] }),
-      boxStep({ name: "Advanced Hold Box", counts: holdCounts, cycles: 5, focus: "Longer holds with clear inhale and exhale", summary: "Lengthen both holds while keeping the inhale and exhale smooth and unforced.", instructions: [`Inhale for ${holdCounts[0]} seconds.`, `Hold softly for ${holdCounts[1]} seconds.`, `Exhale for ${holdCounts[2]} seconds, then hold for ${holdCounts[3]} seconds.`], cues: ["Inhale.", "Hold without bracing.", "Exhale.", "Hold softly."], period: 2.7 }),
-      boxStep({ name: "Endurance Box Breathing", counts: enduranceCounts, cycles: 4, focus: "Longer equal sides", summary: "Practice a longer equal-sided box only while the breath stays calm and controlled.", instructions: [`Inhale for ${enduranceCounts[0]} seconds without filling to maximum.`, `Hold for ${enduranceCounts[1]} seconds with a relaxed face.`, `Exhale for ${enduranceCounts[2]} seconds, then hold for ${enduranceCounts[3]} seconds.`], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."] }),
-      move({ name: "Quiet Box Breathing", duration: 64, target: "4 / 4 / 4 / 4", animation: "box-breath", focus: "Return to a calm four-part pattern", summary: "Stay with the pose, arrows, and soft holds as the practice finishes.", instructions: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow, then hold softly again."], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 3.0, breathPattern: natural, boxGuide: true }),
-    ], sessionMinutes);
-  }
+  const practicePattern = adv && option.advancedPhases ? option.advancedPhases : option.phases;
+  const setupPattern = [
+    phase("Inhale", 4, "Breathe in gently through the nose without filling to the maximum.", "inhale"),
+    phase("Exhale", 6, "Exhale slowly and let the jaw, shoulders, and belly soften.", "exhale"),
+  ];
+  const phaseInstructions = practicePattern.map(item => `${item.label} for ${item.duration} seconds: ${item.cue}`);
+  const phaseCues = practicePattern.map(item => item.cue);
+  const cycleSeconds = practicePattern.reduce((sum, item) => sum + item.duration, 0);
 
   return fitBreathingRoutineDuration([
-    move({ name: "Arrow Breathing Setup", duration: 48, target: "4 / 4 / 4 / 4", animation: "belly-breath", focus: "Watch the arrow cue on the pose", summary: "The cue box sits on Reverberesh's breathing pose and shows airflow direction with arrows.", instructions: ["Inhale with the upward arrow.", "Hold softly with no arrow movement.", "Exhale with the downward arrow, then hold softly again."], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 3.0, breathPattern: natural, boxGuide: true }),
-    boxStep({ name: "Easy Box Breathing", counts: easy.counts, cycles: 6, focus: "Learn inhale, hold, exhale, hold", summary: "Use a short three-count box so the four-part pattern is obvious.", instructions: ["Inhale for 3 seconds with the upward arrow.", "Hold softly for 3 seconds.", "Exhale for 3 seconds with the downward arrow, then hold for 3 seconds."], cues: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow.", "Hold softly."] }),
-    boxStep({ name: `${option.label} Box Breathing`, counts: selectedCounts, cycles: 6, focus: "Use your selected timing option", summary: `Practice the ${option.target} timing option: ${option.note}`, instructions: [`Inhale for ${selectedCounts[0]} seconds.`, `Hold for ${selectedCounts[1]} seconds.`, `Exhale for ${selectedCounts[2]} seconds, then hold for ${selectedCounts[3]} seconds.`], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."] }),
-    boxStep({ name: "Repeat Box Breathing", counts: selectedCounts, cycles: 6, focus: "Repeat the same four-part cue", summary: "Stay with the same timing while the box near Reverberesh tells you inhale, hold, exhale, hold.", instructions: [`Inhale smoothly for ${selectedCounts[0]} seconds.`, `Hold softly for ${selectedCounts[1]} seconds.`, `Exhale evenly for ${selectedCounts[2]} seconds, then hold for ${selectedCounts[3]} seconds.`], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 2.7 }),
-    move({ name: "Quiet Box Breathing", duration: 48, target: "4 / 4 / 4 / 4", animation: "box-breath", focus: "Return to a calm four-part pattern", summary: "Let the counts fade but keep watching the cue box and airflow arrows.", instructions: ["Inhale with the upward arrow.", "Hold softly.", "Exhale with the downward arrow, then hold softly again."], cues: ["Inhale.", "Hold.", "Exhale.", "Hold."], period: 3.0, breathPattern: natural, boxGuide: true }),
+    move({
+      name: "Breath Check-In", duration: 40, target: "4 in / 6 out", animation: "belly-breath",
+      focus: "Find a comfortable, unforced starting rhythm",
+      summary: "Begin with a gentle lower-rib breath before changing to the selected practice.",
+      instructions: ["Sit or lie where the shoulders and belly can relax.", "Inhale gently for 4 seconds and exhale for 6 seconds.", "Shorten the count immediately if it feels effortful."],
+      cues: ["Easy inhale.", "Long, unforced exhale."], period: 3, breathPattern: setupPattern,
+    }),
+    move({
+      name: option.title, duration: Math.max(cycleSeconds * 8, 160), target: option.target, animation: option.animation,
+      focus: option.summary, summary: option.summary,
+      instructions: phaseInstructions,
+      cues: phaseCues, period: 2.8, breathPattern: practicePattern, boxGuide: option.key === "box",
+    }),
+    move({
+      name: "Quiet Finish", duration: 40, target: "4 in / 6 out", animation: "belly-breath",
+      focus: "Return to an easy breath and notice how you feel",
+      summary: "Finish with a few quiet cycles and return to normal breathing without extending the session.",
+      instructions: ["Release any hand position used for the practice.", "Use the 4-in, 6-out count only while it remains easy.", "Let the timer finish, then breathe normally."],
+      cues: ["Release effort.", "Return to normal breathing."], period: 3.2, breathPattern: setupPattern,
+    }),
   ], sessionMinutes);
 }
 
+function yogaSequenceMove(name, duration, animation, breath, focus, summary, instructions, cues) {
+  return move({ name, duration, target: `${duration} sec · ${breath}`, animation, focus, summary, instructions, cues, period: 2.6 });
+}
+
+function buildDailyYogaRoutine(level) {
+  const adv = level === "advanced";
+  const support = adv ? "Use support before depth changes alignment." : "Keep a chair, wall, cushion, or blocks within reach.";
+  const easyBreath = [phase("Inhale", 4, "Breathe in gently and let the lower ribs expand.", "inhale"), phase("Exhale", 6, "Exhale without pushing and let the shoulders soften.", "exhale")];
+  const nadiBreath = BREATH_OPTIONS.nadi.phases;
+  return [
+    move({ name: "Arrive with Diaphragmatic Breathing", duration: 120, target: "2 min · 4 in / 6 out", animation: "belly-breath", focus: "Set posture and an unforced breath", summary: "Begin seated or lying down and let the lower ribs and belly move more than the upper chest.", instructions: ["Choose a supported position where the spine can feel long without stiffness.", "Place one hand below the ribs and one on the upper chest.", "Inhale for 4 and exhale for 6 only while the count feels easy."], cues: ["Lower ribs expand.", "Long, easy exhale."], period: 3, breathPattern: easyBreath }),
+    yogaSequenceMove("Posture and Shoulder Warmup", 120, "posture", "normal breath", "Upper-back activation and shoulder mobility", "Reach forward, open the arms, and reset the shoulders over the ribs.", ["Stand or sit tall with the ribs centered.", "Reach forward, then open the arms without arching the low back.", "Move slowly enough that the neck stays relaxed."], ["Open from the upper back.", "Keep the neck easy."]),
+    yogaSequenceMove("Cat-Cow Mobility", 180, "cat-cow", "5 controlled rounds", "Mobilize the spine from a stable tabletop", "Move between Cow and Cat through a clear neutral tabletop.", ["Place hands near the shoulders and knees below the hips.", "Move into Cow for about 5 seconds, then return to neutral.", "Move into Cat for about 5 seconds and repeat without forcing range."], ["Return through neutral.", "Use the same range each round."]),
+    yogaSequenceMove("Child Pose Reset", 60, "child-pose", "easy breath", "Rest after spinal mobility", "Support the forehead and let the back settle before standing work.", ["Bring the hips back only as far as the knees remain comfortable.", "Place support under the forehead or chest.", "Stay in tabletop instead if Child Pose is not comfortable."], ["Use support.", "Let the back settle."]),
+    yogaSequenceMove("Mountain + Sun Reach", 90, "sun-sweep", "inhale up · exhale down", "Link standing posture with breath", "Stand evenly and sweep the arms overhead without forcing a backbend.", ["Root through both feet.", "Inhale the arms up while the ribs stay controlled.", "Exhale the arms down and return to Mountain."], ["Stand evenly.", "Reach without strain."]),
+    yogaSequenceMove("Supported Forward Fold", 120, "fold", "easy exhale", "Hip hinge and back-body mobility", "Fold from the hips with bent knees and hands on blocks or a chair.", ["Hinge from the hips before the spine rounds.", "Bend the knees enough to keep the breath free.", support], ["Bend the knees.", "Use the support."]),
+    yogaSequenceMove("Knees-Down or Full Plank", 60, "plank", "steady breath", "Shoulder and trunk control", "Stack shoulders over hands and choose knees-down or full plank.", ["Spread the fingers and press through both hands.", "Place the knees down before the middle sags.", "Keep breathing instead of bracing."], ["Shoulders over hands.", "Knees down is valid."]),
+    yogaSequenceMove("Low Cobra", 60, "cobra", "inhale to lift", "Gentle backbend and upper-back control", "Lift the chest into a low Cobra with bent elbows and a comfortable low back.", ["Keep the pelvis and legs grounded.", "Use light hand pressure and the back muscles.", "Lower immediately if the back pinches."], ["Keep it low.", "Elbows stay soft."]),
+    yogaSequenceMove("Downward Dog", 90, "downward-dog", "steady breath", "Long spine and supported inversion", "Lift the hips into an inverted V and bend the knees to keep the spine long.", ["Press through the hands and move the hips back.", "Bend the knees as much as needed.", "Return to tabletop if the wrists or shoulders are uncomfortable."], ["Hips up and back.", "Bend the knees."]),
+    yogaSequenceMove("Warrior II", 120, "warrior", "steady breath", "Standing leg strength and frontal alignment", "Use a wide stance and keep the front knee following the toes.", ["Turn the front foot out and place the back foot securely.", "Bend the front knee only as far as it stays aligned.", support], ["Knee follows toes.", "Arms long, shoulders soft."]),
+    yogaSequenceMove("Triangle", 120, "triangle", "easy breath", "Side-body length and hip hinge", "Lengthen over the front leg and use a block or chair under the lower hand.", ["Straighten the front leg without locking the knee.", "Lengthen forward before tipping sideways.", "Turn the chest only as far as the neck and breath stay easy."], ["Lengthen first.", "Use a block or chair."]),
+    yogaSequenceMove("Standing Side Stretch", 90, "side-stretch", "inhale up · exhale bend", "Lateral rib mobility", "Reach upward before moving into a small side bend on each side.", ["Keep both feet grounded.", "Lengthen upward before bending sideways.", "Return through center slowly before changing sides."], ["Lengthen first.", "Both feet grounded."]),
+    yogaSequenceMove("Tree Balance", 90, "tree", "normal breath", "Single-leg balance with support", "Use the wall and place the lifted foot below or above the standing knee.", ["Keep fingertips on a wall or chair.", "Place the foot on the ankle, shin, or thigh, never the knee joint.", "Keep the gaze on one steady point."], ["Use the wall.", "Skip the knee joint."]),
+    yogaSequenceMove("Supported Butterfly", 120, "butterfly", "easy breath", "Seated hip mobility", "Bring the soles together and support both knees so the hips can relax.", ["Sit on a folded blanket if the low back rounds.", "Place cushions under both knees.", "Keep the spine long without pressing the knees down."], ["Support both knees.", "No pushing."]),
+    yogaSequenceMove("Seated Twist", 120, "seated-twist", "exhale to rotate", "Controlled torso rotation", "Rotate from a tall seat without pulling with the arms.", ["Sit evenly and lengthen on the inhale.", "Exhale into a small torso rotation.", "Return to center before repeating to the other side."], ["Lengthen, then turn.", "Keep both hips grounded."]),
+    yogaSequenceMove("Supported Seated Forward Fold", 120, "supported-forward-fold", "easy exhale", "Gentle forward bend with support", "Rest the torso and head on cushions rather than pulling deeper.", ["Place support on the legs before folding.", "Hinge forward only until the body can rest.", "Keep the head supported and the breath free."], ["Rest on support.", "Do not pull deeper."]),
+    yogaSequenceMove("Low Supported Bridge", 120, "supported-bridge", "normal breath", "Gentle backbend and front-body opening", "Use low support under the pelvis and keep the throat and face relaxed.", ["Lie down with knees bent and feet grounded.", "Lift only enough to place low support under the pelvis.", "Leave the pose if the neck, back, or breath feels pressured."], ["Keep support low.", "Relax the throat."]),
+    move({ name: "Nadi Shodhana", duration: 160, target: "10 rounds · no holds", animation: "nadi-shodhana", focus: "Alternate-nostril breathing without retention", summary: "Complete gentle left-to-right-to-left rounds with no breath holding.", instructions: ["Sit comfortably and relax the left hand.", "Inhale left, exhale right, inhale right, and exhale left.", "Use four seconds per phase only while it stays easy."], cues: nadiBreath.map(item => item.cue), period: 3, breathPattern: nadiBreath }),
+    yogaSequenceMove("Supported Shavasana", 440, "shavasana", "normal breath", "Final rest and full-body release", "Rest on the back with support under the knees, head, or arms.", ["Set support before the timer begins.", "Let the feet, hands, belly, jaw, and eyes soften.", "At the end, roll to one side and rise slowly."], ["Let the body become heavy.", "Breathe normally.", "Rise slowly."]),
+  ];
+}
+
+function buildOfficeYogaRoutine(level) {
+  const adv = level === "advanced";
+  const range = adv ? "Use a stronger shape only while the chair remains optional, not necessary for recovery." : "Keep one hand on a stable chair or wall whenever balance changes.";
+  const easyBreath = [phase("Inhale", 4, "Breathe in gently without lifting the shoulders.", "inhale"), phase("Exhale", 6, "Exhale slowly and soften the jaw.", "exhale")];
+  return [
+    move({ name: "Seated Breath Reset", duration: 90, target: "90 sec · 4 in / 6 out", animation: "belly-breath", focus: "Shift out of desk posture", summary: "Sit near the front of a stable chair and begin with an easy lower-rib breath.", instructions: ["Place both feet flat and sit away from the chair back.", "Rest the hands below the ribs or on the thighs.", "Use a 4-in, 6-out rhythm only while it feels comfortable."], cues: ["Feet grounded.", "Long, easy exhale."], period: 3, breathPattern: easyBreath }),
+    yogaSequenceMove("Posture Pull-Opens", 90, "posture", "normal breath", "Upper-back activation", "Reach forward, then open the arms and reset the shoulders over the ribs.", ["Stand or sit with the ribs centered.", "Reach forward before opening the arms wide.", "Keep the neck relaxed and avoid arching the low back."], ["Open from the upper back.", "Ribs stay centered."]),
+    yogaSequenceMove("Seated Cat-Cow", 120, "seated-cat-cow", "slow inhale and exhale", "Spinal flexion and extension from a chair", "Move between a small seated Cow and Cat without throwing the head back.", ["Sit near the front of a stable chair with feet grounded.", "Inhale into a small chest lift.", "Exhale to round the spine gently and return through neutral."], ["Small chest lift.", "Round without collapsing."]),
+    yogaSequenceMove("Standing Side Bend", 90, "side-stretch", "inhale up · exhale bend", "Side-body mobility", "Move clear of the desk and take a small side bend on each side.", ["Stand with both feet grounded.", "Reach upward before bending sideways.", "Keep space between the torso and desk or wall."], ["Clear the desk edge.", "Lengthen first."]),
+    yogaSequenceMove("Standing Trunk Rotation", 90, "rotation", "exhale to turn", "Controlled torso rotation", "Rotate the torso without leaning or pulling through the arms.", ["Stand tall with knees soft.", "Turn the head, chest, and ribs together.", "Return to center before changing sides."], ["Stay upright.", "Turn as one piece."]),
+    yogaSequenceMove("Chair Pose with Support", 120, "chair", "steady breath", "Leg strength and hip hinge", "Sit the hips back while fingertips stay near a chair or desk for support.", ["Set the feet hip-width apart.", "Send the hips back and keep knees following the toes.", range], ["Hips back.", "Knees follow toes."]),
+    yogaSequenceMove("Supported Forward Fold", 90, "fold", "easy exhale", "Back-body mobility", "Hinge toward a chair or desk with bent knees and a long spine.", ["Use a stable surface that will not roll.", "Hinge from the hips and bend the knees.", "Keep the head above the heart if lowering it feels uncomfortable."], ["Use a stable surface.", "Bend the knees."]),
+    yogaSequenceMove("Supported Low Lunge · Left", 90, "low-lunge", "steady breath", "Left hip mobility and leg control", "Step the left foot forward and use the chair to keep the lunge upright.", ["Keep the chair beside the body, not in front of the knee.", "Stack the front knee near the ankle.", range], ["Front knee near ankle.", "Use the chair."]),
+    yogaSequenceMove("Supported Low Lunge · Right", 90, "low-lunge-right", "steady breath", "Right hip mobility and leg control", "Repeat the supported lunge with the right foot forward.", ["Match the stance length used on the first side.", "Keep the front knee near the ankle.", range], ["Match the first side.", "Stay upright."]),
+    yogaSequenceMove("Supported Warrior II", 90, "warrior", "steady breath", "Wide-stance leg control", "Use a shallow Warrior II with a chair within reach.", ["Take a comfortable wide stance.", "Keep the front knee aligned with the toes.", "Shorten the stance if the feet or knees feel unstable."], ["Shallow is enough.", "Knee follows toes."]),
+    yogaSequenceMove("Standing Posture Reset", 90, "posture", "normal breath", "Upper-back endurance after standing work", "Open the arms and return the ribs, shoulders, and head to a centered stack.", ["Reach forward once, then open the arms.", "Draw the shoulder blades together gently.", "Finish with the arms relaxed by the sides."], ["Stand tall.", "Shoulders easy."]),
+    yogaSequenceMove("Seated Twist", 90, "seated-twist", "exhale to rotate", "Easy workday torso rotation", "Use a small seated twist without pulling on the chair back.", ["Plant both feet and sit evenly.", "Lengthen on the inhale and rotate on the exhale.", "Return to center before changing sides."], ["Both feet grounded.", "No pulling."]),
+    yogaSequenceMove("Quiet Finish", 60, "seated", "normal breath", "Return to a neutral seated posture", "Finish upright with both feet grounded and let the breath return to normal.", ["Rest the hands on the thighs.", "Center the head over the ribs and pelvis.", "Take several normal breaths before returning to work."], ["Return to neutral.", "Breathe normally."]),
+  ];
+}
+
+function buildCatCowRoutine(level) {
+  const adv = level === "advanced";
+  const rounds = Array.from({ length: 5 }, (_, index) => yogaSequenceMove(
+    `Cat-Cow Round ${index + 1}`,
+    adv ? 16 : 12,
+    "cat-cow",
+    "one controlled cycle",
+    "Segmental spinal movement from a stable tabletop",
+    "Move from neutral to Cow, return through neutral, then arch into Cat.",
+    ["From neutral, relax the belly and lift the head gently into Cow.", "Return to a level tabletop before changing direction.", "Tuck the head and arch the back into Cat without forcing the shoulders."],
+    ["Cow for five seconds.", "Return through neutral.", "Cat for five seconds."]
+  ));
+  return [
+    yogaSequenceMove("Neutral Tabletop", adv ? 25 : 20, "tabletop", "normal breath", "Set hands and knees before moving", "Build a level tabletop with weight shared across the hands and knees.", ["Place hands slightly ahead of the shoulders.", "Set knees under the hips and look slightly down.", "Keep the back level without rounding or sagging."], ["Hands steady.", "Knees under hips.", "Level the spine."]),
+    ...rounds,
+    yogaSequenceMove("Child Pose Reset", adv ? 35 : 25, "child-pose", "easy breath", "Release the back after five rounds", "Finish in a comfortable supported Child Pose or remain in tabletop.", ["Bring the hips back only as far as the knees stay comfortable.", "Support the forehead if it does not reach the floor easily.", "Return to tabletop if Child Pose is not comfortable."], ["Use support.", "Let the back settle.", "Come up slowly."]),
+  ];
+}
+
+function buildSuryaRoutine(level) {
+  const adv = level === "advanced";
+  const duration = adv ? 4 : 5;
+  const transitionSeconds = adv ? 2.6 : 3.2;
+  const continuous = (...args) => ({
+    ...yogaSequenceMove(...args),
+    sequenceFlow: true,
+    flowTransitionSeconds: transitionSeconds,
+  });
+  const buildRound = (round, lead) => {
+    const backStepLunge = lead === "left" ? "equestrian-right" : "equestrian-left";
+    const forwardStepLunge = lead === "left" ? "equestrian-left" : "equestrian-right";
+    return [
+      continuous(`${round}. Namaskarasana`, duration, "prayer", "normal breath", "Even standing base", "Stand evenly and bring palms together near the chest.", ["Share weight across both feet.", "Lengthen the spine.", "Bring palms together without lifting the shoulders."], ["Stand evenly.", "Shoulders easy."]),
+      continuous(`${round}. Hastottanasana`, duration, "sun", "inhale", "Upward length", "Raise the arms and lengthen upward with only a small comfortable backbend.", ["Sweep the arms up.", "Keep the knees easy and the ribs controlled.", "Look forward if looking up bothers the neck."], ["Lengthen up.", "Keep the backbend small."]),
+      continuous(`${round}. Padahastasana`, duration, "fold", "exhale", "Hip hinge", "Fold from the hips and bend the knees as much as needed.", ["Hinge forward with a long spine.", "Bend the knees to reduce hamstring or back strain.", "Use blocks when the floor is far away."], ["Hinge from the hips.", "Soften the knees."]),
+      continuous(`${round}. Ashwa Sanchalanasana`, duration, backStepLunge, "inhale", "Stable low lunge", `Step the ${lead} leg back and organize the front knee over the ankle.`, ["Step one leg back and lower the knee when needed.", "Keep the front knee close to the ankle.", "Lift the chest without compressing the low back."], ["Front knee near ankle.", "Use the back knee."]),
+      continuous(`${round}. Santolanasana`, duration, "plank", "exhale", "Aligned plank", "Move to a straight plank or lower both knees for support.", ["Set shoulders over the hands.", "Reach through the heels or place the knees down.", "Keep the middle from sagging."], ["Shoulders over hands.", "Knees down is valid."]),
+      continuous(`${round}. Ashtanga Namaskara`, duration, "ashtanga", "easy exhale", "Controlled eight-point lowering", "Lower knees, chest, and chin only if the position is comfortable.", ["Place the knees down first.", "Keep elbows close as the chest and chin lower.", "Skip directly to a gentle Cobra if this position is not suitable."], ["Lower with control.", "Skip when needed."]),
+      continuous(`${round}. Bhujangasana`, duration, "cobra", "inhale", "Gentle spinal extension", "Lift the chest into a low Cobra without pushing into the low back.", ["Keep the pelvis and legs grounded.", "Use the back muscles and light hand pressure.", "Keep elbows bent and shoulders away from ears."], ["Low Cobra.", "Elbows soft."]),
+      continuous(`${round}. Parvatasana`, duration, "downward-dog", "exhale", "Long inverted V", "Lift the hips and keep the knees bent enough to lengthen the spine.", ["Press through the hands.", "Lift the hips up and back.", "Bend the knees instead of rounding the back."], ["Hips up and back.", "Bend the knees."]),
+      continuous(`${round}. Ashwa Sanchalanasana`, duration, forwardStepLunge, "inhale", "Return to low lunge", `Bring the ${lead} foot forward and use blocks or hands for support.`, ["Step the lead foot between the hands, or take several smaller steps.", "Keep the front knee close to the ankle.", "Lower the back knee when needed."], ["Bring the foot forward.", "Use support."]),
+      continuous(`${round}. Padahastasana`, duration, "fold", "exhale", "Return to the fold", "Bring the other foot forward and fold with soft knees.", ["Step forward without rushing.", "Keep the knees bent as needed.", "Release the neck."], ["Soft knees.", "Easy neck."]),
+      continuous(`${round}. Hastottanasana`, duration, "sun", "inhale", "Rise with length", "Rise with a long spine and reach the arms upward.", ["Press through the feet.", "Lift the torso before adding a small backbend.", "Keep the neck comfortable."], ["Rise with length.", "Small backbend."]),
+      continuous(`${round}. Namaskarasana`, duration, "prayer", "exhale", "Return to center", "Bring palms to the chest and settle the weight evenly.", ["Lower the arms with control.", "Stand evenly on both feet.", "Take one normal breath before continuing."], ["Return to center.", "One easy breath."]),
+    ];
+  };
+  return adv ? [...buildRound("Round 1", "left"), ...buildRound("Round 2", "right")] : buildRound("Round 1", "left");
+}
+
+function buildChandraRoutine(level) {
+  const duration = level === "advanced" ? 5 : 6;
+  const transitionSeconds = level === "advanced" ? 3.4 : 4.2;
+  const specs = [
+    ["Center in Mountain", "mountain", "normal breath", "Set an even standing base", "Stand tall and settle before moving sideways."],
+    ["Half Moon Side Bend · Left", "side-stretch-left", "inhale up · exhale bend", "Lengthen the left side of the waist", "Reach up before moving into a comfortable left side bend."],
+    ["Goddess Pose", "goddess", "steady breath", "Wide-stance knee alignment", "Turn the toes out comfortably and bend both knees in line with the feet."],
+    ["Triangle · Left", "triangle", "easy breath", "Left side-body length", "Lengthen over the left leg and rotate the chest only as far as comfortable."],
+    ["Pyramid · Left", "pyramid-left", "exhale to fold", "Left hamstring and hip hinge", "Square the hips as much as comfortable and fold with a long spine."],
+    ["Low Lunge · Left", "low-lunge", "inhale to lengthen", "Left-leg lunge control", "Keep the front knee near the ankle and use the back knee for support."],
+    ["Skandasana · Left", "skandasana-left", "exhale to bend", "Left lateral squat control", "Shift left into a shallow lateral squat with the knee following the toes."],
+    ["Malasana Center", "malasana", "steady breath", "Centered deep squat with support", "Bring the weight to center and use a block under the seat or heels when needed."],
+    ["Skandasana · Right", "skandasana-right", "exhale to bend", "Right lateral squat control", "Shift right into the same comfortable depth used on the first side."],
+    ["Low Lunge · Right", "low-lunge-right", "inhale to lengthen", "Right-leg lunge control", "Keep the front knee near the ankle and lower the back knee as needed."],
+    ["Pyramid · Right", "pyramid-right", "exhale to fold", "Right hamstring and hip hinge", "Use blocks and soften the knee to keep the spine long."],
+    ["Triangle · Right", "triangle-right", "easy breath", "Right side-body length", "Lengthen over the right leg and avoid forcing the neck upward."],
+    ["Goddess Return", "goddess", "steady breath", "Return through a balanced wide stance", "Match the depth used in the first Goddess pose before bringing the feet in."],
+    ["Half Moon Side Bend · Right", "side-stretch-right", "inhale up · exhale bend", "Lengthen the right side of the waist", "Repeat the side bend with the same range on the right."],
+    ["Return to Mountain", "mountain", "normal breath", "Finish centered", "Stand evenly and let the breath return to normal."],
+  ];
+  return specs.map(([name, animation, breath, focus, summary]) => ({
+    ...yogaSequenceMove(name, duration, animation, breath, focus, summary, [summary, "Keep the movement slow enough to stay balanced.", "Use a smaller range whenever alignment changes."], ["Slow and steady.", "Use a comfortable range.", "Match both sides."]),
+    sequenceFlow: true,
+    flowTransitionSeconds: transitionSeconds,
+  }));
+}
+
 function buildYogaRoutine(level) {
+  if (state?.yogaSection === "daily") return buildDailyYogaRoutine(level);
+  if (state?.yogaSection === "office") return buildOfficeYogaRoutine(level);
+  if (state?.yogaSection === "catcow") return buildCatCowRoutine(level);
+  if (state?.yogaSection === "sun") return buildSuryaRoutine(level);
+  if (state?.yogaSection === "moon") return buildChandraRoutine(level);
   if (state?.yogaSection === "relax") return buildYogaRelaxationRoutine(level);
   const adv = level === "advanced";
   const coreFlow = [
     move({ name: "Mountain Pose", duration: adv ? 35 : 25, target: `${adv ? 35 : 25} sec hold`, animation: "mountain", focus: "Root through the feet and stack the body", summary: "Stand grounded and long through the spine.", instructions: ["Press evenly through the feet.", "Soften the ribs and widen across the collarbones.", "Let the crown of the head rise over the center of the body."], cues: ["Root down and grow tall.", "Shoulders easy, ribs soft.", "Stand long through the whole body."], period: adv ? 2.7 : 2.8 }),
-    move({ name: "Sun Reach Flow", duration: adv ? 40 : 30, target: `${adv ? 40 : 30} sec flow`, animation: "sun", focus: "Length through the front body", summary: "Sweep the arms wide and overhead with the breath.", instructions: ["Inhale the arms up in a wide arc.", "Exhale and let them float back down.", "Keep the neck easy and the spine long."], cues: ["Move with the breath.", "Reach long without strain.", "Keep the neck soft."], period: adv ? 1.9 : 2 }),
+    move({ name: "Sun Reach Flow", duration: adv ? 40 : 30, target: `${adv ? 40 : 30} sec flow`, animation: "sun-sweep", focus: "Length through the front body", summary: "Sweep the arms wide and overhead with the breath.", instructions: ["Inhale the arms up in a wide arc.", "Exhale and let them float back down.", "Keep the neck easy and the spine long."], cues: ["Move with the breath.", "Reach long without strain.", "Keep the neck soft."], period: adv ? 1.9 : 2 }),
     move({ name: "Chair Pose", duration: adv ? 35 : 25, target: `${adv ? 35 : 25} sec hold`, animation: "chair", focus: "Hip hinge and leg strength", summary: "Sit back as if reaching for a chair and keep the spine long.", instructions: ["Bend the knees and send the hips back.", "Reach the arms up without tightening the neck.", "Keep the weight balanced through the whole foot."], cues: ["Sit back gently.", "Knees follow the toes.", "Keep the spine long."], period: adv ? 1.8 : 1.9 }),
     move({ name: "Low Lunge", duration: adv ? 40 : 30, target: `${adv ? 40 : 30} sec hold`, animation: "low-lunge", focus: "Front-leg stability and hip flexor length", summary: "Step one foot forward, bend the front knee, and lift through the chest.", instructions: ["Keep the front knee stacked over the ankle.", "Let the back leg reach long without dropping the chest.", "Reach upward only as far as the ribs can stay soft."], cues: ["Front knee over ankle.", "Back leg long.", "Lift the chest, soften the ribs."], period: adv ? 1.8 : 1.9 }),
     move({ name: "Warrior II", duration: adv ? 40 : 30, target: `${adv ? 40 : 30} sec hold`, animation: "warrior", focus: "Wide stance and front-knee alignment", summary: "Take a wide stance and reach calmly in both directions.", instructions: ["Open into a wide stance.", "Bend the front knee over the ankle.", "Reach through both arms while keeping the neck easy."], cues: ["Front knee stays over the ankle.", "Arms long, shoulders soft.", "Stay broad across the chest."], period: adv ? 1.7 : 1.8 }),
@@ -352,17 +835,35 @@ function buildDanceRoutine(level) {
 }
 
 function routineContextKey(t = state?.track, l = state?.level) {
-  const variant = t === "yoga" ? state?.yogaSection || "flow" : "default";
+  const variant = t === "yoga"
+    ? state?.yogaSection || "flow"
+    : t === "exercise"
+      ? state?.workoutSection || "everyday"
+      : t === "breath"
+        ? state?.breathOption || "diaphragmatic"
+      : "default";
   return `${t}:${l}:${variant}`;
 }
 
-function applyRoutineOrder(items, contextKey) {
-  const identified = items.map((item, index) => ({
-    ...item,
-    routineId: item.isCustom
+function identifyRoutineItems(items, contextKey) {
+  const occurrences = new Map();
+  return items.map((item, index) => {
+    const baseId = item.isCustom
       ? `custom:${item.id}`
-      : `builtin:${contextKey}:${item.name}:${item.animation}:${item.focus || index}`,
-  }));
+      : `builtin:${contextKey}:${item.name}:${item.animation}:${item.focus || index}`;
+    const occurrence = (occurrences.get(baseId) || 0) + 1;
+    occurrences.set(baseId, occurrence);
+    return {
+      ...item,
+      routineId: occurrence === 1 ? baseId : `${baseId}:repeat-${occurrence}`,
+      routinePhase: inferredRoutinePhase(item, index, items.length),
+    };
+  });
+}
+
+function applyRoutineOrder(items, contextKey, useStoredOrder = true) {
+  const identified = identifyRoutineItems(items, contextKey);
+  if (!useStoredOrder) return identified;
   const storedOrder = state?.routineOrders?.[contextKey] || [];
   const storedRank = new Map(storedOrder.map((id, index) => [id, index]));
   return identified
@@ -375,25 +876,51 @@ function applyRoutineOrder(items, contextKey) {
     .map(entry => entry.item);
 }
 
-function buildRoutine(t, l) {
+function buildRoutineCatalog(t, l, useStoredOrder = true) {
   let built;
   if (t === "yoga") built = buildYogaRoutine(l);
   else if (t === "dance") built = buildDanceRoutine(l);
   else if (t === "breath") built = buildBreathingRoutine(l, state?.breathOption, state?.breathMinutes);
   else built = buildExerciseRoutine(l);
-  const custom = (state?.customExercises || [])
-    .filter(item => item.track === t && (item.level === "both" || item.level === l))
-    .map(item => move({
-      ...item,
-      target: `${item.duration} sec ${DYNAMIC_ANIMS?.has?.(item.animation) ? "pace" : "practice"}`,
-      period: item.period || 2,
-      isCustom: true,
-    }));
-  return applyRoutineOrder([...built, ...custom], routineContextKey(t, l));
+  const contextKey = routineContextKey(t, l);
+  return applyRoutineOrder(built, contextKey, useStoredOrder);
+}
+
+function compactSelectedRoutine(items) {
+  const compacted = [];
+  items.forEach(item => {
+    if (item.type === "rest" && (!compacted.length || compacted[compacted.length - 1].type === "rest")) return;
+    compacted.push(item);
+  });
+  while (compacted[0]?.type === "rest") compacted.shift();
+  while (compacted[compacted.length - 1]?.type === "rest") compacted.pop();
+  return compacted;
+}
+
+function buildRoutine(t, l) {
+  const contextKey = routineContextKey(t, l);
+  const catalog = buildRoutineCatalog(t, l, true);
+  const selectedIds = state?.routineSelections?.[contextKey];
+  if (!Array.isArray(selectedIds)) return catalog;
+  const selected = compactSelectedRoutine(catalog.filter(item => selectedIds.includes(item.routineId)));
+  if (selected.length) return selected;
+  return [move({
+    isPlaceholder: true,
+    routineId: `placeholder:${contextKey}`,
+    name: "Choose exercises",
+    duration: 1,
+    target: "Open the Exercises tab",
+    animation: "rest",
+    focus: "Build a routine from the curated movement list",
+    summary: "This routine is empty. Select one or more curated movements before starting the coach.",
+    instructions: ["Open Exercises.", "Choose movements from the curated list.", "Return to Coach when the routine is ready."],
+    cues: ["Choose at least one curated movement."],
+    period: 2.4,
+  })];
 }
 
 // ═══════════════════════════════════════════════════════════
-//  3D POSE KEYFRAMES — Anatomically correct
+//  3D POSE KEYFRAMES
 //  Convention (all values in degrees):
 //    ArmX  +  = shoulder flexion (arm forward)    -  = extension (arm back)
 //    ArmZ  +  = abduction (arm away from body)    for BOTH sides
@@ -410,13 +937,13 @@ const P = {
     rootY: 0, rootX: 0, rootZ: 0,
     rootRotX: 0, rootRotY: 0, rootRotZ: 0,
     spineX: 0, spineY: 0, spineZ: 0,
-    headX: 0, headY: 0,
-    lArmX: 0, lArmZ: 10, lElbow: 8,
-    rArmX: 0, rArmZ: 10, rElbow: 8,
-    lLegX: 0, lKnee: 2, lLegZ: 2,
-    rLegX: 0, rKnee: 2, rLegZ: 2,
-    lFootX: 0, lFootY: 0,
-    rFootX: 0, rFootY: 0,
+    headX: 0, headY: 0, headZ: 0,
+    lArmX: 0, lArmY: 0, lArmZ: 10, lElbow: 8,
+    rArmX: 0, rArmY: 0, rArmZ: 10, rElbow: 8,
+    lLegX: 0, lLegY: 0, lKnee: 2, lLegZ: 2,
+    rLegX: 0, rLegY: 0, rKnee: 2, rLegZ: 2,
+    lFootX: 0, lFootY: 0, lFootZ: 0,
+    rFootX: 0, rFootY: 0, rFootZ: 0,
   },
 };
 
@@ -507,9 +1034,19 @@ P.mountain = { speed: 0.45,
   b: pose({ rootY: 0.1, spineX: -2, headX: 0, lArmX: -2, rArmX: -2, lArmZ: 11, rArmZ: 11, lElbow: 7, rElbow: 7 }),
 };
 
-P.sun = { speed: 0.6,
+P.prayer = { speed: 0.22,
+  a: pose({ spineX: -1, lArmX: 46, lArmZ: -20, lElbow: 102, rArmX: 46, rArmZ: -20, rElbow: 102 }),
+  b: pose({ spineX: -2, lArmX: 48, lArmZ: -22, lElbow: 106, rArmX: 48, rArmZ: -22, rElbow: 106 }),
+};
+
+P["sun-sweep"] = { speed: 0.6,
   a: pose({ spineX: 2, lArmX: -8, lArmZ: 28, lElbow: 12, rArmX: -8, rArmZ: 28, rElbow: 12 }),
   b: pose({ rootY: 0.08, lArmX: 158, lArmZ: 24, lElbow: 14, rArmX: 158, rArmZ: 24, rElbow: 14, spineX: -5, headX: -4 }),
+};
+
+P.sun = { speed: 0.22,
+  a: pose({ lArmX: 154, lArmZ: 12, lElbow: 8, rArmX: 154, rArmZ: 12, rElbow: 8, spineX: -3, headX: -2 }),
+  b: pose({ lArmX: 160, lArmZ: 10, lElbow: 6, rArmX: 160, rArmZ: 10, rElbow: 6, spineX: -6, headX: -4 }),
 };
 
 P.chair = { speed: 0.5,
@@ -538,26 +1075,26 @@ P["low-lunge"] = { speed: 0.38,
 
 P.warrior = { speed: 0.4,
   a: pose({ rootY: -1.0, spineX: 1, spineY: -2, spineZ: -1, headY: 20,
-    lLegX: 54, lKnee: 68, lLegZ: 1, lFootY: 4,
-    rLegX: -18, rKnee: 8, rLegZ: 14, rFootY: 18,
+    lLegX: 54, lLegY: 4, lKnee: 68, lLegZ: 1, lFootY: 4,
+    rLegX: -18, rLegY: 18, rKnee: 8, rLegZ: 14, rFootY: 18,
     lArmX: 4, lArmZ: 78, lElbow: 8,
     rArmX: 2, rArmZ: 82, rElbow: 8 }),
   b: pose({ rootY: -1.15, spineX: 1, spineY: -1, spineZ: 1, headY: 22,
-    lLegX: 60, lKnee: 74, lLegZ: 1, lFootY: 4,
-    rLegX: -18, rKnee: 8, rLegZ: 14, rFootY: 18,
+    lLegX: 60, lLegY: 4, lKnee: 74, lLegZ: 1, lFootY: 4,
+    rLegX: -18, rLegY: 18, rKnee: 8, rLegZ: 14, rFootY: 18,
     lArmX: 4, lArmZ: 82, lElbow: 6,
     rArmX: 2, rArmZ: 84, rElbow: 6 }),
 };
 
 P.triangle = { speed: 0.34,
   a: pose({ rootY: -0.55, spineX: 8, spineY: -12, spineZ: 34, headY: -12,
-    lLegX: 10, lKnee: 8, lLegZ: 10, lFootY: 4,
-    rLegX: -2, rKnee: 6, rLegZ: 18, rFootY: 18,
+    lLegX: 10, lLegY: 4, lKnee: 8, lLegZ: 10, lFootY: 4,
+    rLegX: -2, rLegY: 18, rKnee: 6, rLegZ: 18, rFootY: 18,
     lArmX: 8, lArmZ: 78, lElbow: 8,
     rArmX: 0, rArmZ: 80, rElbow: 8 }),
   b: pose({ rootY: -0.62, spineX: 10, spineY: -14, spineZ: 38, headY: -10,
-    lLegX: 10, lKnee: 10, lLegZ: 10, lFootY: 4,
-    rLegX: -2, rKnee: 6, rLegZ: 18, rFootY: 18,
+    lLegX: 10, lLegY: 4, lKnee: 10, lLegZ: 10, lFootY: 4,
+    rLegX: -2, rLegY: 18, rKnee: 6, rLegZ: 18, rFootY: 18,
     lArmX: 10, lArmZ: 80, lElbow: 6,
     rArmX: 0, rArmZ: 84, rElbow: 6 }),
 };
@@ -569,6 +1106,24 @@ P["side-stretch"] = { speed: 0.6,
   b: pose({ spineZ: -20, headY: 6,
     rArmX: 158, rArmZ: 14, rElbow: 6,
     lArmX: 10, lArmZ: 10, lElbow: 18, lLegZ: 4, rLegZ: 4 }),
+};
+
+P["side-stretch-left"] = { speed: 0.22,
+  a: pose({ spineZ: 17, headZ: -5,
+    lArmX: 150, lArmZ: 14, lElbow: 8,
+    rArmX: 8, rArmZ: 10, rElbow: 16, lLegZ: 4, rLegZ: 4 }),
+  b: pose({ spineZ: 22, headZ: -7,
+    lArmX: 158, lArmZ: 12, lElbow: 6,
+    rArmX: 8, rArmZ: 10, rElbow: 16, lLegZ: 4, rLegZ: 4 }),
+};
+
+P["side-stretch-right"] = { speed: 0.22,
+  a: pose({ spineZ: -17, headZ: 5,
+    rArmX: 150, rArmZ: 14, rElbow: 8,
+    lArmX: 8, lArmZ: 10, lElbow: 16, lLegZ: 4, rLegZ: 4 }),
+  b: pose({ spineZ: -22, headZ: 7,
+    rArmX: 158, rArmZ: 12, rElbow: 6,
+    lArmX: 8, lArmZ: 10, lElbow: 16, lLegZ: 4, rLegZ: 4 }),
 };
 
 P.tree = { speed: 0.3,
@@ -616,13 +1171,13 @@ P["wide-fold"] = { speed: 0.36,
   a: pose({ rootY: -0.55, spineX: 74, headX: 12,
     lArmX: -12, lArmZ: 12, lElbow: 22,
     rArmX: -12, rArmZ: 12, rElbow: 22,
-    lLegX: 4, lKnee: 12, lLegZ: 18, lFootX: 8, lFootY: 12,
-    rLegX: 4, rKnee: 12, rLegZ: 18, rFootX: 8, rFootY: 12 }),
+    lLegX: 4, lLegY: 12, lKnee: 12, lLegZ: 18, lFootX: 8, lFootY: 12,
+    rLegX: 4, rLegY: 12, rKnee: 12, rLegZ: 18, rFootX: 8, rFootY: 12 }),
   b: pose({ rootY: -0.7, spineX: 86, headX: 16,
     lArmX: -8, lArmZ: 10, lElbow: 16,
     rArmX: -8, rArmZ: 10, rElbow: 16,
-    lLegX: 4, lKnee: 16, lLegZ: 20, lFootX: 10, lFootY: 12,
-    rLegX: 4, rKnee: 16, rLegZ: 20, rFootX: 10, rFootY: 12 }),
+    lLegX: 4, lLegY: 12, lKnee: 16, lLegZ: 20, lFootX: 10, lFootY: 12,
+    rLegX: 4, rLegY: 12, rKnee: 16, rLegZ: 20, rFootX: 10, rFootY: 12 }),
 };
 
 P.seated = { speed: 0.3,
@@ -634,28 +1189,122 @@ P.seated = { speed: 0.3,
     rArmX: 28, rElbow: 18, rArmZ: 8 }),
 };
 
+P["seated-cat-cow"] = { speed: 0.34,
+  a: pose({ rootY: -4.75, spineX: -12, headX: -8,
+    lLegX: 72, lKnee: 72, lFootX: 10, rLegX: 72, rKnee: 72, rFootX: 10,
+    lArmX: 34, lArmZ: 8, lElbow: 34, rArmX: 34, rArmZ: 8, rElbow: 34 }),
+  b: pose({ rootY: -4.82, spineX: 22, headX: 18,
+    lLegX: 72, lKnee: 72, lFootX: 10, rLegX: 72, rKnee: 72, rFootX: 10,
+    lArmX: 38, lArmZ: 8, lElbow: 40, rArmX: 38, rArmZ: 8, rElbow: 40 }),
+};
+
+P["seated-twist"] = { speed: 0.32,
+  a: lotusSeat({ spineY: 26, headY: 14,
+    lArmX: 38, lArmZ: 10, lElbow: 62,
+    rArmX: 30, rArmZ: 12, rElbow: 82 }),
+  b: lotusSeat({ rootY: -5.48, spineY: -26, headY: -14,
+    lArmX: 30, lArmZ: 12, lElbow: 82,
+    rArmX: 38, rArmZ: 10, rElbow: 62 }),
+};
+
+P.tabletop = { speed: 0.2,
+  a: pose({ rootY: -4.6, rootRotX: 74, spineX: 0, headX: -8,
+    lLegX: 74, lKnee: 92, lFootX: 12, rLegX: 74, rKnee: 92, rFootX: 12,
+    lArmX: 74, lArmZ: 7, lElbow: 4, rArmX: 74, rArmZ: 7, rElbow: 4 }),
+  b: pose({ rootY: -4.55, rootRotX: 74, spineX: 2, headX: -6,
+    lLegX: 74, lKnee: 92, lFootX: 12, rLegX: 74, rKnee: 92, rFootX: 12,
+    lArmX: 74, lArmZ: 7, lElbow: 5, rArmX: 74, rArmZ: 7, rElbow: 5 }),
+};
+
+P["cat-cow"] = { speed: 0.5,
+  a: pose({ rootY: -4.62, rootRotX: 74, spineX: -18, headX: -15,
+    lLegX: 74, lKnee: 92, lFootX: 12, rLegX: 74, rKnee: 92, rFootX: 12,
+    lArmX: 74, lArmZ: 7, lElbow: 4, rArmX: 74, rArmZ: 7, rElbow: 4 }),
+  b: pose({ rootY: -4.5, rootRotX: 74, spineX: 27, headX: 22,
+    lLegX: 74, lKnee: 94, lFootX: 14, rLegX: 74, rKnee: 94, rFootX: 14,
+    lArmX: 74, lArmZ: 7, lElbow: 8, rArmX: 74, rArmZ: 7, rElbow: 8 }),
+};
+
+P["bird-dog"] = { speed: 0.34,
+  a: pose({ rootY: -4.35, rootRotX: 74, spineX: 0, headX: -5,
+    lLegX: 4, lKnee: 8, lFootX: 8, rLegX: 74, rKnee: 92, rFootX: 12,
+    lArmX: 74, lArmZ: 7, lElbow: 5, rArmX: 154, rArmZ: 6, rElbow: 8 }),
+  b: pose({ rootY: -4.35, rootRotX: 74, spineX: 0, headX: -5,
+    rLegX: 4, rKnee: 8, rFootX: 8, lLegX: 74, lKnee: 92, lFootX: 12,
+    rArmX: 74, rArmZ: 7, rElbow: 5, lArmX: 154, lArmZ: 6, lElbow: 8 }),
+};
+
+P.plank = { speed: 0.22,
+  a: pose({ rootY: -3.9, rootRotX: 76, spineX: 1, headX: -4,
+    lLegX: 0, lKnee: 4, lFootX: 12, rLegX: 0, rKnee: 4, rFootX: 12,
+    lArmX: 76, lArmZ: 8, lElbow: 5, rArmX: 76, rArmZ: 8, rElbow: 5 }),
+  b: pose({ rootY: -3.86, rootRotX: 77, spineX: 0, headX: -3,
+    lLegX: 0, lKnee: 5, lFootX: 12, rLegX: 0, rKnee: 5, rFootX: 12,
+    lArmX: 77, lArmZ: 8, lElbow: 6, rArmX: 77, rArmZ: 8, rElbow: 6 }),
+};
+
+P.ashtanga = { speed: 0.2,
+  a: pose({ rootY: -5.15, rootRotX: 72, spineX: 30, headX: 4,
+    lLegX: 70, lKnee: 92, lFootX: 16, rLegX: 70, rKnee: 92, rFootX: 16,
+    lArmX: 100, lArmZ: 7, lElbow: 70, rArmX: 100, rArmZ: 7, rElbow: 70 }),
+  b: pose({ rootY: -5.25, rootRotX: 72, spineX: 35, headX: 6,
+    lLegX: 70, lKnee: 94, lFootX: 16, rLegX: 70, rKnee: 94, rFootX: 16,
+    lArmX: 110, lArmZ: 7, lElbow: 78, rArmX: 110, rArmZ: 7, rElbow: 78 }),
+};
+
+P.cobra = { speed: 0.2,
+  a: pose({ rootY: -5.7, rootRotX: 76, spineX: -30, headX: -10,
+    lLegX: 0, lKnee: 5, lFootX: 15, rLegX: 0, rKnee: 5, rFootX: 15,
+    lArmX: 48, lArmZ: 8, lElbow: 48, rArmX: 48, rArmZ: 8, rElbow: 48 }),
+  b: pose({ rootY: -5.62, rootRotX: 76, spineX: -38, headX: -13,
+    lLegX: 0, lKnee: 5, lFootX: 15, rLegX: 0, rKnee: 5, rFootX: 15,
+    lArmX: 52, lArmZ: 8, lElbow: 38, rArmX: 52, rArmZ: 8, rElbow: 38 }),
+};
+
+P["downward-dog"] = { speed: 0.22,
+  a: pose({ rootY: -0.75, spineX: 92, headX: 8,
+    lLegX: 12, lKnee: 30, lFootX: 14, rLegX: 12, rKnee: 30, rFootX: 14,
+    lArmX: 112, lArmZ: 8, lElbow: 6, rArmX: 112, rArmZ: 8, rElbow: 6 }),
+  b: pose({ rootY: -0.65, spineX: 98, headX: 10,
+    lLegX: 15, lKnee: 36, lFootX: 16, rLegX: 15, rKnee: 36, rFootX: 16,
+    lArmX: 116, lArmZ: 8, lElbow: 7, rArmX: 116, rArmZ: 8, rElbow: 7 }),
+};
+
 P.goddess = { speed: 0.34,
   a: pose({ rootY: -1.35, spineX: 1,
-    lLegX: 42, lKnee: 68, lLegZ: 20, lFootY: 24,
-    rLegX: 42, rKnee: 68, rLegZ: 20, rFootY: 24,
+    lLegX: 42, lLegY: 24, lKnee: 68, lLegZ: 20, lFootY: 24,
+    rLegX: 42, rLegY: 24, rKnee: 68, rLegZ: 20, rFootY: 24,
     lArmX: 18, lArmZ: 74, lElbow: 88,
     rArmX: 18, rArmZ: 74, rElbow: 88 }),
   b: pose({ rootY: -1.55, spineX: 0,
-    lLegX: 48, lKnee: 76, lLegZ: 22, lFootY: 26,
-    rLegX: 48, rKnee: 76, rLegZ: 22, rFootY: 26,
+    lLegX: 48, lLegY: 26, lKnee: 76, lLegZ: 22, lFootY: 26,
+    rLegX: 48, rLegY: 26, rKnee: 76, rLegZ: 22, rFootY: 26,
     lArmX: 20, lArmZ: 78, lElbow: 92,
     rArmX: 20, rArmZ: 78, rElbow: 92 }),
 };
 
+P.malasana = { speed: 0.24,
+  a: pose({ rootY: -3.45, spineX: 12, headX: 2,
+    lLegX: 92, lLegY: 8, lKnee: 112, lLegZ: 18, lFootX: 8, lFootY: 10,
+    rLegX: 92, rLegY: 8, rKnee: 112, rLegZ: 18, rFootX: 8, rFootY: 10,
+    lArmX: 44, lArmZ: -34, lElbow: 110,
+    rArmX: 44, rArmZ: -34, rElbow: 110 }),
+  b: pose({ rootY: -3.7, spineX: 15, headX: 2,
+    lLegX: 98, lLegY: 10, lKnee: 118, lLegZ: 22, lFootX: 10, lFootY: 12,
+    rLegX: 98, rLegY: 10, rKnee: 118, rLegZ: 22, rFootX: 10, rFootY: 12,
+    lArmX: 48, lArmZ: -36, lElbow: 106,
+    rArmX: 48, rArmZ: -36, rElbow: 106 }),
+};
+
 P["triangle-right"] = { speed: 0.34,
   a: pose({ rootY: -0.55, spineX: 8, spineY: 12, spineZ: -34, headY: 12,
-    rLegX: 10, rKnee: 8, rLegZ: 10, rFootY: 4,
-    lLegX: -2, lKnee: 6, lLegZ: 18, lFootY: 18,
+    rLegX: 10, rLegY: 4, rKnee: 8, rLegZ: 10, rFootY: 4,
+    lLegX: -2, lLegY: 18, lKnee: 6, lLegZ: 18, lFootY: 18,
     rArmX: 8, rArmZ: 78, rElbow: 8,
     lArmX: 0, lArmZ: 80, lElbow: 8 }),
   b: pose({ rootY: -0.62, spineX: 10, spineY: 14, spineZ: -38, headY: 10,
-    rLegX: 10, rKnee: 10, rLegZ: 10, rFootY: 4,
-    lLegX: -2, lKnee: 6, lLegZ: 18, lFootY: 18,
+    rLegX: 10, rLegY: 4, rKnee: 10, rLegZ: 10, rFootY: 4,
+    lLegX: -2, lLegY: 18, lKnee: 6, lLegZ: 18, lFootY: 18,
     rArmX: 10, rArmZ: 80, rElbow: 6,
     lArmX: 0, lArmZ: 84, lElbow: 6 }),
 };
@@ -663,12 +1312,12 @@ P["triangle-right"] = { speed: 0.34,
 P["pyramid-left"] = { speed: 0.32,
   a: pose({ rootX: -0.18, rootY: -0.45, spineX: 58, spineY: -8, headX: 8,
     lLegX: 10, lKnee: 12, lFootX: 8,
-    rLegX: -8, rKnee: 8, rLegZ: 8, rFootY: 12,
+    rLegX: -8, rLegY: 12, rKnee: 8, rLegZ: 8, rFootY: 12,
     lArmX: -8, lArmZ: 8, lElbow: 20,
     rArmX: -8, rArmZ: 8, rElbow: 20 }),
   b: pose({ rootX: -0.18, rootY: -0.52, spineX: 68, spineY: -10, headX: 10,
     lLegX: 12, lKnee: 16, lFootX: 10,
-    rLegX: -10, rKnee: 10, rLegZ: 8, rFootY: 12,
+    rLegX: -10, rLegY: 12, rKnee: 10, rLegZ: 8, rFootY: 12,
     lArmX: -10, lArmZ: 8, lElbow: 16,
     rArmX: -10, rArmZ: 8, rElbow: 16 }),
 };
@@ -676,12 +1325,12 @@ P["pyramid-left"] = { speed: 0.32,
 P["pyramid-right"] = { speed: 0.32,
   a: pose({ rootX: 0.18, rootY: -0.45, spineX: 58, spineY: 8, headX: 8,
     rLegX: 10, rKnee: 12, rFootX: 8,
-    lLegX: -8, lKnee: 8, lLegZ: 8, lFootY: 12,
+    lLegX: -8, lLegY: 12, lKnee: 8, lLegZ: 8, lFootY: 12,
     rArmX: -8, rArmZ: 8, rElbow: 20,
     lArmX: -8, lArmZ: 8, lElbow: 20 }),
   b: pose({ rootX: 0.18, rootY: -0.52, spineX: 68, spineY: 10, headX: 10,
     rLegX: 12, rKnee: 16, rFootX: 10,
-    lLegX: -10, lKnee: 10, lLegZ: 8, lFootY: 12,
+    lLegX: -10, lLegY: 12, lKnee: 10, lLegZ: 8, lFootY: 12,
     rArmX: -10, rArmZ: 8, rElbow: 16,
     lArmX: -10, lArmZ: 8, lElbow: 16 }),
 };
@@ -699,28 +1348,54 @@ P["low-lunge-right"] = { speed: 0.38,
     rArmX: 154, rArmZ: 18, rElbow: 12 }),
 };
 
+P["equestrian-left"] = { speed: 0.24,
+  a: pose({ rootX: -0.12, rootY: -2.4, spineX: 28, headX: -8,
+    lLegX: 72, lKnee: 86, lLegZ: 3, lFootX: 10,
+    rLegX: -40, rKnee: 50, rLegZ: 5, rFootX: 18,
+    lArmX: 30, lArmZ: 5, lElbow: 14,
+    rArmX: 30, rArmZ: 5, rElbow: 14 }),
+  b: pose({ rootX: -0.12, rootY: -2.5, spineX: 24, headX: -12,
+    lLegX: 76, lKnee: 90, lLegZ: 3, lFootX: 12,
+    rLegX: -42, rKnee: 52, rLegZ: 5, rFootX: 20,
+    lArmX: 26, lArmZ: 4, lElbow: 10,
+    rArmX: 26, rArmZ: 4, rElbow: 10 }),
+};
+
+P["equestrian-right"] = { speed: 0.24,
+  a: pose({ rootX: 0.12, rootY: -2.4, spineX: 28, headX: -8,
+    rLegX: 72, rKnee: 86, rLegZ: 3, rFootX: 10,
+    lLegX: -40, lKnee: 50, lLegZ: 5, lFootX: 18,
+    lArmX: 30, lArmZ: 5, lElbow: 14,
+    rArmX: 30, rArmZ: 5, rElbow: 14 }),
+  b: pose({ rootX: 0.12, rootY: -2.5, spineX: 24, headX: -12,
+    rLegX: 76, rKnee: 90, rLegZ: 3, rFootX: 12,
+    lLegX: -42, lKnee: 52, lLegZ: 5, lFootX: 20,
+    lArmX: 26, lArmZ: 4, lElbow: 10,
+    rArmX: 26, rArmZ: 4, rElbow: 10 }),
+};
+
 P["skandasana-left"] = { speed: 0.3,
   a: pose({ rootX: -0.82, rootY: -2.0, spineX: 22, spineY: -8, spineZ: -4,
-    lLegX: 74, lKnee: 104, lLegZ: 16, lFootX: 18, lFootY: 18,
-    rLegX: 4, rKnee: 8, rLegZ: 34, rFootX: 18, rFootY: 20,
+    lLegX: 74, lLegY: 18, lKnee: 104, lLegZ: 16, lFootX: 18, lFootY: 18,
+    rLegX: 4, rLegY: 20, rKnee: 8, rLegZ: 34, rFootX: 18, rFootY: 20,
     lArmX: 34, lArmZ: 16, lElbow: 36,
     rArmX: 32, rArmZ: 16, rElbow: 36 }),
   b: pose({ rootX: -0.9, rootY: -2.15, spineX: 26, spineY: -10, spineZ: -2,
-    lLegX: 80, lKnee: 112, lLegZ: 17, lFootX: 20, lFootY: 18,
-    rLegX: 4, rKnee: 10, rLegZ: 36, rFootX: 20, rFootY: 20,
+    lLegX: 80, lLegY: 18, lKnee: 112, lLegZ: 17, lFootX: 20, lFootY: 18,
+    rLegX: 4, rLegY: 20, rKnee: 10, rLegZ: 36, rFootX: 20, rFootY: 20,
     lArmX: 38, lArmZ: 16, lElbow: 38,
     rArmX: 36, rArmZ: 16, rElbow: 38 }),
 };
 
 P["skandasana-right"] = { speed: 0.3,
   a: pose({ rootX: 0.82, rootY: -2.0, spineX: 22, spineY: 8, spineZ: 4,
-    rLegX: 74, rKnee: 104, rLegZ: 16, rFootX: 18, rFootY: 18,
-    lLegX: 4, lKnee: 8, lLegZ: 34, lFootX: 18, lFootY: 20,
+    rLegX: 74, rLegY: 18, rKnee: 104, rLegZ: 16, rFootX: 18, rFootY: 18,
+    lLegX: 4, lLegY: 20, lKnee: 8, lLegZ: 34, lFootX: 18, lFootY: 20,
     rArmX: 34, rArmZ: 16, rElbow: 36,
     lArmX: 32, lArmZ: 16, lElbow: 36 }),
   b: pose({ rootX: 0.9, rootY: -2.15, spineX: 26, spineY: 10, spineZ: 2,
-    rLegX: 80, rKnee: 112, rLegZ: 17, rFootX: 20, rFootY: 18,
-    lLegX: 4, lKnee: 10, lLegZ: 36, lFootX: 20, lFootY: 20,
+    rLegX: 80, rLegY: 18, rKnee: 112, rLegZ: 17, rFootX: 20, rFootY: 18,
+    lLegX: 4, lLegY: 20, lKnee: 10, lLegZ: 36, lFootX: 20, lFootY: 20,
     rArmX: 38, rArmZ: 16, rElbow: 38,
     lArmX: 36, lArmZ: 16, lElbow: 38 }),
 };
@@ -750,6 +1425,24 @@ P["long-exhale"] = { speed: 0.18,
   b: lotusSeat({ rootY: -5.5, spineX: 3, headX: 1,
     lArmX: 24, lArmZ: 7, lElbow: 24,
     rArmX: 24, rArmZ: 7, rElbow: 24 }),
+};
+
+P["nadi-shodhana"] = { speed: 0.18,
+  a: lotusSeat({ spineX: 1,
+    lArmX: 28, lArmZ: 8, lElbow: 24,
+    rArmX: 66, rArmZ: 12, rElbow: 112 }),
+  b: lotusSeat({ rootY: -5.46, spineX: 0, headY: 1,
+    lArmX: 28, lArmZ: 8, lElbow: 24,
+    rArmX: 70, rArmZ: 12, rElbow: 106 }),
+};
+
+P.bhramari = { speed: 0.18,
+  a: lotusSeat({ spineX: 1,
+    lArmX: 54, lArmZ: 62, lElbow: 118,
+    rArmX: 54, rArmZ: 62, rElbow: 118 }),
+  b: lotusSeat({ rootY: -5.47, spineX: 0,
+    lArmX: 58, lArmZ: 64, lElbow: 112,
+    rArmX: 58, rArmZ: 64, rElbow: 112 }),
 };
 
 P["sukhasana-breath"] = { speed: 0.22,
@@ -789,13 +1482,13 @@ P.vajrasana = { speed: 0.2,
 
 P.butterfly = { speed: 0.24,
   a: pose({ rootY: -6.35, spineX: 2,
-    lLegX: 54, lLegZ: 52, lKnee: 112, lFootX: 20, lFootY: 18,
-    rLegX: 54, rLegZ: 52, rKnee: 112, rFootX: 20, rFootY: 18,
+    lLegX: 54, lLegY: 18, lLegZ: 52, lKnee: 112, lFootX: 20, lFootY: 18,
+    rLegX: 54, rLegY: 18, rLegZ: 52, rKnee: 112, rFootX: 20, rFootY: 18,
     lArmX: 36, lArmZ: 12, lElbow: 46,
     rArmX: 36, rArmZ: 12, rElbow: 46 }),
   b: pose({ rootY: -6.42, spineX: 4,
-    lLegX: 55, lLegZ: 56, lKnee: 116, lFootX: 22, lFootY: 20,
-    rLegX: 55, rLegZ: 56, rKnee: 116, rFootX: 22, rFootY: 20,
+    lLegX: 55, lLegY: 20, lLegZ: 56, lKnee: 116, lFootX: 22, lFootY: 20,
+    rLegX: 55, rLegY: 20, rLegZ: 56, rKnee: 116, rFootX: 22, rFootY: 20,
     lArmX: 38, lArmZ: 12, lElbow: 50,
     rArmX: 38, rArmZ: 12, rElbow: 50 }),
 };
@@ -814,12 +1507,12 @@ P["supported-forward-fold"] = { speed: 0.18,
 };
 
 P["legs-up-wall"] = { speed: 0.18,
-  a: pose({ rootY: -5.7, rootRotX: 78, spineX: -4, headX: 6,
+  a: pose({ rootY: -5.7, rootRotX: -78, spineX: -4, headX: 6,
     lLegX: 72, lKnee: 6, lLegZ: 4, lFootX: 8,
     rLegX: 72, rKnee: 6, rLegZ: 4, rFootX: 8,
     lArmX: -8, lArmZ: 38, lElbow: 12,
     rArmX: -8, rArmZ: 38, rElbow: 12 }),
-  b: pose({ rootY: -5.62, rootRotX: 78, spineX: -3, headX: 5,
+  b: pose({ rootY: -5.62, rootRotX: -78, spineX: -3, headX: 5,
     lLegX: 76, lKnee: 6, lLegZ: 5, lFootX: 10,
     rLegX: 76, rKnee: 6, rLegZ: 5, rFootX: 10,
     lArmX: -8, lArmZ: 40, lElbow: 12,
@@ -827,25 +1520,47 @@ P["legs-up-wall"] = { speed: 0.18,
 };
 
 P["supported-bridge"] = { speed: 0.2,
-  a: pose({ rootY: -4.6, rootRotX: 72, spineX: -10, headX: 6,
+  a: pose({ rootY: -4.6, rootRotX: -72, spineX: -10, headX: 6,
     lLegX: 58, lKnee: 80, lLegZ: 3, lFootX: 8,
     rLegX: 58, rKnee: 80, rLegZ: 3, rFootX: 8,
     lArmX: -12, lArmZ: 18, lElbow: 10,
     rArmX: -12, rArmZ: 18, rElbow: 10 }),
-  b: pose({ rootY: -4.45, rootRotX: 72, spineX: -14, headX: 6,
+  b: pose({ rootY: -4.45, rootRotX: -72, spineX: -14, headX: 6,
     lLegX: 58, lKnee: 82, lLegZ: 3, lFootX: 8,
     rLegX: 58, rKnee: 82, rLegZ: 3, rFootX: 8,
     lArmX: -14, lArmZ: 18, lElbow: 10,
     rArmX: -14, rArmZ: 18, rElbow: 10 }),
 };
 
+P["glute-bridge"] = { speed: 0.52,
+  a: pose({ rootY: -5.25, rootRotX: -78, spineX: -3, headX: 6,
+    lLegX: 58, lKnee: 82, lLegZ: 3, lFootX: 8,
+    rLegX: 58, rKnee: 82, rLegZ: 3, rFootX: 8,
+    lArmX: -12, lArmZ: 18, lElbow: 8,
+    rArmX: -12, rArmZ: 18, rElbow: 8 }),
+  b: pose({ rootY: -4.35, rootRotX: -70, spineX: -10, headX: 6,
+    lLegX: 58, lKnee: 76, lLegZ: 3, lFootX: 6,
+    rLegX: 58, rKnee: 76, rLegZ: 3, rFootX: 6,
+    lArmX: -14, lArmZ: 18, lElbow: 8,
+    rArmX: -14, rArmZ: 18, rElbow: 8 }),
+};
+
+P["knee-to-chest"] = { speed: 0.32,
+  a: pose({ rootY: -5.42, rootRotX: -86, spineX: 2, headX: 5,
+    lLegX: 104, lKnee: 116, lFootX: 5, rLegX: 48, rKnee: 78, rFootX: 8,
+    lArmX: 28, lArmZ: 10, lElbow: 92, rArmX: 20, rArmZ: 12, rElbow: 72 }),
+  b: pose({ rootY: -5.42, rootRotX: -86, spineX: 2, headX: 5,
+    rLegX: 104, rKnee: 116, rFootX: 5, lLegX: 48, lKnee: 78, lFootX: 8,
+    rArmX: 28, rArmZ: 10, rElbow: 92, lArmX: 20, lArmZ: 12, lElbow: 72 }),
+};
+
 P.shavasana = { speed: 0.16,
-  a: pose({ rootY: -5.45, rootRotX: 88, spineX: 0, headX: 4,
+  a: pose({ rootY: -5.45, rootRotX: -88, spineX: 0, headX: 4,
     lLegX: 6, lKnee: 4, lLegZ: 10, lFootX: 4,
     rLegX: 6, rKnee: 4, rLegZ: 10, rFootX: 4,
     lArmX: -8, lArmZ: 32, lElbow: 6,
     rArmX: -8, rArmZ: 32, rElbow: 6 }),
-  b: pose({ rootY: -5.38, rootRotX: 88, spineX: 1, headX: 4,
+  b: pose({ rootY: -5.38, rootRotX: -88, spineX: 1, headX: 4,
     lLegX: 6, lKnee: 4, lLegZ: 12, lFootX: 4,
     rLegX: 6, rKnee: 4, rLegZ: 12, rFootX: 4,
     lArmX: -8, lArmZ: 34, lElbow: 6,
@@ -1344,7 +2059,7 @@ const CAMERA_SEGMENTS = [
   ["rightShoulder", "rightHip"], ["leftHip", "rightHip"], ["leftHip", "leftKnee"],
   ["leftKnee", "leftAnkle"], ["rightHip", "rightKnee"], ["rightKnee", "rightAnkle"],
 ];
-const CAMERA_KEY_JOINTS = ["nose", "leftShoulder", "rightShoulder", "leftHip", "rightHip", "leftKnee", "rightKnee", "leftAnkle", "rightAnkle"];
+const CAMERA_KEY_JOINTS = ["nose", "leftShoulder", "rightShoulder", "leftWrist", "rightWrist", "leftHip", "rightHip", "leftKnee", "rightKnee", "leftAnkle", "rightAnkle"];
 const CAMERA_ANGLE_METRICS = [
   { label: "left elbow", points: ["leftShoulder", "leftElbow", "leftWrist"] },
   { label: "right elbow", points: ["rightShoulder", "rightElbow", "rightWrist"] },
@@ -1366,50 +2081,61 @@ const cameraCoach = {
   bestScore: 0,
   scoreTotal: 0,
   sampleCount: 0,
+  meanScore: 0,
+  scoreM2: 0,
   reps: 0,
   holdMs: 0,
+  trackedMs: 0,
+  targetMs: 0,
   repArmed: true,
   lastCue: "",
   lastCueAt: 0,
   startedAt: 0,
+  breathHistory: [],
+  breathDirection: "calibrating",
+  lastBreathDirection: "calibrating",
+  breathCycles: 0,
+  breathSignal: null,
+  breathPostureScore: 0,
 };
 
 function cameraPoint(landmarks, name) {
   const point = landmarks?.[POSE_IDX[name]];
   if (!point) return null;
-  return { x: point.x, y: point.y, score: scorePoint(point) };
+  return { x: point.x, y: point.y, z: point.z || 0, score: scorePoint(point) };
+}
+
+function worldPointFromObject(object, x = 0, y = 0, z = 0) {
+  if (!object || typeof THREE === "undefined") return null;
+  const point = new THREE.Vector3(x, y, z);
+  object.localToWorld(point);
+  return { x: point.x, y: point.y, z: point.z, score: 1 };
 }
 
 function avatarReferencePoints() {
-  if (!neuralPose.cssWidth || !neuralPose.cssHeight) return null;
-  const projected = {
-    leftShoulder: projectFromObject(bones.lArm),
-    rightShoulder: projectFromObject(bones.rArm),
-    leftElbow: projectFromObject(bones.lElbow),
-    rightElbow: projectFromObject(bones.rElbow),
-    leftWrist: projectFromObject(bones.lElbow, 0, -BODY.lArmL - 0.15, 0),
-    rightWrist: projectFromObject(bones.rElbow, 0, -BODY.lArmL - 0.15, 0),
-    leftHip: projectFromObject(bones.root, BODY.hipW / 2, 0, 0),
-    rightHip: projectFromObject(bones.root, -BODY.hipW / 2, 0, 0),
-    leftKnee: projectFromObject(bones.lKnee),
-    rightKnee: projectFromObject(bones.rKnee),
-    leftAnkle: projectFromObject(bones.lFoot),
-    rightAnkle: projectFromObject(bones.rFoot),
+  return {
+    leftShoulder: worldPointFromObject(bones.lArm),
+    rightShoulder: worldPointFromObject(bones.rArm),
+    leftElbow: worldPointFromObject(bones.lElbow),
+    rightElbow: worldPointFromObject(bones.rElbow),
+    leftWrist: worldPointFromObject(bones.lElbow, 0, -BODY.lArmL - 0.15, 0),
+    rightWrist: worldPointFromObject(bones.rElbow, 0, -BODY.lArmL - 0.15, 0),
+    leftHip: worldPointFromObject(bones.root, BODY.hipW / 2, 0, 0),
+    rightHip: worldPointFromObject(bones.root, -BODY.hipW / 2, 0, 0),
+    leftKnee: worldPointFromObject(bones.lKnee),
+    rightKnee: worldPointFromObject(bones.rKnee),
+    leftAnkle: worldPointFromObject(bones.lFoot),
+    rightAnkle: worldPointFromObject(bones.rFoot),
   };
-  return Object.fromEntries(Object.entries(projected).map(([name, point]) => [name, point ? {
-    x: point.x / neuralPose.cssWidth,
-    y: point.y / neuralPose.cssHeight,
-    score: 1,
-  } : null]));
 }
 
 function jointAngle(a, b, c) {
   if (!a || !b || !c) return null;
-  const abx = a.x - b.x, aby = a.y - b.y;
-  const cbx = c.x - b.x, cby = c.y - b.y;
-  const denom = Math.hypot(abx, aby) * Math.hypot(cbx, cby);
+  const abx = a.x - b.x, aby = a.y - b.y, abz = (a.z || 0) - (b.z || 0);
+  const cbx = c.x - b.x, cby = c.y - b.y, cbz = (c.z || 0) - (b.z || 0);
+  const denom = Math.hypot(abx, aby, abz) * Math.hypot(cbx, cby, cbz);
   if (!denom) return null;
-  return Math.acos(Math.max(-1, Math.min(1, (abx * cbx + aby * cby) / denom))) / DEG;
+  return Math.acos(Math.max(-1, Math.min(1, (abx * cbx + aby * cby + abz * cbz) / denom))) / DEG;
 }
 
 function scorePoseMatch(landmarks) {
@@ -1425,7 +2151,7 @@ function scorePoseMatch(landmarks) {
     const targetAngle = jointAngle(reference[a], reference[b], reference[c]);
     if (!Number.isFinite(userAngle) || !Number.isFinite(targetAngle)) return null;
     const difference = Math.abs(userAngle - targetAngle);
-    return { ...metric, difference, score: Math.max(0, 100 - difference * 1.35) };
+    return { ...metric, difference, userAngle, targetAngle, score: Math.max(0, 100 - difference * 1.35) };
   }).filter(Boolean);
 
   if (comparisons.length < 4) return null;
@@ -1439,8 +2165,10 @@ function framingResult(landmarks) {
   const visible = points.filter(point => point.score >= 0.5);
   const visibility = Math.round((visible.length / CAMERA_KEY_JOINTS.length) * 100);
   const noseVisible = (cameraPoint(landmarks, "nose")?.score || 0) >= 0.5;
+  const handsVisible = ["leftWrist", "rightWrist"].every(name => (cameraPoint(landmarks, name)?.score || 0) >= 0.45);
   const anklesVisible = ["leftAnkle", "rightAnkle"].every(name => (cameraPoint(landmarks, name)?.score || 0) >= 0.45);
-  if (visible.length < 5) return { ready: false, visibility, title: "Step into the camera view", detail: "Face the camera and make sure the room is well lit." };
+  const checks = { head: noseVisible, hands: handsVisible, feet: anklesVisible };
+  if (visible.length < 6) return { ready: false, visibility, checks, title: "Step into the camera view", detail: "Face the camera and make sure the room is well lit." };
 
   const minX = Math.min(...visible.map(p => p.x));
   const maxX = Math.max(...visible.map(p => p.x));
@@ -1448,10 +2176,40 @@ function framingResult(landmarks) {
   const maxY = Math.max(...visible.map(p => p.y));
   const height = maxY - minY;
   const centerX = (minX + maxX) / 2;
-  if (!noseVisible || !anklesVisible || height > 0.94) return { ready: false, visibility, title: "Move farther from the camera", detail: "Keep your head, hands, knees, and feet inside the frame." };
-  if (height < 0.48) return { ready: false, visibility, title: "Move a little closer", detail: "Come closer while keeping your whole body visible." };
-  if (centerX < 0.34 || centerX > 0.66) return { ready: false, visibility, title: "Reposition toward the center", detail: "Center your hips inside the body outline." };
-  return { ready: true, visibility, title: "Full body visible", detail: "Copy the AI pose and follow the live adjustment cue." };
+  if (!noseVisible || !handsVisible || !anklesVisible || height > 0.94) return { ready: false, visibility, checks, title: "Move farther from the camera", detail: "Keep your head, both hands, knees, and both feet inside the frame." };
+  if (height < 0.48) return { ready: false, visibility, checks, title: "Move a little closer", detail: "Come closer while keeping your head, hands, and feet visible." };
+  if (centerX < 0.34 || centerX > 0.66) return { ready: false, visibility, checks, title: "Reposition toward the center", detail: "Center your hips inside the body outline." };
+  return { ready: true, visibility, checks, title: "Full body visible", detail: "Copy the AI pose and follow the live adjustment cue." };
+}
+
+function breathingFramingResult(landmarks) {
+  const names = ["nose", "leftShoulder", "rightShoulder", "leftWrist", "rightWrist", "leftHip", "rightHip"];
+  const points = names.map(name => cameraPoint(landmarks, name)).filter(Boolean);
+  const visible = points.filter(point => point.score >= 0.45);
+  const headVisible = (cameraPoint(landmarks, "nose")?.score || 0) >= 0.5;
+  const shouldersVisible = ["leftShoulder", "rightShoulder"].every(name => (cameraPoint(landmarks, name)?.score || 0) >= 0.5);
+  const hipsVisible = ["leftHip", "rightHip"].every(name => (cameraPoint(landmarks, name)?.score || 0) >= 0.42);
+  const handsVisible = ["leftWrist", "rightWrist"].some(name => (cameraPoint(landmarks, name)?.score || 0) >= 0.4);
+  const visibility = Math.round((visible.length / names.length) * 100);
+  const checks = { head: headVisible, hands: shouldersVisible, feet: hipsVisible };
+  if (!headVisible || !shouldersVisible || !hipsVisible) {
+    return { ready: false, visibility, checks, title: "Frame your head, shoulders, and hips", detail: "Sit facing the camera with the full torso visible and the room evenly lit." };
+  }
+  const nose = cameraPoint(landmarks, "nose");
+  const leftHip = cameraPoint(landmarks, "leftHip");
+  const rightHip = cameraPoint(landmarks, "rightHip");
+  const centerX = (leftHip.x + rightHip.x) / 2;
+  const torsoHeight = ((leftHip.y + rightHip.y) / 2) - nose.y;
+  if (torsoHeight < 0.28) return { ready: false, visibility, checks, title: "Move a little closer", detail: "Fill more of the frame while keeping the head and both shoulders visible." };
+  if (torsoHeight > 0.88) return { ready: false, visibility, checks, title: "Move a little farther away", detail: "Keep the head, shoulders, and hips inside the frame." };
+  if (centerX < 0.32 || centerX > 0.68) return { ready: false, visibility, checks, title: "Center your seated posture", detail: "Place the center of your ribs and hips near the middle of the frame." };
+  return { ready: true, visibility, checks: { ...checks, hands: handsVisible || shouldersVisible }, title: "Breathing view ready", detail: "Stay comfortably upright and let the torso move naturally with the breath." };
+}
+
+function updateFramingChecks(checks = {}) {
+  [[el.cameraHeadCheck, checks.head], [el.cameraHandsCheck, checks.hands], [el.cameraFeetCheck, checks.feet]].forEach(([node, visible]) => {
+    if (node) node.dataset.visible = String(Boolean(visible));
+  });
 }
 
 function drawCameraSkeleton(landmarks, matchScore = 0) {
@@ -1489,6 +2247,7 @@ function drawCameraSkeleton(landmarks, matchScore = 0) {
 }
 
 function setCameraGuidance(framing, match) {
+  updateFramingChecks(framing.checks);
   const ready = framing.ready && match;
   el.framingGuidance.dataset.state = ready ? "ready" : "adjust";
   el.framingTitle.textContent = framing.title;
@@ -1505,8 +2264,128 @@ function setCameraGuidance(framing, match) {
     el.coachDirectionCopy.textContent = "Hold this alignment and keep breathing naturally.";
   } else {
     el.coachDirectionTitle.textContent = `Adjust your ${match.weakest.label}`;
-    el.coachDirectionCopy.textContent = `Bring the ${match.weakest.label} closer to the AI guide. Make a small change, then settle.`;
+    const hinge = /elbow|knee/.test(match.weakest.label);
+    const direction = hinge
+      ? (match.weakest.userAngle > match.weakest.targetAngle ? "Bend it a little more" : "Straighten it a little more")
+      : "Bring that body line closer to the AI guide";
+    el.coachDirectionCopy.textContent = `${direction}. Make a small change, then settle and recheck the score.`;
   }
+}
+
+function setCameraModeLabels() {
+  const breathing = state.track === "breath";
+  if (el.cameraModeLabel) el.cameraModeLabel.textContent = breathing ? "Your breathing" : "Your movement";
+  if (el.cameraCoachTitle) el.cameraCoachTitle.textContent = breathing ? "Breathing Camera" : "Camera Coach";
+  if (el.cameraPrimaryLabel) el.cameraPrimaryLabel.textContent = breathing ? "Visible breath motion" : "Pose match";
+  if (el.cameraVisibilityLabel) el.cameraVisibilityLabel.textContent = breathing ? "Torso visible" : "Body visible";
+  if (el.cameraTargetLabel) el.cameraTargetLabel.textContent = breathing ? "Phase match" : "In target";
+  if (el.cameraConsistencyLabel) el.cameraConsistencyLabel.textContent = breathing ? "Rhythm" : "Consistency";
+  if (el.cameraRepLabel) el.cameraRepLabel.textContent = breathing ? "Observed cycles" : "Matched reps";
+  if (el.cameraHoldLabel) el.cameraHoldLabel.textContent = breathing ? "Tracked" : "Hold time";
+  if (el.cameraBestLabel) el.cameraBestLabel.textContent = breathing ? "Posture" : "Best match";
+  if (el.cameraHeadCheck) el.cameraHeadCheck.textContent = "Head";
+  if (el.cameraHandsCheck) el.cameraHandsCheck.textContent = breathing ? "Shoulders" : "Hands";
+  if (el.cameraFeetCheck) el.cameraFeetCheck.textContent = breathing ? "Hips" : "Feet";
+  if (el.cameraLimitationCopy) {
+    el.cameraLimitationCopy.textContent = breathing
+      ? "Breathing feedback estimates visible upper-torso motion. It cannot measure airflow, lung volume, oxygen, or diagnose a breathing condition."
+      : "Scores compare visible joint angles with the guide; they are coaching estimates, not a medical assessment.";
+  }
+}
+
+function breathingObservation(landmarks, nowMs) {
+  const leftShoulder = cameraPoint(landmarks, "leftShoulder");
+  const rightShoulder = cameraPoint(landmarks, "rightShoulder");
+  const leftHip = cameraPoint(landmarks, "leftHip");
+  const rightHip = cameraPoint(landmarks, "rightHip");
+  const nose = cameraPoint(landmarks, "nose");
+  if (![leftShoulder, rightShoulder, leftHip, rightHip, nose].every(Boolean)) return null;
+  const shoulderWidth = Math.hypot(leftShoulder.x - rightShoulder.x, leftShoulder.y - rightShoulder.y);
+  const shoulderY = (leftShoulder.y + rightShoulder.y) / 2;
+  const hipY = (leftHip.y + rightHip.y) / 2;
+  const torsoHeight = Math.max(0.08, hipY - shoulderY);
+  const rawSignal = shoulderWidth / torsoHeight;
+  cameraCoach.breathSignal = cameraCoach.breathSignal == null ? rawSignal : cameraCoach.breathSignal * 0.86 + rawSignal * 0.14;
+  cameraCoach.breathHistory.push({ time: nowMs, value: cameraCoach.breathSignal });
+  cameraCoach.breathHistory = cameraCoach.breathHistory.filter(sample => nowMs - sample.time <= 2200);
+  const comparison = cameraCoach.breathHistory.find(sample => nowMs - sample.time >= 750);
+  const deltaSignal = comparison ? cameraCoach.breathSignal - comparison.value : 0;
+  const threshold = 0.0045;
+  const direction = !comparison ? "calibrating" : deltaSignal > threshold ? "inhale" : deltaSignal < -threshold ? "exhale" : "steady";
+  if (cameraCoach.lastBreathDirection === "exhale" && direction === "inhale") cameraCoach.breathCycles++;
+  if (direction !== "calibrating") cameraCoach.lastBreathDirection = direction;
+  cameraCoach.breathDirection = direction;
+
+  const phaseInfo = breathPhaseFor(step());
+  const expected = phaseInfo?.key;
+  const phaseMatch = Boolean(expected) && (
+    (expected === "inhale" && direction === "inhale") ||
+    (expected === "exhale" && direction === "exhale") ||
+    ((expected === "hold" || expected === "rest") && direction === "steady")
+  );
+  const shoulderSlope = Math.abs(leftShoulder.y - rightShoulder.y) / Math.max(0.05, shoulderWidth);
+  const headCenter = Math.abs(nose.x - (leftShoulder.x + rightShoulder.x) / 2) / Math.max(0.05, shoulderWidth);
+  const postureScore = Math.max(0, Math.min(100, 100 - shoulderSlope * 120 - headCenter * 55));
+  cameraCoach.breathPostureScore = cameraCoach.sampleCount ? cameraCoach.breathPostureScore * 0.9 + postureScore * 0.1 : postureScore;
+
+  const deltaMs = cameraCoach.lastFrameAt ? Math.min(250, nowMs - cameraCoach.lastFrameAt) : 0;
+  cameraCoach.lastFrameAt = nowMs;
+  cameraCoach.trackedMs += deltaMs;
+  if (phaseMatch) cameraCoach.targetMs += deltaMs;
+  const score = direction === "calibrating" ? 0 : phaseMatch ? 92 : direction === "steady" ? 58 : 35;
+  cameraCoach.smoothedScore = cameraCoach.sampleCount ? cameraCoach.smoothedScore * 0.82 + score * 0.18 : score;
+  cameraCoach.bestScore = Math.max(cameraCoach.bestScore, postureScore);
+  cameraCoach.scoreTotal += score;
+  cameraCoach.sampleCount++;
+  const meanDelta = score - cameraCoach.meanScore;
+  cameraCoach.meanScore += meanDelta / cameraCoach.sampleCount;
+  cameraCoach.scoreM2 += meanDelta * (score - cameraCoach.meanScore);
+  cameraCoach.reps = cameraCoach.breathCycles;
+  cameraCoach.holdMs = cameraCoach.trackedMs;
+  return { direction, phaseInfo, phaseMatch, postureScore, deltaSignal };
+}
+
+function setBreathingCameraGuidance(framing, observation) {
+  updateFramingChecks(framing.checks);
+  el.framingGuidance.dataset.state = framing.ready ? "ready" : "adjust";
+  el.framingTitle.textContent = framing.title;
+  el.framingDetail.textContent = framing.detail;
+  if (!framing.ready || !observation) {
+    el.coachDirectionTitle.textContent = framing.title;
+    el.coachDirectionCopy.textContent = framing.detail;
+    return;
+  }
+  const expected = observation.phaseInfo?.label || "Natural breath";
+  const observed = observation.direction === "calibrating" ? "calibrating" : observation.direction;
+  if (observation.direction === "calibrating") {
+    el.coachDirectionTitle.textContent = "Calibrating visible motion";
+    el.coachDirectionCopy.textContent = "Stay comfortably still and breathe normally for a few seconds.";
+  } else if (observation.phaseMatch) {
+    el.coachDirectionTitle.textContent = `${expected} is tracking`;
+    el.coachDirectionCopy.textContent = "The visible torso motion is moving in the same direction as the timer cue. Keep the breath unforced.";
+  } else {
+    el.coachDirectionTitle.textContent = `Timer: ${expected} · camera: ${observed}`;
+    el.coachDirectionCopy.textContent = "Use the timer as the guide. The camera estimate can miss subtle breathing, loose clothing, or alternate-nostril and humming techniques.";
+  }
+}
+
+function renderBreathingCameraStats(visibility, observation) {
+  const directionLabel = !observation || observation.direction === "calibrating"
+    ? "Settle"
+    : observation.direction === "inhale" ? "IN ↑" : observation.direction === "exhale" ? "OUT ↓" : "STEADY";
+  const targetRate = cameraCoach.trackedMs ? Math.round((cameraCoach.targetMs / cameraCoach.trackedMs) * 100) : 0;
+  const rhythm = cameraCoach.sampleCount < 8 ? 0 : Math.max(0, Math.min(100, Math.round(55 + targetRate * 0.45)));
+  el.matchScore.textContent = directionLabel;
+  el.matchMeterFill.style.width = `${observation?.phaseMatch ? 100 : observation?.direction === "calibrating" ? 20 : 45}%`;
+  el.visibilityScore.textContent = `${visibility}%`;
+  el.targetRate.textContent = `${targetRate}%`;
+  el.consistencyScore.textContent = `${rhythm}%`;
+  el.repCount.textContent = String(cameraCoach.breathCycles);
+  el.holdTime.textContent = `${Math.floor(cameraCoach.trackedMs / 1000)}s`;
+  el.bestScore.textContent = `${Math.round(cameraCoach.breathPostureScore)}%`;
+  el.matchLabel.textContent = observation?.direction === "calibrating"
+    ? "Calibrating upper-torso movement"
+    : "Visible movement estimate only";
 }
 
 function announceCameraCue(cue) {
@@ -1519,9 +2398,14 @@ function announceCameraCue(cue) {
 
 function renderCameraStats(visibility, match) {
   const score = match ? Math.round(cameraCoach.smoothedScore) : 0;
+  const targetRate = cameraCoach.trackedMs ? Math.round((cameraCoach.targetMs / cameraCoach.trackedMs) * 100) : 0;
+  const variance = cameraCoach.sampleCount > 1 ? cameraCoach.scoreM2 / (cameraCoach.sampleCount - 1) : 0;
+  const consistency = cameraCoach.sampleCount ? Math.max(0, Math.round(100 - Math.sqrt(variance) * 2)) : 0;
   el.matchScore.textContent = match ? `${score}%` : "--";
   el.matchMeterFill.style.width = `${score}%`;
   el.visibilityScore.textContent = `${visibility}%`;
+  el.targetRate.textContent = `${targetRate}%`;
+  el.consistencyScore.textContent = `${consistency}%`;
   el.repCount.textContent = String(cameraCoach.reps);
   el.holdTime.textContent = `${Math.floor(cameraCoach.holdMs / 1000)}s`;
   el.bestScore.textContent = `${Math.round(cameraCoach.bestScore)}%`;
@@ -1535,9 +2419,16 @@ function updateMovementStats(score, nowMs) {
   cameraCoach.bestScore = Math.max(cameraCoach.bestScore, score);
   cameraCoach.scoreTotal += score;
   cameraCoach.sampleCount++;
-  if (score >= 78) cameraCoach.holdMs += delta;
+  const meanDelta = score - cameraCoach.meanScore;
+  cameraCoach.meanScore += meanDelta / cameraCoach.sampleCount;
+  cameraCoach.scoreM2 += meanDelta * (score - cameraCoach.meanScore);
+  cameraCoach.trackedMs += delta;
+  if (score >= 78) {
+    cameraCoach.holdMs += delta;
+    cameraCoach.targetMs += delta;
+  }
 
-  const isDynamic = DYNAMIC_ANIMS.has(step()?.animation);
+  const isDynamic = DYNAMIC_ANIMS.has(step()?.animation) || Boolean(step()?.sequenceFlow);
   if (isDynamic && score < 62) cameraCoach.repArmed = true;
   if (isDynamic && score >= 80 && cameraCoach.repArmed) {
     cameraCoach.reps++;
@@ -1553,8 +2444,22 @@ function updateCameraCoach(nowMs) {
     const result = neuralPose.landmarker.detectForVideo(el.cameraVideo, nowMs);
     const landmarks = result?.landmarks?.[0];
     if (!landmarks) {
-      renderCameraStats(0, null);
-      setCameraGuidance({ ready: false, title: "Step into the camera view", detail: "Face the camera so the coach can find your full body." }, null);
+      if (state.track === "breath") {
+        const missing = { ready: false, visibility: 0, checks: {}, title: "Sit in the camera view", detail: "Face the camera with your head, shoulders, and hips visible." };
+        renderBreathingCameraStats(0, null);
+        setBreathingCameraGuidance(missing, null);
+      } else {
+        renderCameraStats(0, null);
+        setCameraGuidance({ ready: false, checks: {}, title: "Step into the camera view", detail: "Face the camera so the coach can find your full body." }, null);
+      }
+      return;
+    }
+    if (state.track === "breath") {
+      const framing = breathingFramingResult(landmarks);
+      const observation = framing.ready ? breathingObservation(landmarks, nowMs) : null;
+      drawCameraSkeleton(landmarks, observation?.postureScore || 0);
+      setBreathingCameraGuidance(framing, observation);
+      renderBreathingCameraStats(framing.visibility, observation);
       return;
     }
     const framing = framingResult(landmarks);
@@ -1872,28 +2777,100 @@ function updateAdvancedCue(time, nowMs) {
   }
 }
 
-// Pose values use a symmetric convention: positive Z = abduction for BOTH sides.
-// applyPose maps to actual Three.js rotations (mirrors right side, negates knees).
-function applyPose(d) {
+const ANATOMICAL_YOGA_ANIMS = new Set([
+  "mountain", "prayer", "sun", "sun-sweep", "chair", "low-lunge", "low-lunge-right",
+  "equestrian-left", "equestrian-right", "warrior", "triangle", "triangle-right", "side-stretch",
+  "side-stretch-left", "side-stretch-right",
+  "tree", "warrior-three", "fold", "wide-fold", "seated", "seated-cat-cow", "seated-twist",
+  "tabletop", "cat-cow", "plank", "ashtanga", "cobra", "downward-dog", "goddess", "malasana",
+  "pyramid-left", "pyramid-right", "skandasana-left", "skandasana-right", "child-pose",
+  "vajrasana", "butterfly", "supported-forward-fold", "legs-up-wall", "supported-bridge",
+  "shavasana", "belly-breath", "box-breath", "long-exhale", "nadi-shodhana", "bhramari",
+  "sukhasana-breath",
+]);
+
+const ACTIVE_ANATOMICAL_ANIMS = new Set([
+  "sun-sweep", "side-stretch", "cat-cow", "seated-cat-cow", "seated-twist",
+  "belly-breath", "box-breath", "long-exhale", "nadi-shodhana", "bhramari", "sukhasana-breath",
+]);
+
+const ANATOMICAL_LIMITS = {
+  rootX: [-3, 3], rootY: [-8, 3], rootZ: [-3, 3],
+  rootRotX: [-95, 95], rootRotY: [-90, 90], rootRotZ: [-55, 55],
+  spineX: [-45, 100], spineY: [-55, 55], spineZ: [-48, 48],
+  headX: [-35, 35], headY: [-75, 75], headZ: [-40, 40],
+  lArmX: [-80, 175], rArmX: [-80, 175],
+  lArmY: [-90, 90], rArmY: [-90, 90],
+  lArmZ: [-30, 175], rArmZ: [-30, 175],
+  lElbow: [0, 150], rElbow: [0, 150],
+  lLegX: [-45, 125], rLegX: [-45, 125],
+  lLegY: [-55, 55], rLegY: [-55, 55],
+  lLegZ: [-12, 70], rLegZ: [-12, 70],
+  lKnee: [0, 150], rKnee: [0, 150],
+  lFootX: [-45, 45], rFootX: [-45, 45],
+  lFootY: [-45, 45], rFootY: [-45, 45],
+  lFootZ: [-35, 35], rFootZ: [-35, 35],
+};
+
+function clampValue(value, [min, max]) {
+  return Math.min(max, Math.max(min, Number.isFinite(value) ? value : 0));
+}
+
+function constrainAnatomicalPose(source) {
+  const constrained = { ...source };
+  Object.entries(ANATOMICAL_LIMITS).forEach(([key, range]) => {
+    constrained[key] = clampValue(constrained[key], range);
+  });
+  return constrained;
+}
+
+function convertPoseConvention(source, fromAnatomical, toAnatomical) {
+  if (!source || fromAnatomical === toAnatomical) return source ? { ...source } : { ...P._base };
+  const converted = { ...source };
+  ["lArmX", "rArmX", "lLegX", "rLegX", "lKnee", "rKnee"].forEach(key => {
+    converted[key] = -(converted[key] || 0);
+  });
+  return converted;
+}
+
+let avatarBounds = null;
+function enforceGroundContact(animKey) {
+  if (!ANATOMICAL_YOGA_ANIMS.has(animKey) || !avatarGroup || typeof THREE === "undefined") return;
+  avatarBounds ||= new THREE.Box3();
+  avatarGroup.updateMatrixWorld(true);
+  avatarBounds.setFromObject(avatarGroup);
+  const correction = 0.015 - avatarBounds.min.y;
+  if (Number.isFinite(correction) && Math.abs(correction) < 10) {
+    bones.root.position.y += correction;
+    avatarGroup.updateMatrixWorld(true);
+  }
+}
+
+// Yoga values use anatomical flexion signs. Legacy workout and dance poses keep
+// their original renderer convention so this correction remains scoped.
+function applyPose(source, animKey = targetPoseAnim) {
+  const anatomical = ANATOMICAL_YOGA_ANIMS.has(animKey);
+  const d = anatomical ? constrainAnatomicalPose(source) : source;
   const baseY = BODY.uLegL + BODY.lLegL + BODY.footH + 0.6;
   bones.root.position.y = baseY + d.rootY;
   bones.root.position.x = d.rootX;
   bones.root.position.z = d.rootZ;
   bones.root.rotation.set(d.rootRotX * DEG, d.rootRotY * DEG, d.rootRotZ * DEG);
   bones.spine.rotation.set(d.spineX * DEG, d.spineY * DEG, d.spineZ * DEG);
-  bones.head.rotation.set(d.headX * DEG, d.headY * DEG, 0);
-  // Arms: left Z positive = abduct left, right Z negated so positive = abduct right
-  bones.lArm.rotation.set(d.lArmX * DEG, 0, d.lArmZ * DEG);
-  bones.lElbow.rotation.set(d.lElbow * DEG, 0, 0);       // positive = flexion ✓
-  bones.rArm.rotation.set(d.rArmX * DEG, 0, -d.rArmZ * DEG);
-  bones.rElbow.rotation.set(d.rElbow * DEG, 0, 0);
-  // Legs: same mirror for Z; knees negated so positive = flexion (shin bends back)
-  bones.lLeg.rotation.set(d.lLegX * DEG, 0, (d.lLegZ || 0) * DEG);
-  bones.lKnee.rotation.set(-d.lKnee * DEG, 0, 0);
-  bones.rLeg.rotation.set(d.rLegX * DEG, 0, -(d.rLegZ || 0) * DEG);
-  bones.rKnee.rotation.set(-d.rKnee * DEG, 0, 0);
-  bones.lFoot.rotation.set((d.lFootX || 0) * DEG, (d.lFootY || 0) * DEG, 0);
-  bones.rFoot.rotation.set((d.rFootX || 0) * DEG, -(d.rFootY || 0) * DEG, 0);
+  bones.head.rotation.set(d.headX * DEG, d.headY * DEG, (d.headZ || 0) * DEG);
+  const sagittalSign = anatomical ? -1 : 1;
+  const hingeSign = anatomical ? 1 : -1;
+  bones.lArm.rotation.set(sagittalSign * d.lArmX * DEG, (d.lArmY || 0) * DEG, d.lArmZ * DEG);
+  bones.lElbow.rotation.set(hingeSign * d.lElbow * DEG, 0, 0);
+  bones.rArm.rotation.set(sagittalSign * d.rArmX * DEG, -(d.rArmY || 0) * DEG, -d.rArmZ * DEG);
+  bones.rElbow.rotation.set(hingeSign * d.rElbow * DEG, 0, 0);
+  bones.lLeg.rotation.set(sagittalSign * d.lLegX * DEG, (d.lLegY || 0) * DEG, (d.lLegZ || 0) * DEG);
+  bones.lKnee.rotation.set(hingeSign * d.lKnee * DEG, 0, 0);
+  bones.rLeg.rotation.set(sagittalSign * d.rLegX * DEG, -(d.rLegY || 0) * DEG, -(d.rLegZ || 0) * DEG);
+  bones.rKnee.rotation.set(hingeSign * d.rKnee * DEG, 0, 0);
+  bones.lFoot.rotation.set((d.lFootX || 0) * DEG, (d.lFootY || 0) * DEG, (d.lFootZ || 0) * DEG);
+  bones.rFoot.rotation.set((d.rFootX || 0) * DEG, -(d.rFootY || 0) * DEG, -(d.rFootZ || 0) * DEG);
+  enforceGroundContact(animKey);
 }
 
 function smoothStep(t) {
@@ -1925,16 +2902,21 @@ const MOTION_PROFILES = {
   default: { breathRoot: 0.05, breathSpine: 0.35, sway: 0.015, counterTwist: 0.4, hold: 0.08 },
   dynamic: { breathRoot: 0.03, breathSpine: 0.25, sway: 0.08, counterTwist: 1.8, headCounter: 1.1, stepLift: 0.05, hold: 0.02 },
   grounded: { breathRoot: 0.035, breathSpine: 0.28, sway: 0.02, counterTwist: 0.6, hold: 0.16 },
+  asana: { breathRoot: 0, breathSpine: 0.12, sway: 0, counterTwist: 0, hold: 0.24 },
+  asanaFlow: { breathRoot: 0, breathSpine: 0.16, sway: 0, counterTwist: 0.15, hold: 0.12 },
   seated: { breathRoot: 0.018, breathSpine: 0.18, sway: 0.005, counterTwist: 0.15, hold: 0.2 },
   supine: { breathRoot: 0.01, breathSpine: 0.08, sway: 0, counterTwist: 0, hold: 0.22 },
 };
 
-const DYNAMIC_ANIMS = new Set(["march", "side-step", "rotation", "punch", "dance-bounce", "step-touch", "grapevine", "cross-groove", "disco", "skater", "freestyle"]);
-const GROUNDED_ANIMS = new Set(["squat", "chair", "low-lunge", "low-lunge-right", "warrior", "triangle", "triangle-right", "goddess", "pyramid-left", "pyramid-right", "skandasana-left", "skandasana-right", "side-stretch", "tree", "warrior-three", "fold", "wide-fold", "child-pose", "supported-forward-fold", "supported-bridge"]);
-const SEATED_ANIMS = new Set(["seated", "belly-breath", "box-breath", "long-exhale", "sukhasana-breath", "vajrasana", "butterfly"]);
-const SUPINE_ANIMS = new Set(["legs-up-wall", "shavasana"]);
+const DYNAMIC_ANIMS = new Set(["march", "side-step", "rotation", "punch", "cat-cow", "bird-dog", "glute-bridge", "knee-to-chest", "seated-cat-cow", "dance-bounce", "step-touch", "grapevine", "cross-groove", "disco", "skater", "freestyle"]);
+const GROUNDED_ANIMS = new Set(["squat", "chair", "low-lunge", "low-lunge-right", "equestrian-left", "equestrian-right", "warrior", "triangle", "triangle-right", "goddess", "malasana", "pyramid-left", "pyramid-right", "skandasana-left", "skandasana-right", "side-stretch", "side-stretch-left", "side-stretch-right", "tree", "warrior-three", "fold", "wide-fold", "tabletop", "cat-cow", "bird-dog", "plank", "ashtanga", "cobra", "downward-dog", "child-pose", "supported-forward-fold", "supported-bridge"]);
+const SEATED_ANIMS = new Set(["seated", "seated-twist", "belly-breath", "box-breath", "long-exhale", "nadi-shodhana", "bhramari", "sukhasana-breath", "vajrasana", "butterfly"]);
+const SUPINE_ANIMS = new Set(["legs-up-wall", "supported-bridge", "glute-bridge", "knee-to-chest", "shavasana"]);
 
 function motionProfileFor(animKey) {
+  if (ANATOMICAL_YOGA_ANIMS.has(animKey)) {
+    return ACTIVE_ANATOMICAL_ANIMS.has(animKey) ? MOTION_PROFILES.asanaFlow : MOTION_PROFILES.asana;
+  }
   if (DYNAMIC_ANIMS.has(animKey)) return MOTION_PROFILES.dynamic;
   if (SUPINE_ANIMS.has(animKey)) return MOTION_PROFILES.supine;
   if (SEATED_ANIMS.has(animKey)) return MOTION_PROFILES.seated;
@@ -1973,8 +2955,11 @@ function applyNaturalMotion(pose, animKey, time, rawCycle, pData) {
 let targetPoseAnim = "rest";
 let transitionStartPose = null;
 let lastAppliedPose = null;
+let lastAppliedAnatomical = false;
 let transitionProgress = 1;
 const TRANSITION_SPEED = 2.0;
+const YOGA_TRANSITION_SPEED = 0.78;
+let activeTransitionSpeed = YOGA_TRANSITION_SPEED;
 
 function resizeSceneToStage() {
   if (!el?.animationStage || !camera || !renderer3d) return;
@@ -2064,6 +3049,9 @@ function setupScene() {
   buildAvatar();
   buildMorpheusInstructor();
   applyMirrorGuide();
+  // The first requested step has no visible predecessor. Render it immediately;
+  // later step changes retain the slower anatomical transition.
+  transitionProgress = 1;
 
   // Enable shadows on avatar
   avatarGroup.traverse(child => {
@@ -2089,21 +3077,34 @@ function setupScene() {
     const pData = P[targetPoseAnim] || P.rest;
     const breathingTrack = state.track === "breath";
     const rawCycle = breathingTrack ? 0 : (Math.sin(time * pData.speed * Math.PI - Math.PI / 2) + 1) / 2;
-    const cycle = breathingTrack ? 0 : realisticCycle(rawCycle, motionProfileFor(targetPoseAnim));
+    const staticAsana = ANATOMICAL_YOGA_ANIMS.has(targetPoseAnim) && !ACTIVE_ANATOMICAL_ANIMS.has(targetPoseAnim);
+    const cycle = breathingTrack ? 0 : staticAsana ? 1 : realisticCycle(rawCycle, motionProfileFor(targetPoseAnim));
     const exercisePose = breathingTrack ? lerpPose(pData.a, pData.a, 0) : lerpPose(pData.a, pData.b, cycle);
     if (!breathingTrack) applyNaturalMotion(exercisePose, targetPoseAnim, time, rawCycle, pData);
 
     // Smooth transition between exercises
     let finalPose;
     if (transitionProgress < 1) {
-      transitionProgress = Math.min(1, transitionProgress + dt * TRANSITION_SPEED);
+      const transitionSpeed = activeTransitionSpeed || (ANATOMICAL_YOGA_ANIMS.has(targetPoseAnim) ? YOGA_TRANSITION_SPEED : TRANSITION_SPEED);
+      transitionProgress = Math.min(1, transitionProgress + dt * transitionSpeed);
       finalPose = lerpPose(transitionStartPose, exercisePose, easeInOutCubic(transitionProgress));
     } else {
       finalPose = exercisePose;
     }
 
-    applyPose(finalPose);
+    applyPose(finalPose, targetPoseAnim);
+    if (el.animationStage) {
+      el.animationStage.dataset.poseAnimation = targetPoseAnim;
+      el.animationStage.dataset.poseConvention = ANATOMICAL_YOGA_ANIMS.has(targetPoseAnim) ? "anatomical" : "legacy";
+      el.animationStage.dataset.poseShoulderFlexion = String(Math.round(finalPose.lArmX || 0));
+      el.animationStage.dataset.poseHipFlexion = String(Math.round(finalPose.lLegX || 0));
+      el.animationStage.dataset.poseKneeFlexion = String(Math.round(finalPose.lKnee || 0));
+      el.animationStage.dataset.poseTargetShoulderFlexion = String(Math.round(pData.b?.lArmX || 0));
+      el.animationStage.dataset.poseTransition = transitionProgress.toFixed(2);
+      el.animationStage.dataset.sequenceFlow = step()?.sequenceFlow ? "on" : "off";
+    }
     lastAppliedPose = { ...finalPose };
+    lastAppliedAnatomical = ANATOMICAL_YOGA_ANIMS.has(targetPoseAnim);
     updateAdvancedCue(time, now);
 
     // Camera: smooth orbit + per-pose angles + full body framing
@@ -2137,9 +3138,13 @@ const CAM_PRESETS = {
   punch:          { angle: 30,  height: 5.5, dist: 22, lookY: 5.0, orbit: 0 },    // 3/4 angle
   posture:        { angle: 160, height: 5.5, dist: 22, lookY: 5.0, orbit: 0 },    // BACK view to see shoulder blades
   mountain:       { angle: 0,   height: 5.5, dist: 22, lookY: 5.0, orbit: 12 },   // slow orbit
+  prayer:         { angle: 8,   height: 5.5, dist: 22, lookY: 5.0, orbit: 2 },
   sun:            { angle: 20,  height: 6.0, dist: 23, lookY: 5.5, orbit: 8 },
+  "sun-sweep":    { angle: 20,  height: 6.0, dist: 23, lookY: 5.5, orbit: 2 },
   chair:          { angle: 55,  height: 4.5, dist: 21, lookY: 4.0, orbit: 6 },    // side to see form
   "low-lunge":    { angle: 58,  height: 4.2, dist: 22, lookY: 3.8, orbit: 3 },
+  "equestrian-left": { angle: 58, height: 3.8, dist: 22, lookY: 3.3, orbit: 0 },
+  "equestrian-right": { angle: -58, height: 3.8, dist: 22, lookY: 3.3, orbit: 0 },
   warrior:        { angle: 0,   height: 5.0, dist: 24, lookY: 4.5, orbit: 10 },   // wide, front, orbits
   triangle:       { angle: 18,  height: 5.0, dist: 24, lookY: 4.4, orbit: 5 },
   "triangle-right": { angle: -18, height: 5.0, dist: 24, lookY: 4.4, orbit: 5 },
@@ -2147,11 +3152,23 @@ const CAM_PRESETS = {
   "pyramid-left": { angle: 58,  height: 4.0, dist: 22, lookY: 3.6, orbit: 1 },
   "pyramid-right": { angle: -58, height: 4.0, dist: 22, lookY: 3.6, orbit: 1 },
   "side-stretch": { angle: 0,   height: 6.0, dist: 22, lookY: 5.0, orbit: 0 },
+  "side-stretch-left": { angle: 0, height: 6.0, dist: 22, lookY: 5.0, orbit: 0 },
+  "side-stretch-right": { angle: 0, height: 6.0, dist: 22, lookY: 5.0, orbit: 0 },
   tree:           { angle: 10,  height: 5.5, dist: 22, lookY: 5.0, orbit: 14 },   // slow orbit for balance
   "warrior-three": { angle: 72, height: 5.6, dist: 40, lookY: 4.7, orbit: 1 },
   fold:           { angle: 75,  height: 3.5, dist: 19, lookY: 3.5, orbit: 0 },    // side view for hip hinge
   "wide-fold":    { angle: 18,  height: 3.6, dist: 21, lookY: 3.5, orbit: 3 },
   seated:         { angle: 5,   height: 2.5, dist: 17, lookY: 2.0, orbit: 10 },   // low, close
+  "seated-cat-cow": { angle: 58, height: 3.0, dist: 18, lookY: 2.5, orbit: 0 },
+  "seated-twist": { angle: 20, height: 2.6, dist: 17, lookY: 2.0, orbit: 4 },
+  tabletop:       { angle: 62,  height: 3.2, dist: 19, lookY: 2.7, orbit: 0 },
+  "cat-cow":     { angle: 62,  height: 3.2, dist: 19, lookY: 2.7, orbit: 0 },
+  "bird-dog":    { angle: 62,  height: 3.2, dist: 20, lookY: 2.7, orbit: 0 },
+  plank:          { angle: 68,  height: 3.1, dist: 19, lookY: 2.6, orbit: 0 },
+  ashtanga:       { angle: 68,  height: 2.5, dist: 18, lookY: 2.0, orbit: 0 },
+  cobra:          { angle: 66,  height: 2.6, dist: 18, lookY: 2.1, orbit: 0 },
+  "downward-dog": { angle: 62, height: 4.0, dist: 20, lookY: 3.4, orbit: 0 },
+  malasana:        { angle: 12, height: 3.5, dist: 20, lookY: 2.9, orbit: 0 },
   "low-lunge-right": { angle: -58, height: 4.2, dist: 22, lookY: 3.8, orbit: 3 },
   "skandasana-left": { angle: 18, height: 3.8, dist: 23, lookY: 3.0, orbit: 2 },
   "skandasana-right": { angle: -18, height: 3.8, dist: 23, lookY: 3.0, orbit: 2 },
@@ -2162,10 +3179,14 @@ const CAM_PRESETS = {
   "supported-forward-fold": { angle: 35, height: 2.3, dist: 18, lookY: 1.7, orbit: 1 },
   "legs-up-wall": { angle: 70, height: 3.2, dist: 18, lookY: 2.0, orbit: 0 },
   "supported-bridge": { angle: 68, height: 2.8, dist: 18, lookY: 1.9, orbit: 0 },
+  "glute-bridge": { angle: 68, height: 2.8, dist: 18, lookY: 1.9, orbit: 0 },
+  "knee-to-chest": { angle: 70, height: 2.7, dist: 18, lookY: 1.9, orbit: 0 },
   shavasana: { angle: 72, height: 2.4, dist: 18, lookY: 1.7, orbit: 0 },
   "belly-breath": { angle: 0, height: 5.45, dist: 4.25, lookY: 5.25, orbit: 0 },
   "box-breath":   { angle: 0, height: 5.45, dist: 4.0, lookY: 5.25, orbit: 0 },
   "long-exhale":  { angle: -8, height: 2.7, dist: 17, lookY: 2.0, orbit: 3 },
+  "nadi-shodhana": { angle: -8, height: 2.7, dist: 17, lookY: 2.0, orbit: 2 },
+  bhramari:        { angle: 4, height: 2.7, dist: 17, lookY: 2.0, orbit: 2 },
   "dance-bounce": { angle: 18,  height: 5.2, dist: 22, lookY: 4.8, orbit: 8 },
   "step-touch":   { angle: 14,  height: 5.3, dist: 22, lookY: 4.8, orbit: 4 },
   grapevine:      { angle: 20,  height: 5.2, dist: 22, lookY: 4.7, orbit: 6 },
@@ -2202,7 +3223,12 @@ function updateCamera(time, dt) {
   camCurrent.angle += angleDiff * t;
 
   // Apply orbit rotation on top of base angle
-  const orbitOffset = camCurrent.orbit > 0 ? time * camCurrent.orbit : 0;
+  const orbitSpeed = cameraCoach.active
+    ? 0
+    : ANATOMICAL_YOGA_ANIMS.has(targetPoseAnim)
+      ? Math.min(camCurrent.orbit, 2)
+      : camCurrent.orbit;
+  const orbitOffset = orbitSpeed > 0 ? time * orbitSpeed : 0;
   const finalAngle = (camCurrent.angle + orbitOffset) * DEG;
 
   // Slight natural sway
@@ -2216,11 +3242,15 @@ function updateCamera(time, dt) {
   camera.lookAt(0, camCurrent.lookY, 0);
 }
 
-function transitionToAnimation(animKey) {
+function transitionToAnimation(animKey, transitionSeconds = null) {
   if (animKey === targetPoseAnim && transitionProgress >= 1) return;
-  transitionStartPose = lastAppliedPose ? { ...lastAppliedPose } : { ...P._base };
+  const nextAnatomical = ANATOMICAL_YOGA_ANIMS.has(animKey);
+  transitionStartPose = convertPoseConvention(lastAppliedPose, lastAppliedAnatomical, nextAnatomical);
   targetPoseAnim = animKey;
   transitionProgress = 0;
+  activeTransitionSpeed = transitionSeconds && transitionSeconds > 0
+    ? 1 / transitionSeconds
+    : nextAnatomical ? YOGA_TRANSITION_SPEED : TRANSITION_SPEED;
   setCameraTarget(animKey);
 }
 
@@ -2294,20 +3324,29 @@ function speak(text) {
 //  APP STATE + UI
 // ═══════════════════════════════════════════════════════════
 
-const state = { activeView: "coach", track: "exercise", level: "beginner", yogaSection: "flow", breathOption: "classic", breathMinutes: 5, routine: [], routineOrders: {}, customExercises: [], stepIndex: 0, remaining: 0, running: false, tickId: null, cueId: null, cueIndex: 0, voiceEnabled: true, neuralPoseEnabled: true, mirrorGuideEnabled: true, cameraCoachEnabled: false, hasUserInteracted: false };
+const state = { activeView: "coach", track: "exercise", level: "beginner", workoutSection: "everyday", yogaSection: "flow", breathOption: "diaphragmatic", breathMinutes: 5, displayMode: "standard", routine: [], routineOrders: {}, routineSelections: {}, stepIndex: 0, remaining: 0, running: false, tickId: null, cueId: null, cueIndex: 0, voiceEnabled: true, neuralPoseEnabled: true, mirrorGuideEnabled: true, cameraCoachEnabled: false, hasUserInteracted: false };
 state.routine = buildRoutine(state.track, state.level);
 
 const $ = id => document.getElementById(id);
 const el = {
-  coachTabBtn: $("coach-tab-btn"), exercisesTabBtn: $("exercises-tab-btn"),
+  coachTabBtn: $("coach-tab-btn"), exercisesTabBtn: $("exercises-tab-btn"), displayModeBtn: $("display-mode-btn"),
   heroTitle: $("hero-title"), heroText: $("hero-text"), goalRow: $("goal-row"),
   sessionNote: $("session-note"), trackExerciseBtn: $("track-exercise-btn"),
   trackYogaBtn: $("track-yoga-btn"), trackDanceBtn: $("track-dance-btn"),
   trackBreathBtn: $("track-breath-btn"),
   levelBeginnerBtn: $("level-beginner-btn"),
   levelAdvancedBtn: $("level-advanced-btn"),
+  workoutSectionPicker: $("workout-section-picker"),
+  workoutSectionEverydayBtn: $("workout-section-everyday-btn"),
+  workoutSectionPostureBtn: $("workout-section-posture-btn"),
+  workoutSectionHiitBtn: $("workout-section-hiit-btn"),
   yogaSectionPicker: $("yoga-section-picker"),
   yogaSectionFlowBtn: $("yoga-section-flow-btn"),
+  yogaSectionDailyBtn: $("yoga-section-daily-btn"),
+  yogaSectionOfficeBtn: $("yoga-section-office-btn"),
+  yogaSectionCatcowBtn: $("yoga-section-catcow-btn"),
+  yogaSectionSunBtn: $("yoga-section-sun-btn"),
+  yogaSectionMoonBtn: $("yoga-section-moon-btn"),
   yogaSectionRelaxBtn: $("yoga-section-relax-btn"),
   breathOptionPicker: $("breath-option-picker"),
   breathDurationPicker: $("breath-duration-picker"),
@@ -2340,30 +3379,41 @@ const el = {
   tutorialTitle: $("tutorial-title"), tutorialKicker: $("tutorial-kicker"),
   tutorialSummary: $("tutorial-summary"), tutorialBody: $("tutorial-body"),
   cameraCoachPanel: $("camera-coach-panel"), cameraFeedback: $("camera-feedback"), cameraStopBtn: $("camera-stop-btn"),
+  cameraCoachTitle: $("camera-coach-title"),
   cameraVideo: $("camera-video"), userPoseCanvas: $("user-pose-canvas"),
   cameraLoading: $("camera-loading"), framingGuidance: $("framing-guidance"),
   framingTitle: $("framing-title"), framingDetail: $("framing-detail"),
+  cameraModeLabel: $("camera-mode-label"), cameraPrimaryLabel: $("camera-primary-label"),
+  cameraHeadCheck: $("camera-head-check"), cameraHandsCheck: $("camera-hands-check"), cameraFeetCheck: $("camera-feet-check"),
   matchScore: $("match-score"), matchMeterFill: $("match-meter-fill"), matchLabel: $("match-label"),
-  visibilityScore: $("visibility-score"), repCount: $("rep-count"), holdTime: $("hold-time"), bestScore: $("best-score"),
+  visibilityScore: $("visibility-score"), targetRate: $("target-rate"), consistencyScore: $("consistency-score"), repCount: $("rep-count"), holdTime: $("hold-time"), bestScore: $("best-score"),
+  cameraVisibilityLabel: $("camera-visibility-label"), cameraTargetLabel: $("camera-target-label"), cameraConsistencyLabel: $("camera-consistency-label"),
+  cameraRepLabel: $("camera-rep-label"), cameraHoldLabel: $("camera-hold-label"), cameraBestLabel: $("camera-best-label"), cameraLimitationCopy: $("camera-limitation-copy"),
   coachDirectionTitle: $("coach-direction-title"), coachDirectionCopy: $("coach-direction-copy"),
   sessionHistory: $("session-history"),
   exerciseStudioPanel: $("exercise-studio-panel"), exerciseAddBtn: $("exercise-add-btn"),
-  exerciseForm: $("exercise-form"), exerciseAnimation: $("exercise-animation"),
-  exerciseSaveStatus: $("exercise-save-status"), exerciseOrderList: $("exercise-order-list"),
+  exerciseSaveStatus: $("exercise-save-status"), exerciseOrderList: $("exercise-order-list"), exercisePickerList: $("exercise-picker-list"),
+  exerciseSelectAllBtn: $("exercise-select-all-btn"), exerciseClearBtn: $("exercise-clear-btn"),
   exerciseRoutineContext: $("exercise-routine-context"), exerciseRoutineTotal: $("exercise-routine-total"),
+  practiceLibrary: $("practice-library"), practiceHistory: $("practice-history"),
 };
 el.voiceBtnLabel = el.voiceBtn ? el.voiceBtn.querySelector("[data-label]") : null;
 el.neuralPoseBtnLabel = el.neuralPoseBtn ? el.neuralPoseBtn.querySelector("[data-neural-label]") : null;
 el.mirrorGuideBtnLabel = el.mirrorGuideBtn ? el.mirrorGuideBtn.querySelector("[data-mirror-label]") : null;
 el.cameraCoachBtnLabel = el.cameraCoachBtn ? el.cameraCoachBtn.querySelector("[data-camera-label]") : null;
+el.displayModeBtnLabel = el.displayModeBtn ? el.displayModeBtn.querySelector("[data-display-label]") : null;
 el.breathOptionBtns = Array.from(document.querySelectorAll("[data-breath-option]"));
 el.breathDurationBtns = Array.from(document.querySelectorAll("[data-breath-minutes]"));
 el.breathBoxSides = Array.from(document.querySelectorAll("[data-box-side]"));
 
 function cfg() {
   const base = tracks[state.track];
-  if (state.track !== "yoga" || state.yogaSection === "flow") return base;
-  const section = yogaSections[state.yogaSection] || yogaSections.flow;
+  const section = state.track === "exercise"
+    ? workoutSections[state.workoutSection] || workoutSections.everyday
+    : state.track === "yoga"
+      ? yogaSections[state.yogaSection] || yogaSections.flow
+      : null;
+  if (!section || (state.track === "exercise" && state.workoutSection === "everyday") || (state.track === "yoga" && state.yogaSection === "flow")) return base;
   return {
     ...base,
     ...section,
@@ -2372,11 +3422,15 @@ function cfg() {
   };
 }
 function routine() { return state.routine; }
+function routineItems() { return routine().filter(item => !item.isPlaceholder); }
 function step() { return routine()[state.stepIndex]; }
 function fmtSec(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
 function fmtDur(s) { const m = Math.floor(s / 60), r = s % 60; return m ? (r ? `${m} min ${r} sec` : `${m} min`) : `${r} sec`; }
-function totalTime() { return routine().reduce((a, s) => a + s.duration, 0); }
-function doneTime() { return routine().slice(0, state.stepIndex).reduce((a, s) => a + s.duration, 0) + (step().duration - state.remaining); }
+function totalTime() { return routineItems().reduce((a, s) => a + s.duration, 0); }
+function doneTime() {
+  if (step()?.isPlaceholder) return 0;
+  return routine().slice(0, state.stepIndex).reduce((a, s) => a + s.duration, 0) + (step().duration - state.remaining);
+}
 function rndPrompt() { const p = cfg().prompts; return p[Math.floor(Math.random() * p.length)]; }
 
 function showBurst(text) {
@@ -2392,61 +3446,110 @@ function resetCameraStats() {
     bestScore: 0,
     scoreTotal: 0,
     sampleCount: 0,
+    meanScore: 0,
+    scoreM2: 0,
     reps: 0,
     holdMs: 0,
+    trackedMs: 0,
+    targetMs: 0,
     repArmed: true,
     lastCue: "",
     lastCueAt: 0,
     startedAt: performance.now(),
+    breathHistory: [],
+    breathDirection: "calibrating",
+    lastBreathDirection: "calibrating",
+    breathCycles: 0,
+    breathSignal: null,
+    breathPostureScore: 0,
   });
-  renderCameraStats(0, null);
+  if (state.track === "breath") renderBreathingCameraStats(0, null);
+  else renderCameraStats(0, null);
+  updateFramingChecks({});
 }
 
 async function renderSessionHistory() {
-  if (!el.sessionHistory) return;
-  const sessions = await window.ReverbereshStore?.listSessions?.(8) || [];
-  el.sessionHistory.innerHTML = "";
-  if (!sessions.length) {
-    const empty = appendText(document.createElement("p"), "Completed camera sessions will appear here.");
-    empty.className = "history-empty";
-    el.sessionHistory.appendChild(empty);
-    return;
-  }
-  sessions.forEach(session => {
+  const sessions = await window.ReverbereshStore?.listSessions?.(16) || [];
+  const renderInto = (container, rows, emptyCopy) => {
+    if (!container) return;
+    container.innerHTML = "";
+    if (!rows.length) {
+      const empty = appendText(document.createElement("p"), emptyCopy);
+      empty.className = "history-empty";
+      container.appendChild(empty);
+      return;
+    }
+    rows.forEach(session => {
     const item = document.createElement("article");
     item.className = "history-item";
-    item.appendChild(appendText(document.createElement("strong"), session.movement));
-    const score = appendText(document.createElement("span"), `${session.averageScore}% average · ${session.bestScore}% best`);
-    score.className = "history-score";
-    item.appendChild(score);
-    item.appendChild(appendText(document.createElement("span"), `${session.reps} reps · ${session.holdSeconds}s matched hold`));
+    item.appendChild(appendText(document.createElement("strong"), session.movement || session.practice || "Completed practice"));
+    if (session.sessionType === "practice") {
+      const completion = appendText(document.createElement("span"), `${fmtDur(session.durationSeconds || 0)} completed${session.breathCycles ? ` · ${session.breathCycles} cycles` : ""}`);
+      completion.className = "history-score";
+      item.appendChild(completion);
+      item.appendChild(appendText(document.createElement("span"), `${tracks[session.track]?.label || "Practice"} · ${session.level || "beginner"}`));
+    } else {
+      const score = appendText(document.createElement("span"), `${session.averageScore}% average · ${session.bestScore}% best`);
+      score.className = "history-score";
+      item.appendChild(score);
+      const target = Number.isFinite(session.targetRate) ? ` · ${session.targetRate}% in target` : "";
+      item.appendChild(appendText(document.createElement("span"), session.breathCamera
+        ? `${session.reps || 0} observed cycles · ${session.holdSeconds || 0}s tracked${target}`
+        : `${session.reps || 0} reps · ${session.holdSeconds || 0}s matched hold${target}`));
+    }
     item.appendChild(appendText(document.createElement("span"), new Date(session.completedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })));
-    el.sessionHistory.appendChild(item);
-  });
+    container.appendChild(item);
+    });
+  };
+  renderInto(el.sessionHistory, sessions.filter(session => session.sessionType !== "practice").slice(0, 8), "Completed camera sessions will appear here.");
+  renderInto(el.practiceHistory, sessions.slice(0, 8), "Completed guided sessions will appear here.");
 }
 
 async function saveCameraSession() {
   if (cameraCoach.sampleCount < 5 || !window.ReverbereshStore) return;
+  const variance = cameraCoach.sampleCount > 1 ? cameraCoach.scoreM2 / (cameraCoach.sampleCount - 1) : 0;
   await window.ReverbereshStore.saveSession({
-    movement: step()?.name || "Movement session",
+    sessionType: "camera",
+    breathCamera: state.track === "breath",
+    movement: state.track === "breath" ? `${selectedBreathOption(state.breathOption).title} · camera estimate` : step()?.name || "Movement session",
     track: state.track,
     level: state.level,
     averageScore: Math.round(cameraCoach.scoreTotal / cameraCoach.sampleCount),
     bestScore: Math.round(cameraCoach.bestScore),
     reps: cameraCoach.reps,
     holdSeconds: Math.floor(cameraCoach.holdMs / 1000),
+    targetRate: cameraCoach.trackedMs ? Math.round((cameraCoach.targetMs / cameraCoach.trackedMs) * 100) : 0,
+    consistency: Math.max(0, Math.round(100 - Math.sqrt(variance) * 2)),
     durationSeconds: Math.max(1, Math.round((performance.now() - cameraCoach.startedAt) / 1000)),
   });
+}
+
+async function savePracticeCompletion() {
+  if (!window.ReverbereshStore) return;
+  const breathCycles = state.track === "breath" ? routine().reduce((total, item) => {
+    const cycle = item.breathPattern?.reduce((sum, phaseItem) => sum + phaseItem.duration, 0) || 0;
+    return total + (cycle ? Math.floor(item.duration / cycle) : 0);
+  }, 0) : 0;
+  const movement = state.track === "breath"
+    ? selectedBreathOption(state.breathOption).title
+    : state.track === "yoga"
+      ? yogaSections[state.yogaSection]?.label || "Everyday Yoga"
+      : `${tracks[state.track]?.label || "Movement"} session`;
+  await window.ReverbereshStore.saveSession({
+    sessionType: "practice",
+    movement,
+    track: state.track,
+    level: state.level,
+    durationSeconds: totalTime(),
+    breathCycles,
+  });
+  await renderSessionHistory();
 }
 
 async function startCameraCoach() {
   noteInteraction();
   if (cameraCoach.active) return stopCameraCoach();
-  if (state.track === "breath") {
-    showBurst("Camera coach is for movement tracks");
-    speak("Choose workout, yoga, or dance before starting camera coach.");
-    return;
-  }
+  setCameraModeLabels();
   el.cameraCoachPanel.hidden = false;
   if (el.cameraFeedback) el.cameraFeedback.hidden = false;
   document.body.dataset.cameraCoach = "on";
@@ -2454,7 +3557,7 @@ async function startCameraCoach() {
   el.cameraLoading.hidden = false;
   el.framingGuidance.dataset.state = "setup";
   el.framingTitle.textContent = "Allow camera access";
-  el.framingDetail.textContent = "Your video stays on this device.";
+  el.framingDetail.textContent = state.track === "breath" ? "Video stays on this device. A waist-up view is enough." : "Your video stays on this device.";
   el.cameraCoachPanel.closest(".stage")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   try {
@@ -2476,9 +3579,9 @@ async function startCameraCoach() {
     el.cameraLoading.hidden = true;
     el.cameraCoachBtn.classList.add("is-active");
     if (el.cameraCoachBtnLabel) el.cameraCoachBtnLabel.textContent = "Camera coach on";
-    el.framingTitle.textContent = "Stand where your full body is visible";
-    el.framingDetail.textContent = "Leave space above your head and below your feet.";
-    showBurst("Camera coach ready");
+    el.framingTitle.textContent = state.track === "breath" ? "Sit with your torso visible" : "Stand where your full body is visible";
+    el.framingDetail.textContent = state.track === "breath" ? "Keep your head, shoulders, and hips in view while breathing naturally." : "Leave space above your head and below your feet.";
+    showBurst(state.track === "breath" ? "Breathing camera ready" : "Camera coach ready");
     await renderSessionHistory();
   } catch (error) {
     cameraCoach.stream?.getTracks().forEach(track => track.stop());
@@ -2511,25 +3614,122 @@ async function stopCameraCoach({ save = true, hide = true } = {}) {
   await renderSessionHistory();
 }
 
-function humanizeAnimation(key) {
-  return key.split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+function recommendedRoutineCatalog() {
+  return buildRoutineCatalog(state.track, state.level, false);
 }
 
-function populateAnimationOptions() {
-  if (!el.exerciseAnimation) return;
-  el.exerciseAnimation.innerHTML = "";
-  Object.keys(P).filter(key => key !== "_base").sort().forEach(key => {
-    const option = document.createElement("option");
-    option.value = key;
-    option.textContent = humanizeAnimation(key);
-    el.exerciseAnimation.appendChild(option);
+function selectedRoutineIds() {
+  const stored = state.routineSelections[routineContextKey()];
+  return Array.isArray(stored) ? stored : recommendedRoutineCatalog().map(item => item.routineId);
+}
+
+async function persistRoutinePreferences(contextKey = routineContextKey()) {
+  await window.ReverbereshStore?.saveRoutineOrder?.(
+    contextKey,
+    state.routineOrders[contextKey] || [],
+    state.routineSelections[contextKey],
+  );
+}
+
+function exercisePhaseLabel(item) {
+  if (item.type === "rest") return "Recovery";
+  if (item.sequenceFlow) return "Linked flow";
+  const phase = item.phase || item.routinePhase;
+  if (phase === "warmup") return "Warmup";
+  if (phase === "cooldown") return "Cooldown";
+  if (phase === "mobility") return "Mobility";
+  if (phase === "strength") return "Strength";
+  if (phase === "recovery") return "Recovery";
+  if (phase === "work") return "Work interval";
+  if (phase === "practice") return "Practice";
+  return state.track === "breath" ? "Breathing" : state.track === "yoga" ? "Yoga pose" : "Movement";
+}
+
+async function setRoutineSelection(ids, statusCopy) {
+  const contextKey = routineContextKey();
+  state.routineSelections[contextKey] = Array.from(new Set(ids));
+  await persistRoutinePreferences(contextKey);
+  resetSession(false);
+  if (el.exerciseSaveStatus) el.exerciseSaveStatus.textContent = statusCopy;
+}
+
+async function selectAllRoutineExercises() {
+  const ids = recommendedRoutineCatalog().map(item => item.routineId);
+  await setRoutineSelection(ids, `${ids.length} curated movements selected.`);
+}
+
+async function clearRoutineExercises() {
+  await setRoutineSelection([], "Routine cleared. Choose one or more curated movements to continue.");
+}
+
+async function restoreRecommendedRoutine() {
+  const contextKey = routineContextKey();
+  const ids = recommendedRoutineCatalog().map(item => item.routineId);
+  state.routineOrders[contextKey] = [...ids];
+  state.routineSelections[contextKey] = [...ids];
+  await persistRoutinePreferences(contextKey);
+  resetSession(false);
+  if (el.exerciseSaveStatus) el.exerciseSaveStatus.textContent = "Recommended selection and order restored.";
+}
+
+function renderExercisePicker() {
+  if (!el.exercisePickerList) return;
+  const catalog = recommendedRoutineCatalog();
+  const selected = new Set(selectedRoutineIds());
+  el.exercisePickerList.innerHTML = "";
+
+  catalog.forEach(item => {
+    const label = document.createElement("label");
+    label.className = "exercise-picker-item";
+    label.dataset.routineId = item.routineId;
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = item.routineId;
+    checkbox.checked = selected.has(item.routineId);
+    checkbox.setAttribute("aria-label", `Include ${item.type === "rest" ? item.focus : item.name}`);
+
+    const copy = document.createElement("span");
+    copy.className = "exercise-picker-copy";
+    copy.appendChild(appendText(document.createElement("strong"), item.type === "rest" ? `Reset · ${item.focus}` : item.name));
+    copy.appendChild(appendText(document.createElement("span"), `${fmtDur(item.duration)} · ${item.focus}`));
+
+    const badge = appendText(document.createElement("small"), exercisePhaseLabel(item));
+    badge.className = "exercise-picker-badge";
+    label.append(checkbox, copy, badge);
+    el.exercisePickerList.appendChild(label);
+  });
+
+  el.exercisePickerList.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener("change", async () => {
+      const ids = Array.from(el.exercisePickerList.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
+      await setRoutineSelection(ids, `${ids.length} of ${catalog.length} curated movements selected.`);
+    });
   });
 }
 
 function routineContextLabel() {
-  const parts = [cfg().label, state.level === "advanced" ? "Advanced" : "Beginner"];
-  if (state.track === "yoga") parts.push(state.yogaSection === "relax" ? "Relaxation" : "Core Flow");
+  const parts = [tracks[state.track]?.label || cfg().label, state.level === "advanced" ? "Advanced" : "Beginner"];
+  if (state.track === "exercise") parts.push(workoutSections[state.workoutSection]?.label || "Everyday Workout");
+  if (state.track === "yoga") parts.push(yogaSections[state.yogaSection]?.label || "Everyday Flow");
+  if (state.track === "breath") parts.push(selectedBreathOption(state.breathOption).title);
   return parts.join(" · ");
+}
+
+function inferredRoutinePhase(exercise, index = 0, length = 1) {
+  if (exercise.phase) return exercise.phase;
+  const text = `${exercise.name} ${exercise.focus} ${exercise.summary}`.toLowerCase();
+  if (exercise.type === "rest") return "recovery";
+  if (/finish|cool|shavasana|quiet|breath reset|final rest/.test(text) || index === length - 1) return "cooldown";
+  if (/warm|arrive|setup|check-in|mountain|march/.test(text) || index === 0) return "warmup";
+  if (/mobil|stretch|rotation|twist|fold|cat-cow|posture/.test(text)) return "mobility";
+  if (/squat|lunge|plank|bridge|bird dog|strength|stability|balance/.test(text)) return "strength";
+  if (/cardio|power|punch|skater|dance|interval|drive/.test(text)) return "work";
+  return "practice";
+}
+
+function phaseLabel(phase) {
+  return ({ warmup: "Warm-up", mobility: "Mobility", strength: "Strength", work: "Work", recovery: "Recovery", cooldown: "Cooldown", practice: "Practice" })[phase] || "Practice";
 }
 
 function makeOrderButton(symbol, label, disabled, action) {
@@ -2544,13 +3744,15 @@ function makeOrderButton(symbol, label, disabled, action) {
 }
 
 async function moveRoutineExercise(index, offset) {
+  const visibleRoutine = routineItems();
   const targetIndex = index + offset;
-  if (targetIndex < 0 || targetIndex >= routine().length) return;
+  if (targetIndex < 0 || targetIndex >= visibleRoutine.length) return;
   const activeId = step()?.routineId;
   [state.routine[index], state.routine[targetIndex]] = [state.routine[targetIndex], state.routine[index]];
   const contextKey = routineContextKey();
-  state.routineOrders[contextKey] = state.routine.map(item => item.routineId);
-  await window.ReverbereshStore?.saveRoutineOrder?.(contextKey, state.routineOrders[contextKey]);
+  state.routineOrders[contextKey] = routineItems().map(item => item.routineId);
+  if (!Array.isArray(state.routineSelections[contextKey])) state.routineSelections[contextKey] = recommendedRoutineCatalog().map(item => item.routineId);
+  await persistRoutinePreferences(contextKey);
   state.stepIndex = Math.max(0, state.routine.findIndex(item => item.routineId === activeId));
   buildStepList();
   renderExerciseOrderList();
@@ -2559,11 +3761,20 @@ async function moveRoutineExercise(index, offset) {
 
 function renderExerciseOrderList() {
   if (!el.exerciseOrderList) return;
+  const visibleRoutine = routineItems();
   el.exerciseOrderList.innerHTML = "";
   if (el.exerciseRoutineContext) el.exerciseRoutineContext.textContent = routineContextLabel();
-  if (el.exerciseRoutineTotal) el.exerciseRoutineTotal.textContent = `${routine().length} movements · ${fmtDur(totalTime())}`;
+  if (el.exerciseRoutineTotal) el.exerciseRoutineTotal.textContent = `${visibleRoutine.length} movements · ${fmtDur(totalTime())}`;
 
-  routine().forEach((exercise, index) => {
+  if (!visibleRoutine.length) {
+    const empty = document.createElement("div");
+    empty.className = "exercise-order-empty";
+    empty.appendChild(appendText(document.createElement("strong"), "No movements selected"));
+    empty.appendChild(appendText(document.createElement("span"), "Choose from the curated list, or restore the recommended routine."));
+    el.exerciseOrderList.appendChild(empty);
+  }
+
+  visibleRoutine.forEach((exercise, index) => {
     const item = document.createElement("article");
     item.className = "exercise-order-item";
     item.dataset.routineId = exercise.routineId;
@@ -2575,31 +3786,81 @@ function renderExerciseOrderList() {
     copy.className = "exercise-order-copy";
     copy.appendChild(appendText(document.createElement("strong"), exercise.type === "rest" ? "Reset / Rest" : exercise.name));
     copy.appendChild(appendText(document.createElement("span"), `${fmtDur(exercise.duration)} · ${exercise.focus}`));
-    if (exercise.isCustom) {
-      const customLabel = appendText(document.createElement("small"), "Custom");
-      customLabel.className = "exercise-source-label";
-      copy.appendChild(customLabel);
-    }
+    const phase = exercise.routinePhase || inferredRoutinePhase(exercise, index, visibleRoutine.length);
+    const phaseTag = appendText(document.createElement("small"), phaseLabel(phase));
+    phaseTag.className = `routine-phase is-${phase}`;
+    copy.appendChild(phaseTag);
 
     const actions = document.createElement("div");
     actions.className = "exercise-order-actions";
     actions.appendChild(makeOrderButton("↑", `Move ${exercise.name} earlier`, index === 0, () => moveRoutineExercise(index, -1)));
-    actions.appendChild(makeOrderButton("↓", `Move ${exercise.name} later`, index === routine().length - 1, () => moveRoutineExercise(index, 1)));
-
-    if (exercise.isCustom) {
-      actions.appendChild(makeOrderButton("×", `Delete ${exercise.name}`, false, async () => {
-        if (!window.confirm(`Delete ${exercise.name}?`)) return;
-        await window.ReverbereshStore?.deleteExercise?.(exercise.id);
-        state.customExercises = state.customExercises.filter(entry => entry.id !== exercise.id);
-        const contextKey = routineContextKey();
-        state.routineOrders[contextKey] = (state.routineOrders[contextKey] || []).filter(id => id !== exercise.routineId);
-        await window.ReverbereshStore?.saveRoutineOrder?.(contextKey, state.routineOrders[contextKey]);
-        resetSession(false);
-      }));
-    }
+    actions.appendChild(makeOrderButton("↓", `Move ${exercise.name} later`, index === visibleRoutine.length - 1, () => moveRoutineExercise(index, 1)));
 
     item.append(indexLabel, copy, actions);
     el.exerciseOrderList.appendChild(item);
+  });
+  renderExercisePicker();
+}
+
+async function launchPractice(practice) {
+  noteInteraction();
+  if (practice.type === "workout") {
+    state.track = "exercise";
+    state.workoutSection = practice.workoutSection || "everyday";
+  } else if (practice.type === "yoga") {
+    state.track = "yoga";
+    state.yogaSection = practice.section || "flow";
+  } else {
+    state.track = "breath";
+    state.breathOption = practice.breathOption || "diaphragmatic";
+  }
+  resetSession(false);
+  await switchAppView("coach");
+  document.querySelector(".hero")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  showBurst(`${practice.title} ready`);
+  speak(`${practice.title} is ready. Review the first step, then press Start.`);
+}
+
+function renderPracticeLibrary(highlightId = "") {
+  if (!el.practiceLibrary) return;
+  el.practiceLibrary.innerHTML = "";
+  PRACTICE_LIBRARY.forEach(practice => {
+    const card = document.createElement("article");
+    card.className = "practice-card";
+    card.dataset.practiceId = practice.id;
+    card.classList.toggle("is-recommended", practice.id === highlightId);
+
+    const heading = document.createElement("div");
+    heading.className = "practice-card-heading";
+    const copy = document.createElement("div");
+    const eyebrow = appendText(document.createElement("span"), practice.eyebrow);
+    eyebrow.className = "practice-card-eyebrow";
+    const title = appendText(document.createElement("h4"), practice.title);
+    copy.append(eyebrow, title);
+    const type = appendText(document.createElement("span"), practice.type === "workout" ? "Workout" : practice.type === "yoga" ? "Yoga" : "Breathing");
+    type.className = "practice-type";
+    heading.append(copy, type);
+
+    const meta = appendText(document.createElement("p"), practice.meta);
+    meta.className = "practice-card-meta";
+    const description = appendText(document.createElement("p"), practice.description);
+    description.className = "practice-card-description";
+
+    const footer = document.createElement("div");
+    footer.className = "practice-card-footer";
+    const source = appendText(document.createElement("a"), practice.source.source || practice.source.label || "Source");
+    source.href = practice.source.url;
+    source.target = "_blank";
+    source.rel = "noopener noreferrer";
+    source.title = practice.source.title;
+    source.className = "practice-source-link";
+    const start = appendText(document.createElement("button"), "Start");
+    start.type = "button";
+    start.className = "action-btn practice-start-btn";
+    start.addEventListener("click", () => launchPractice(practice));
+    footer.append(source, start);
+    card.append(heading, meta, description, footer);
+    el.practiceLibrary.appendChild(card);
   });
 }
 
@@ -2613,15 +3874,16 @@ async function switchAppView(view) {
   el.exercisesTabBtn.classList.toggle("is-active", view === "exercises");
   el.coachTabBtn.setAttribute("aria-selected", String(view === "coach"));
   el.exercisesTabBtn.setAttribute("aria-selected", String(view === "exercises"));
-  if (view === "exercises") renderExerciseOrderList();
+  if (view === "exercises") {
+    renderExerciseOrderList();
+    renderPracticeLibrary();
+    renderSessionHistory();
+  }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 async function openExerciseStudio() {
   await switchAppView("exercises");
-  const trackInput = el.exerciseForm?.elements?.track;
-  if (trackInput) trackInput.value = state.track;
-  if (el.exerciseAnimation && P[step()?.animation]) el.exerciseAnimation.value = step().animation;
   renderExerciseOrderList();
 }
 
@@ -2629,38 +3891,18 @@ function closeExerciseStudio() {
   switchAppView("coach");
 }
 
-function focusExerciseForm() {
-  el.exerciseForm?.scrollIntoView({ behavior: "smooth", block: "start" });
-  el.exerciseForm?.elements?.name?.focus({ preventScroll: true });
-}
-
-async function saveCustomExercise(event) {
-  event.preventDefault();
-  const formData = new FormData(el.exerciseForm);
-  const lines = value => String(value || "").split("\n").map(line => line.trim()).filter(Boolean);
-  const exercise = {
-    name: String(formData.get("name") || "").trim(),
-    track: String(formData.get("track") || "exercise"),
-    level: String(formData.get("level") || "both"),
-    duration: Math.max(10, Math.min(600, Number(formData.get("duration")) || 30)),
-    animation: String(formData.get("animation") || "rest"),
-    focus: String(formData.get("focus") || "").trim(),
-    summary: String(formData.get("summary") || "").trim(),
-    instructions: lines(formData.get("instructions")),
-    cues: lines(formData.get("cues")),
-  };
-  if (!exercise.name || !exercise.focus || !exercise.summary || !exercise.instructions.length || !exercise.cues.length) return;
-  const saved = await window.ReverbereshStore.saveExercise(exercise);
-  state.customExercises = [saved, ...state.customExercises.filter(item => item.id !== saved.id)];
-  el.exerciseSaveStatus.textContent = `${saved.name} added to ${tracks[saved.track]?.label || saved.track}.`;
-  el.exerciseForm.reset();
-  if (saved.track === state.track) resetSession(false);
-  else renderExerciseOrderList();
-}
-
 function activeTutorial() {
-  if (state.track === "yoga" && state.yogaSection === "relax") return BP_YOGA_TUTORIAL;
-  if (state.track === "breath") return BREATH_TUTORIAL;
+  if (state.track === "exercise" && state.workoutSection === "posture") return POSTURE_BACK_TUTORIAL;
+  if (state.track === "exercise" && state.workoutSection === "hiit") return HIIT_TUTORIAL;
+  if (state.track === "yoga") {
+    if (state.yogaSection === "daily") return DAILY_YOGA_TUTORIAL;
+    if (state.yogaSection === "office") return OFFICE_YOGA_TUTORIAL;
+    if (state.yogaSection === "catcow") return CAT_COW_TUTORIAL;
+    if (state.yogaSection === "sun") return SURYA_TUTORIAL;
+    if (state.yogaSection === "moon") return CHANDRA_TUTORIAL;
+    if (state.yogaSection === "relax") return BP_YOGA_TUTORIAL;
+  }
+  if (state.track === "breath") return buildBreathTutorial();
   return null;
 }
 
@@ -2755,17 +3997,22 @@ function renderTutorial() {
 
 function updateHero() {
   const t = cfg(); document.body.dataset.track = state.track;
+  document.body.dataset.workoutSection = state.track === "exercise" ? state.workoutSection : "";
   document.body.dataset.yogaSection = state.track === "yoga" ? state.yogaSection : "";
   document.body.dataset.mirrorGuide = state.mirrorGuideEnabled ? "on" : "off";
-  el.heroTitle.textContent = t.heroTitle; el.heroText.textContent = t.heroText;
-  el.sessionNote.textContent = state.track === "breath" ? `${t.descriptions[state.level]} Session length: ${state.breathMinutes} minutes.` : t.descriptions[state.level]; el.interactiveTip.textContent = t.tip;
+  const breath = state.track === "breath" ? selectedBreathOption(state.breathOption) : null;
+  el.heroTitle.textContent = breath ? breath.title : t.heroTitle;
+  el.heroText.textContent = breath ? breath.summary : t.heroText;
+  el.sessionNote.textContent = breath ? `${t.descriptions[state.level]} ${breath.target}. Session length: ${state.breathMinutes} minutes.` : t.descriptions[state.level]; el.interactiveTip.textContent = t.tip;
   el.burstBtn.textContent = t.burstLabel;
+  if (el.workoutSectionPicker) el.workoutSectionPicker.hidden = state.track !== "exercise";
   if (el.yogaSectionPicker) el.yogaSectionPicker.hidden = state.track !== "yoga";
   if (el.breathOptionPicker) el.breathOptionPicker.hidden = state.track !== "breath";
   if (el.breathDurationPicker) el.breathDurationPicker.hidden = state.track !== "breath";
   el.goalRow.innerHTML = ""; t.goals.forEach(g => { const s = document.createElement("span"); s.className = "goal-pill"; s.textContent = g; el.goalRow.appendChild(s); });
   el.noteList.innerHTML = ""; t.notes.forEach(n => { const li = document.createElement("li"); li.textContent = n; el.noteList.appendChild(li); });
   renderTutorial();
+  if (cameraCoach.active) setCameraModeLabels();
 
   // Update avatar shirt color based on track
   if (avatarGroup) {
@@ -2786,7 +4033,16 @@ function updateSel() {
   el.trackYogaBtn.classList.toggle("is-active", state.track === "yoga");
   el.trackDanceBtn.classList.toggle("is-active", state.track === "dance");
   el.trackBreathBtn.classList.toggle("is-active", state.track === "breath");
+  if (el.workoutSectionEverydayBtn) el.workoutSectionEverydayBtn.classList.toggle("is-active", state.workoutSection === "everyday");
+  if (el.workoutSectionPostureBtn) el.workoutSectionPostureBtn.classList.toggle("is-active", state.workoutSection === "posture");
+  if (el.workoutSectionHiitBtn) el.workoutSectionHiitBtn.classList.toggle("is-active", state.workoutSection === "hiit");
+  if (el.workoutSectionPicker) el.workoutSectionPicker.hidden = state.track !== "exercise";
   if (el.yogaSectionFlowBtn) el.yogaSectionFlowBtn.classList.toggle("is-active", state.yogaSection === "flow");
+  if (el.yogaSectionDailyBtn) el.yogaSectionDailyBtn.classList.toggle("is-active", state.yogaSection === "daily");
+  if (el.yogaSectionOfficeBtn) el.yogaSectionOfficeBtn.classList.toggle("is-active", state.yogaSection === "office");
+  if (el.yogaSectionCatcowBtn) el.yogaSectionCatcowBtn.classList.toggle("is-active", state.yogaSection === "catcow");
+  if (el.yogaSectionSunBtn) el.yogaSectionSunBtn.classList.toggle("is-active", state.yogaSection === "sun");
+  if (el.yogaSectionMoonBtn) el.yogaSectionMoonBtn.classList.toggle("is-active", state.yogaSection === "moon");
   if (el.yogaSectionRelaxBtn) el.yogaSectionRelaxBtn.classList.toggle("is-active", state.yogaSection === "relax");
   if (el.yogaSectionPicker) el.yogaSectionPicker.hidden = state.track !== "yoga";
   if (el.breathOptionPicker) el.breathOptionPicker.hidden = state.track !== "breath";
@@ -2804,6 +4060,8 @@ function updateSel() {
   if (el.neuralPoseBtnLabel) el.neuralPoseBtnLabel.textContent = state.neuralPoseEnabled ? "Hide guide lines" : "Show guide lines";
   if (el.mirrorGuideBtnLabel) el.mirrorGuideBtnLabel.textContent = state.mirrorGuideEnabled ? "Mirror on" : "Mirror off";
   if (el.cameraCoachBtnLabel) el.cameraCoachBtnLabel.textContent = state.cameraCoachEnabled ? "Camera coach on" : "Camera coach";
+  if (el.displayModeBtn) el.displayModeBtn.setAttribute("aria-pressed", String(state.displayMode === "large"));
+  if (el.displayModeBtnLabel) el.displayModeBtnLabel.textContent = state.displayMode === "large" ? "Exit big screen" : "Big screen";
 }
 
 function buildStepList() {
@@ -2840,7 +4098,11 @@ function buildStepList() {
 
 function updateStepCards() { el.stepList.querySelectorAll(".step-card").forEach((c, i) => c.classList.toggle("is-current", i === state.stepIndex)); }
 function updateInstr(s) { el.instructionList.innerHTML = ""; s.instructions.forEach(t => { const li = document.createElement("li"); li.textContent = t; el.instructionList.appendChild(li); }); }
-function updateProg() { el.sessionProgressFill.style.width = `${(doneTime() / totalTime()) * 100}%`; el.sessionProgressCopy.textContent = `${fmtSec(doneTime())} completed`; }
+function updateProg() {
+  const total = totalTime();
+  el.sessionProgressFill.style.width = `${total ? (doneTime() / total) * 100 : 0}%`;
+  el.sessionProgressCopy.textContent = total ? `${fmtSec(doneTime())} completed` : "Choose exercises to begin";
+}
 function breathPhaseFor(s) {
   if (!s.breathPattern?.length) return null;
   const total = s.breathPattern.reduce((sum, item) => sum + item.duration, 0);
@@ -2896,13 +4158,7 @@ function renderStageBreathCue(phaseInfo) {
   if (el.stageBreathArrow) el.stageBreathArrow.textContent = inhaling ? "↑" : exhaling ? "↓" : "•";
   if (el.stageBreathLabel) el.stageBreathLabel.textContent = phaseInfo.label;
   if (el.stageBreathCount) el.stageBreathCount.textContent = `${phaseInfo.remaining}s`;
-  if (el.stageBreathDirection) {
-    el.stageBreathDirection.textContent = inhaling
-      ? "Air moves upward"
-      : exhaling
-        ? "Air moves downward"
-        : "Hold softly";
-  }
+  if (el.stageBreathDirection) el.stageBreathDirection.textContent = phaseInfo.cue;
 }
 
 function updateBreathPhase(s) {
@@ -2919,6 +4175,14 @@ function updateBreathPhase(s) {
 }
 
 function updateTimer(s) {
+  if (s.isPlaceholder) {
+    el.remainingTime.textContent = "0";
+    el.stepCount.textContent = "No steps selected";
+    el.stepType.textContent = "Routine builder";
+    el.stepTarget.textContent = s.target;
+    el.timerRing.style.setProperty("--ring-progress", "0");
+    return updateBreathPhase(s);
+  }
   const sessionRemaining = Math.max(0, totalTime() - doneTime());
   const displayedRemaining = state.track === "breath" ? sessionRemaining : state.remaining;
   const ringProgress = state.track === "breath" ? (sessionRemaining / totalTime()) * 100 : (state.remaining / s.duration) * 100;
@@ -2947,18 +4211,32 @@ function renderStep(announce = true) {
   el.currentFocus.textContent = s.focus; el.currentSummary.textContent = s.summary;
   el.upNext.textContent = next ? fmtPreview(next) : "Final block. Stay easy through the finish.";
   updateSel(); updateInstr(s); updateStepCards(); updateProg(); updateTimer(s); schedCue(s);
-  transitionToAnimation(s.animation);
+  transitionToAnimation(s.animation, s.flowTransitionSeconds);
   showBurst(s.type === "rest" ? "Take a breath" : s.name);
   if (!announce) return;
-  speak(s.type === "rest" ? `Reset. ${s.instructions[0]} ${rndPrompt()}` : `${s.name}. ${s.instructions[0]} ${rndPrompt()}`);
+  if (s.sequenceFlow) {
+    speak(`${s.target.replace(/^\d+ sec · /, "")}. ${s.name}. ${s.cues[0]}`);
+  } else {
+    speak(s.type === "rest" ? `Reset. ${s.instructions[0]} ${rndPrompt()}` : `${s.name}. ${s.instructions[0]} ${rndPrompt()}`);
+  }
 }
 
 function stopTimer() { state.running = false; clearInterval(state.tickId); state.tickId = null; el.startBtn.textContent = "Start"; }
 function resetSession(announce = true) { stopTimer(); state.routine = buildRoutine(state.track, state.level); state.stepIndex = 0; state.remaining = routine()[0].duration; updateHero(); buildStepList(); renderExerciseOrderList(); el.totalTime.textContent = fmtDur(totalTime()); renderStep(announce); }
 function switchTrack(t) {
   if (t === state.track) return;
-  if (t === "breath" && cameraCoach.active) stopCameraCoach();
   state.track = t;
+  if (cameraCoach.active) {
+    setCameraModeLabels();
+    resetCameraStats();
+  }
+  noteInteraction();
+  resetSession(true);
+}
+function switchWorkoutSection(section) {
+  if (!workoutSections[section] || section === state.workoutSection) return;
+  state.workoutSection = section;
+  if (state.track !== "exercise") state.track = "exercise";
   noteInteraction();
   resetSession(true);
 }
@@ -3010,8 +4288,22 @@ function switchBreathMinutes(value) {
   noteInteraction();
   resetSession(true);
 }
-function goNext() {
-  if (state.stepIndex >= routine().length - 1) { stopTimer(); state.stepIndex = 0; state.remaining = routine()[0].duration; renderStep(false); showBurst("Session complete"); speak(cfg().voice.finish); return; }
+async function goNext(completedNaturally = false) {
+  if (step()?.isPlaceholder) {
+    showBurst("Choose exercises first");
+    await switchAppView("exercises");
+    return;
+  }
+  if (state.stepIndex >= routine().length - 1) {
+    stopTimer();
+    if (completedNaturally) await savePracticeCompletion();
+    state.stepIndex = 0;
+    state.remaining = routine()[0].duration;
+    renderStep(false);
+    showBurst("Session complete");
+    speak(cfg().voice.finish);
+    return;
+  }
   state.stepIndex++; state.remaining = routine()[state.stepIndex].duration; renderStep(true);
 }
 function tick() {
@@ -3023,25 +4315,32 @@ function tick() {
   if (phaseInfo?.elapsedInPhase === 0 && state.remaining > 0 && state.remaining < s.duration) {
     showBurst(`${phaseInfo.label} ${phaseInfo.remaining}s`);
   }
-  if (!s.breathPattern && state.remaining === Math.floor(s.duration / 2) && s.type === "movement") {
+  if (!s.breathPattern && !s.sequenceFlow && state.remaining === Math.floor(s.duration / 2) && s.type === "movement") {
     const p = rndPrompt();
     showBurst(p);
     speak(p);
   }
-  if (state.remaining === 5) {
+  if (!s.sequenceFlow && state.remaining === 5) {
     showBurst("5 seconds left");
     speak(cfg().voice.fiveSecond);
   }
   if (state.remaining === 0) {
-    goNext();
+    goNext(true);
   }
 }
 function startTimer() {
   if (state.running) return;
+  if (step()?.isPlaceholder) {
+    noteInteraction();
+    showBurst("Choose exercises first");
+    speak("Open Exercises and choose at least one curated movement before starting.");
+    switchAppView("exercises");
+    return;
+  }
   noteInteraction();
   state.running = true;
   state.tickId = setInterval(tick, 1000);
-  el.startBtn.textContent = "Running";
+  el.startBtn.textContent = step()?.sequenceFlow ? "Flowing" : "Running";
   showBurst(`Reverberesh — ${cfg().label}`);
   const mirrorCue = state.mirrorGuideEnabled ? " Mirror me by copying the side you see." : "";
   speak(`Hello, I'm Reverberesh. ${cfg().label}, ${state.level} pace.${mirrorCue} ${cfg().voice.intro}`);
@@ -3094,6 +4393,33 @@ function toggleVoice() {
   speak("Voice cues are on.");
 }
 
+async function toggleDisplayMode() {
+  noteInteraction();
+  const entering = state.displayMode !== "large";
+  state.displayMode = entering ? "large" : "standard";
+  document.body.dataset.displayMode = state.displayMode;
+  updateSel();
+  requestAnimationFrame(() => requestAnimationFrame(resizeSceneToStage));
+  try {
+    if (entering && !document.fullscreenElement && document.documentElement.requestFullscreen) {
+      await document.documentElement.requestFullscreen();
+    } else if (!entering && document.fullscreenElement && document.exitFullscreen) {
+      await document.exitFullscreen();
+    }
+  } catch {
+    // Large-display layout still works when the browser or embedded view blocks fullscreen.
+  }
+}
+
+function syncFullscreenState() {
+  if (!document.fullscreenElement && state.displayMode === "large") {
+    state.displayMode = "standard";
+    document.body.dataset.displayMode = "standard";
+    updateSel();
+    requestAnimationFrame(() => requestAnimationFrame(resizeSceneToStage));
+  }
+}
+
 function handleAppTabKeydown(event) {
   if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
   event.preventDefault();
@@ -3115,54 +4441,71 @@ function bindEvents() {
   el.trackYogaBtn.addEventListener("click", () => switchTrack("yoga"));
   el.trackDanceBtn.addEventListener("click", () => switchTrack("dance"));
   el.trackBreathBtn.addEventListener("click", () => switchTrack("breath"));
+  el.workoutSectionEverydayBtn.addEventListener("click", () => switchWorkoutSection("everyday"));
+  el.workoutSectionPostureBtn.addEventListener("click", () => switchWorkoutSection("posture"));
+  el.workoutSectionHiitBtn.addEventListener("click", () => switchWorkoutSection("hiit"));
   el.levelBeginnerBtn.addEventListener("click", () => switchLevel("beginner"));
   el.levelAdvancedBtn.addEventListener("click", () => switchLevel("advanced"));
   el.yogaSectionFlowBtn.addEventListener("click", () => switchYogaSection("flow"));
+  el.yogaSectionDailyBtn.addEventListener("click", () => switchYogaSection("daily"));
+  el.yogaSectionOfficeBtn.addEventListener("click", () => switchYogaSection("office"));
+  el.yogaSectionCatcowBtn.addEventListener("click", () => switchYogaSection("catcow"));
+  el.yogaSectionSunBtn.addEventListener("click", () => switchYogaSection("sun"));
+  el.yogaSectionMoonBtn.addEventListener("click", () => switchYogaSection("moon"));
   el.yogaSectionRelaxBtn.addEventListener("click", () => switchYogaSection("relax"));
   el.breathOptionBtns.forEach(btn => btn.addEventListener("click", () => switchBreathOption(btn.dataset.breathOption)));
   el.breathDurationBtns.forEach(btn => btn.addEventListener("click", () => switchBreathMinutes(btn.dataset.breathMinutes)));
+  el.breathCustomMinutes.addEventListener("input", () => {
+    const minutes = Number(el.breathCustomMinutes.value);
+    if (Number.isInteger(minutes) && minutes >= 3 && minutes <= 60 && minutes !== state.breathMinutes) {
+      switchBreathMinutes(minutes);
+    }
+  });
   el.breathCustomMinutes.addEventListener("change", () => switchBreathMinutes(el.breathCustomMinutes.value));
   el.startBtn.addEventListener("click", startTimer); el.pauseBtn.addEventListener("click", pauseTimer);
-  el.nextBtn.addEventListener("click", () => { noteInteraction(); goNext(); });
+  el.nextBtn.addEventListener("click", () => { noteInteraction(); goNext(false); });
   el.restartBtn.addEventListener("click", restartRoutine);
   el.voiceBtn.addEventListener("click", toggleVoice);
   el.neuralPoseBtn.addEventListener("click", toggleNeuralPose);
   el.mirrorGuideBtn.addEventListener("click", toggleMirrorGuide);
   el.cameraCoachBtn.addEventListener("click", startCameraCoach);
   el.cameraStopBtn.addEventListener("click", () => stopCameraCoach());
-  el.exerciseAddBtn.addEventListener("click", focusExerciseForm);
-  el.exerciseForm.addEventListener("submit", saveCustomExercise);
+  el.displayModeBtn.addEventListener("click", toggleDisplayMode);
+  el.exerciseAddBtn.addEventListener("click", restoreRecommendedRoutine);
+  el.exerciseSelectAllBtn.addEventListener("click", selectAllRoutineExercises);
+  el.exerciseClearBtn.addEventListener("click", clearRoutineExercises);
   el.burstBtn.addEventListener("click", () => { noteInteraction(); const p = rndPrompt(); showBurst(p); speak(p); });
   window.addEventListener("pagehide", () => {
     cameraCoach.stream?.getTracks().forEach(track => track.stop());
   });
+  document.addEventListener("fullscreenchange", syncFullscreenState);
 }
 
 // ─── Init ───
 
 async function init() {
   const p = new URLSearchParams(window.location.search);
-  const pt = p.get("track"), pl = p.get("level"), section = p.get("section"), breathOption = p.get("timing") || p.get("breath") || p.get("pattern"), breathMinutes = parseInt(p.get("minutes") || p.get("duration") || "5", 10), mirror = p.get("mirror"), guide = p.get("guide"), view = p.get("view"), ps = parseInt(p.get("step") || "0", 10);
+  const pt = p.get("track"), pl = p.get("level"), section = p.get("section"), workout = p.get("workout") || p.get("focus"), breathOption = p.get("timing") || p.get("breath") || p.get("pattern"), breathMinutes = parseInt(p.get("minutes") || p.get("duration") || "5", 10), mirror = p.get("mirror"), guide = p.get("guide"), view = p.get("view"), display = p.get("display"), ps = parseInt(p.get("step") || "0", 10);
   if (pt === "exercise" || pt === "yoga" || pt === "dance" || pt === "breath") state.track = pt;
   if (pl === "beginner" || pl === "advanced") state.level = pl;
-  if (section === "flow" || section === "relax") state.yogaSection = section;
-  if (BREATH_OPTIONS[breathOption]) state.breathOption = breathOption;
+  if (workoutSections[workout]) state.workoutSection = workout;
+  if (yogaSections[section]) state.yogaSection = section;
+  if (BREATH_OPTIONS[breathOption] || LEGACY_BREATH_OPTIONS[breathOption]) state.breathOption = selectedBreathOption(breathOption).key;
   if (Number.isFinite(breathMinutes)) state.breathMinutes = Math.max(3, Math.min(60, breathMinutes));
   if (mirror === "off" || mirror === "false" || mirror === "0") state.mirrorGuideEnabled = false;
   if (mirror === "on" || mirror === "true" || mirror === "1") state.mirrorGuideEnabled = true;
   if (guide === "off" || guide === "false" || guide === "0") state.neuralPoseEnabled = false;
   if (guide === "on" || guide === "true" || guide === "1") state.neuralPoseEnabled = true;
+  if (display === "large" || display === "tv" || display === "projector") state.displayMode = "large";
+  document.body.dataset.displayMode = state.displayMode;
   state.activeView = view === "exercises" ? "exercises" : "coach";
-  const [customExercises, routineOrders] = await Promise.all([
-    window.ReverbereshStore?.listExercises?.() || [],
-    window.ReverbereshStore?.listRoutineOrders?.() || [],
-  ]);
-  state.customExercises = customExercises;
+  const routineOrders = await (window.ReverbereshStore?.listRoutineOrders?.() || []);
   state.routineOrders = Object.fromEntries(routineOrders.map(entry => [entry.id, Array.isArray(entry.order) ? entry.order : []]));
+  state.routineSelections = Object.fromEntries(routineOrders.filter(entry => Array.isArray(entry.selected)).map(entry => [entry.id, entry.selected]));
   state.routine = buildRoutine(state.track, state.level);
   state.stepIndex = Math.min(Math.max(0, Number.isFinite(ps) ? ps : 0), Math.max(0, state.routine.length - 1));
   state.remaining = routine()[state.stepIndex].duration;
-  populateAnimationOptions(); renderExerciseOrderList(); renderSessionHistory();
+  renderExerciseOrderList(); renderPracticeLibrary(); renderSessionHistory();
   updateHero(); buildStepList(); el.totalTime.textContent = fmtDur(totalTime());
   bindEvents(); renderStep(false); setupScene();
   await switchAppView(state.activeView);

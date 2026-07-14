@@ -113,10 +113,11 @@
     async listRoutineOrders() {
       return list(ROUTINE_STORE);
     },
-    saveRoutineOrder(id, order) {
+    saveRoutineOrder(id, order, selected) {
       return put(ROUTINE_STORE, {
         id,
         order: Array.from(order),
+        selected: Array.isArray(selected) ? Array.from(selected) : undefined,
         updatedAt: new Date().toISOString(),
       });
     },
